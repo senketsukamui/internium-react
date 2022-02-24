@@ -1,12 +1,16 @@
 import React from "react";
-import "antd/dist/antd.css";
 import s from "./App.module.scss";
 import Home from "pages/Home";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 function App() {
   return (
     <div className={s.app}>
-      <Home />
+      <BrowserRouter>
+        <Routes>
+          <Route index element={<Home />} />
+        </Routes>
+      </BrowserRouter>
     </div>
   );
 }
