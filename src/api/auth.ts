@@ -22,15 +22,15 @@ interface CompanyInfo {
 }
 
 export const signupIntern = (internInfo: InternInfo) =>
-  basicAxios().post("/auth/intern/signup", internInfo);
+  basicAxios.post("/auth/intern/signup", internInfo);
 
 export const signinIntern = (phone: string) =>
-  basicAxios().post("/auth/intern/auth", {
+  basicAxios.post("/auth/intern/auth", {
     phone,
   });
 
 export const verifyInternOTP = (internOTPInfo: InternOTPInfo) =>
-  basicAxios().post("/auth/intern/verify", internOTPInfo);
+  basicAxios.post("/auth/intern/verify", internOTPInfo);
 
 export const signupCompany = (companyInfo: CompanyInfo) =>
-  basicAxios().post("/auth/company/signup", companyInfo);
+  basicAxios.post("/auth/company/signup", companyInfo);

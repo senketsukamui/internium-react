@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 
 function useCountdown(intervalTime: number, countdownSeconds: number) {
   const [timeLeft, setTimeLeft] = useState<number>(countdownSeconds);
-  console.log(timeLeft);
   useEffect(() => {
     const interval = setInterval(() => {
       setTimeLeft((current: number) => {

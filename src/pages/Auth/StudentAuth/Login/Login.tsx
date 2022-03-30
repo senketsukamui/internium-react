@@ -10,13 +10,18 @@ import MuiPhoneNumber from "material-ui-phone-number";
 import React, { FC, useState } from "react";
 import ReactInputVerificationCode from "react-input-verification-code";
 import useCountdown from "hooks/useCountdown";
+import { useStores } from "hooks/useStores";
 
 const Login: FC = () => {
+  const { authStore } = useStores();
   const [phone, setPhone] = useState<string>("");
   const [code, setCode] = useState<string>("");
   const countdown = useCountdown(1000, 60 * 1000);
-  console.log(countdown);
-  const codeSent = true;
+  const handleSubmit = (e: SubmitEvent) => {
+    e.preventDefault();
+    authStore.loginIntern(phone);
+  };
+  const codeSent = false;
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -34,7 +39,12 @@ const Login: FC = () => {
         <Typography paragraph align="center" sx={{ opacity: 0.5 }}>
           Нужен для регистрации студента и дальнейшего входа в систему
         </Typography>
-        <Box component="form" noValidate sx={{ mt: 4, width: "100%" }}>
+        <Box
+          component="form"
+          noValidate
+          sx={{ mt: 4, width: "100%" }}
+          onSubmit={handleSubmit}
+        >
           <Grid container spacing={1}>
             {codeSent ? (
               <ReactInputVerificationCode

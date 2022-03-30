@@ -3,7 +3,7 @@ import querystring from "query-string";
 
 const defaultHeaders = {};
 
-const baseURL = "http://95.216.137.74:8100/api";
+const baseURL = "https://internium.monkeyhackers.org/api";
 
 const defaultBodyHeaders = {
   ...defaultHeaders,
@@ -12,12 +12,11 @@ const defaultBodyHeaders = {
 
 const okOnly = (status: number) => status === 200;
 
-export const basicAxios = () =>
-  axios.create({
-    baseURL,
-    headers: defaultBodyHeaders,
-    validateStatus: okOnly,
-  });
+export const basicAxios = axios.create({
+  baseURL,
+  headers: defaultBodyHeaders,
+  validateStatus: okOnly,
+});
 
 export const mainAxios = axios.create({
   baseURL,
