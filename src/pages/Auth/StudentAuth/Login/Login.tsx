@@ -12,6 +12,7 @@ import ReactInputVerificationCode from "react-input-verification-code";
 import { useStores } from "hooks/useStores";
 import { useTimer } from "react-timer-hook";
 import { observer } from "mobx-react";
+import { isNumber } from "lodash";
 
 const Login: FC = () => {
   const { authStore } = useStores();
@@ -20,6 +21,12 @@ const Login: FC = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     authStore.loginIntern(phone);
+  };
+
+  const handleCodeComplete = (value: string) => {
+    if (Number(value)) {
+      authStore.verifyIntern(phone, value);
+    }
   };
   const { seconds, isRunning, start, pause, resume, restart } = useTimer({
     expiryTimestamp: new Date(1),
@@ -48,12 +55,7 @@ const Login: FC = () => {
         <Typography paragraph align="center" sx={{ opacity: 0.5 }}>
           Нужен для регистрации студента и дальнейшего входа в систему
         </Typography>
-        <Box
-          component="form"
-          noValidate
-          sx={{ mt: 4, width: "100%" }}
-          onSubmit={handleSubmit}
-        >
+        <Box component="form" noValidate sx={{ mt: 4 }} onSubmit={handleSubmit}>
           <Grid container spacing={1}>
             {authStore.codeSent ? (
               <>
@@ -62,6 +64,7 @@ const Login: FC = () => {
                   length={6}
                   value={code}
                   onChange={(value: string) => setCode(value)}
+                  onCompleted={handleCodeComplete}
                 />
                 <Button
                   type="submit"
@@ -77,22 +80,24 @@ const Login: FC = () => {
                 )}
               </>
             ) : (
-              <Input
-                fullWidth
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-              />
+              <>
+                <Input
+                  fullWidth
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                />
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  disabled={isRunning}
+                  sx={{ mt: 3, mb: 2 }}
+                >
+                  Получить код
+                </Button>
+              </>
             )}
           </Grid>
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            disabled={isRunning}
-            sx={{ mt: 3, mb: 2 }}
-          >
-            Получить код
-          </Button>
         </Box>
       </Box>
     </Container>
