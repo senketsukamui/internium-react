@@ -14,7 +14,18 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "baseUrl": "./src",
+    "paths": {
+      "models": ["/models"],
+      "components": ["/components"],
+      "pages": ["/pages"],
+      "store": ["/store"],
+      "assets": ["/assets"],
+      "styles": ["/styles"],
+      "hooks": ["/hooks"],
+      "api": ["/api"]
+    }
   },
   "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }]

@@ -4,24 +4,33 @@ import {
   Container,
   CssBaseline,
   Grid,
+  Input,
   Typography,
 } from "@mui/material";
-import MuiPhoneNumber from "material-ui-phone-number";
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import ReactInputVerificationCode from "react-input-verification-code";
-import useCountdown from "hooks/useCountdown";
 import { useStores } from "hooks/useStores";
+import { useTimer } from "react-timer-hook";
+import { observer } from "mobx-react";
 
 const Login: FC = () => {
   const { authStore } = useStores();
   const [phone, setPhone] = useState<string>("");
   const [code, setCode] = useState<string>("");
-  const countdown = useCountdown(1000, 60 * 1000);
-  const handleSubmit = (e: SubmitEvent) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     authStore.loginIntern(phone);
   };
-  const codeSent = false;
+  const { seconds, isRunning, start, pause, resume, restart } = useTimer({
+    expiryTimestamp: new Date(1),
+  });
+
+  useEffect(() => {
+    restart(new Date(Date.now() + authStore.blockTimer * 1000), true);
+  }, [authStore.blockTimer]);
+
+  console.log(authStore.blockTimer);
+
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -46,20 +55,32 @@ const Login: FC = () => {
           onSubmit={handleSubmit}
         >
           <Grid container spacing={1}>
-            {codeSent ? (
-              <ReactInputVerificationCode
-                autoFocus
-                length={6}
-                value={code}
-                onChange={(value: string) => setCode(value)}
-              />
+            {authStore.codeSent ? (
+              <>
+                <ReactInputVerificationCode
+                  autoFocus
+                  length={6}
+                  value={code}
+                  onChange={(value: string) => setCode(value)}
+                />
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  disabled={isRunning}
+                  sx={{ mt: 3, mb: 2 }}
+                >
+                  Получить код
+                </Button>
+                {isRunning && authStore.codeSent && (
+                  <Typography>{`Код отправлен. Получить повторный код через ${seconds} секунд.`}</Typography>
+                )}
+              </>
             ) : (
-              <MuiPhoneNumber
-                onlyCountries={["ru"]}
-                defaultCountry={"ru"}
+              <Input
                 fullWidth
                 value={phone}
-                onChange={(value) => setPhone(value)}
+                onChange={(e) => setPhone(e.target.value)}
               />
             )}
           </Grid>
@@ -67,15 +88,15 @@ const Login: FC = () => {
             type="submit"
             fullWidth
             variant="contained"
+            disabled={isRunning}
             sx={{ mt: 3, mb: 2 }}
           >
             Получить код
           </Button>
-          <Typography>{`Код отправлен. Получить повторный код через ${countdown} секунд.`}</Typography>
         </Box>
       </Box>
     </Container>
   );
 };
 
-export default Login;
+export default observer(Login);

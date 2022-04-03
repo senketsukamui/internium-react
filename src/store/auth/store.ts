@@ -3,6 +3,8 @@ import { signinIntern } from "api/auth";
 
 class AuthStore {
   public loading: boolean = false;
+  public blockTimer: number | null = null;
+  public codeSent: boolean = false;
 
   constructor() {
     makeAutoObservable(this);
@@ -10,7 +12,11 @@ class AuthStore {
 
   public loginIntern(phone: string) {
     this.loading = true;
-    return signinIntern(phone);
+    this.codeSent = false;
+    return signinIntern(phone).then(({ data }: { data: InternAuth }) => {
+      this.blockTimer = data.blockTime;
+      this.codeSent = true;
+    });
   }
 }
 

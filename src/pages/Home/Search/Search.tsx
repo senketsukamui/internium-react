@@ -21,10 +21,13 @@ import React, { FC, SyntheticEvent, useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { SortLabels, SortTypes } from "./constants";
 import queryString from "query-string";
+import CheckboxGroup from "components/CheckboxGroup";
 
 const Search: FC = () => {
-  const [search, setSearch] = useState<string>("");
   const [searchParams, setSearchParams] = useSearchParams();
+  const [search, setSearch] = useState<string | number | null>(
+    searchParams.get("search")
+  );
   const [sort, setSort] = useState<SortTypes>(SortTypes.Popularity);
 
   const sortOptions = Object.values(SortTypes).map((type: string) => (
@@ -32,11 +35,15 @@ const Search: FC = () => {
       {SortLabels[type]}
     </MenuItem>
   ));
+  console.log();
 
   useEffect(() => {
+    const currentSearchString = searchParams.get("search") || "";
+    console.log(currentSearchString);
     setSearchParams(
       queryString.stringify({
         sort,
+        search: currentSearchString,
       })
     );
   }, [sort]);
@@ -113,8 +120,13 @@ const Search: FC = () => {
           </Paper>
         </Grid>
         <Grid item xs={4}>
-          <Paper>
-            <Button fullWidth>Y</Button>
+          <Paper sx={{ padding: 2 }}>
+            <CheckboxGroup
+              label="Сфера деятельности"
+              options={{
+                abc: { checked: false, id: "abc" },
+              }}
+            />
           </Paper>
         </Grid>
       </Grid>
