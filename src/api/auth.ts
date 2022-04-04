@@ -1,6 +1,6 @@
 import { basicAxios } from "./utils";
 
-interface InternInfo {
+export interface InternInfo {
   firstName: string;
   lastName: string;
   middlename: string;
@@ -8,12 +8,12 @@ interface InternInfo {
   gender: boolean;
 }
 
-interface InternOTPInfo {
+export interface InternOTPInfo {
   code: string;
   phone: string;
 }
 
-interface CompanyInfo {
+export interface CompanyInfo {
   name: string;
   email: string;
   city: string;
@@ -22,15 +22,15 @@ interface CompanyInfo {
 }
 
 export const signupIntern = (internInfo: InternInfo) =>
-  basicAxios.post("/auth/intern/signup", internInfo);
+  basicAxios.post("/intern/signup", internInfo);
 
 export const signinIntern = (phone: string) =>
-  basicAxios.post("/auth/intern/auth", {
+  basicAxios.post("/intern/auth", {
     phone,
   });
 
 export const verifyInternOTP = (internOTPInfo: InternOTPInfo) =>
-  basicAxios.post("/auth/intern/verify", internOTPInfo);
+  basicAxios.post("/intern/verify", internOTPInfo);
 
 export const signupCompany = (companyInfo: CompanyInfo) =>
-  basicAxios.post("/auth/company/signup", companyInfo);
+  basicAxios.post("/company/signup", companyInfo);

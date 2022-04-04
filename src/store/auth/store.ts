@@ -1,5 +1,10 @@
 import { makeAutoObservable } from "mobx";
-import { signinIntern, verifyInternOTP } from "api/auth";
+import {
+  InternInfo,
+  signinIntern,
+  signupIntern,
+  verifyInternOTP,
+} from "api/auth";
 import { InternAuth, InternVerify } from "api/types";
 import { save } from "utils";
 
@@ -30,6 +35,13 @@ class AuthStore {
     }).then(({ data }: { data: InternVerify }) => {
       this.registerToken = data.registerToken;
       save("registerToken", data.registerToken);
+    });
+  }
+
+  public signupIntern(data: InternInfo) {
+    this.loading = true;
+    return signupIntern(data).then((data) => {
+      console.log(signupIntern);
     });
   }
 }
