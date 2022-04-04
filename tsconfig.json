@@ -24,7 +24,8 @@
       "assets": ["/assets"],
       "styles": ["/styles"],
       "hooks": ["/hooks"],
-      "api": ["/api"]
+      "api": ["/api"],
+      "utils": ["/utils"]
     }
   },
   "include": ["src"],
