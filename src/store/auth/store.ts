@@ -41,7 +41,7 @@ class AuthStore {
   public signupIntern(data: InternInfo) {
     this.loading = true;
     return signupIntern(data).then((data) => {
-      console.log(signupIntern);
+      console.log(data);
     });
   }
 }

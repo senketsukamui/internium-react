@@ -13,11 +13,13 @@ import ReactInputVerificationCode from "react-input-verification-code";
 import { useStores } from "hooks/useStores";
 import { useTimer } from "react-timer-hook";
 import { observer } from "mobx-react";
-import { AuthorizationStatuses } from "./constants";
+import { AuthorizationStatuses, signupSchema } from "./constants";
 import { Controller, useForm } from "react-hook-form";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import DatePicker from "@mui/lab/DatePicker";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { format } from "date-fns";
 
 const getTimerDate = (value: number) => new Date(Date.now() + value * 1000);
 
@@ -35,9 +37,9 @@ const Login: FC = () => {
   const [phone, setPhone] = useState<string>("");
   const [code, setCode] = useState<string>("");
   const [status, setStatus] = useState<AuthorizationStatuses>(
-    AuthorizationStatuses.INFO
+    AuthorizationStatuses.PHONE
   );
-  const handleOTPSubmit = (e) => {
+  const handleOTPSubmit = (e: React.SyntheticEvent) => {
     e.preventDefault();
     authStore.loginIntern(phone).then(() => {
       setStatus(AuthorizationStatuses.OTP);
@@ -55,7 +57,24 @@ const Login: FC = () => {
     expiryTimestamp: getTimerDate(60),
   });
 
-  const { control, handleSubmit } = useForm<SignupFormValues>();
+  const { control, handleSubmit, formState } = useForm<SignupFormValues>({
+    resolver: yupResolver(signupSchema),
+    defaultValues: {
+      firstName: "",
+      middleName: "",
+      lastName: "",
+      gender: true,
+      birthdate: new Date(Date.now()),
+    },
+  });
+
+  console.log(formState.errors);
+
+  const onSignUpSubmit = (values: SignupFormValues) => {
+    authStore.signupIntern({
+      ...values,
+    });
+  };
 
   useEffect(() => {
     restart(getTimerDate(authStore.blockTimer), true);
@@ -66,7 +85,11 @@ const Login: FC = () => {
       case AuthorizationStatuses.PHONE:
         return (
           <form noValidate onSubmit={handleOTPSubmit}>
-            <Typography component="h1" sx={{ margin: "0 auto" }} variant="h5">
+            <Typography
+              component="h1"
+              sx={{ display: "flex", justifyContent: "center" }}
+              variant="h5"
+            >
               Введите номер телефона
             </Typography>
             <Typography paragraph align="center" sx={{ opacity: 0.5 }}>
@@ -114,7 +137,7 @@ const Login: FC = () => {
         );
       case AuthorizationStatuses.INFO:
         return (
-          <form noValidate onSubmit={handleSubmit}>
+          <form noValidate onSubmit={handleSubmit(onSignUpSubmit)}>
             <Typography gutterBottom component="h1" align="center" variant="h5">
               Введите ваши данные
             </Typography>
@@ -122,11 +145,16 @@ const Login: FC = () => {
               name="firstName"
               control={control}
               defaultValue=""
-              render={({ field }) => (
+              render={({ field, fieldState }) => (
                 <TextField
-                  fullWidth
-                  label="Имя"
                   {...field}
+                  error={Boolean(fieldState?.error)}
+                  helperText={
+                    fieldState?.error ? "Пожалуйста введите имя" : null
+                  }
+                  fullWidth
+                  required
+                  label="Имя"
                   sx={{ marginBottom: 1 }}
                 />
               )}
@@ -135,11 +163,16 @@ const Login: FC = () => {
               name="lastName"
               control={control}
               defaultValue=""
-              render={({ field }) => (
+              render={({ field, fieldState }) => (
                 <TextField
-                  fullWidth
-                  label="Фамилия"
                   {...field}
+                  error={Boolean(fieldState?.error)}
+                  helperText={
+                    fieldState?.error ? "Пожалуйста введите фамилию" : null
+                  }
+                  fullWidth
+                  required
+                  label="Фамилия"
                   sx={{ marginBottom: 1 }}
                 />
               )}
@@ -150,9 +183,9 @@ const Login: FC = () => {
               defaultValue=""
               render={({ field }) => (
                 <TextField
+                  {...field}
                   fullWidth
                   label="Отчество"
-                  {...field}
                   sx={{ marginBottom: 1 }}
                 />
               )}
@@ -161,11 +194,16 @@ const Login: FC = () => {
               name="email"
               control={control}
               defaultValue=""
-              render={({ field }) => (
+              render={({ field, fieldState }) => (
                 <TextField
+                  {...field}
+                  error={Boolean(fieldState?.error)}
+                  helperText={
+                    fieldState?.error ? "Пожалуйста введите почту" : null
+                  }
                   fullWidth
                   label="Почта"
-                  {...field}
+                  required
                   sx={{ marginBottom: 1 }}
                 />
               )}
@@ -174,19 +212,21 @@ const Login: FC = () => {
               <Controller
                 name="birthdate"
                 control={control}
-                render={({ field }) => (
-                  <DatePicker
-                    label="Дата рождения"
-                    {...field}
-                    renderInput={(params) => (
-                      <TextField
-                        fullWidth
-                        sx={{ marginBottom: 1 }}
-                        {...params}
-                      />
-                    )}
-                  />
-                )}
+                render={({ field }) => {
+                  return (
+                    <DatePicker
+                      {...field}
+                      label="Дата рождения*"
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          fullWidth
+                          sx={{ marginBottom: 1 }}
+                        />
+                      )}
+                    />
+                  );
+                }}
               />
             </LocalizationProvider>
             <Button fullWidth variant="contained" type="submit">
