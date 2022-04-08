@@ -19,6 +19,7 @@ import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import DatePicker from "@mui/lab/DatePicker";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { format } from "date-fns";
 
 const getTimerDate = (value: number) => new Date(Date.now() + value * 1000);
 
@@ -62,14 +63,6 @@ const Login: FC = () => {
           setStatus(AuthorizationStatuses.INFO);
         })
         .then(() => {
-          const {
-            seconds,
-            isRunning,
-            restart,
-            pause: pauseTimer,
-          } = useTimer({
-            expiryTimestamp: getTimerDate(60),
-          });
           pauseTimer();
         });
     }
@@ -86,11 +79,10 @@ const Login: FC = () => {
     },
   });
 
-  console.log(formState.errors);
-
   const onSignUpSubmit = (values: SignupFormValues) => {
     authStore.signupIntern({
       ...values,
+      birthdate: format(new Date(values.birthdate.toISOString()), "yyyy-MM-dd"),
     });
   };
 
