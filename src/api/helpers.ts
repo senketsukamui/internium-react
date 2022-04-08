@@ -37,8 +37,9 @@ const getAccessToken = (store) => store.accessToken;
 // };
 
 export const createWrappedApiInterceptor = (store) => {
-  mainAxios.interceptors.request.use((request) => {
-    request.headers["Authorization"] = `Bearer ${getAccessToken(store)}`;
+  basicAxios.interceptors.request.use((request) => {
+    const currentToken = store.accessToken || store.registerToken;
+    request.headers["Authorization"] = `${currentToken}`;
     return request;
   });
 };
