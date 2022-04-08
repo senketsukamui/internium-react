@@ -14,6 +14,9 @@ class AuthStore {
   public codeSent: boolean = false;
   public registerToken: string | null = null;
   public accessToken: string | null = null;
+  public refreshToken: string | null = null;
+  // TODO: Implement types
+  public user: object = {};
 
   constructor() {
     makeAutoObservable(this);
@@ -35,14 +38,18 @@ class AuthStore {
       code,
     }).then(({ data }: { data: InternVerify }) => {
       this.registerToken = data.registerToken;
-      save("registerToken", data.registerToken);
     });
   }
 
   public signupIntern(data: InternInfo) {
     this.loading = true;
-    return signupIntern(data).then((data) => {
-      console.log(data);
+    // TODO: Implement types
+    return signupIntern(data).then(({ data }) => {
+      save("accessToken", data.token.accessToken);
+      save("refreshToken", data.token.refreshToken);
+      this.accessToken = data.token.accessToken;
+      this.refreshToken = data.token.refreshToken;
+      this.user = data.intern;
     });
   }
 }
