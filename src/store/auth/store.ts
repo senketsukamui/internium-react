@@ -13,6 +13,7 @@ class AuthStore {
   public blockTimer: number | null = null;
   public codeSent: boolean = false;
   public registerToken: string | null = null;
+  public accessToken: string | null = null;
 
   constructor() {
     makeAutoObservable(this);

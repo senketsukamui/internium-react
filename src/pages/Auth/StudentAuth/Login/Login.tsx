@@ -19,7 +19,6 @@ import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import DatePicker from "@mui/lab/DatePicker";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { format } from "date-fns";
 
 const getTimerDate = (value: number) => new Date(Date.now() + value * 1000);
 
@@ -46,16 +45,35 @@ const Login: FC = () => {
     });
   };
 
-  const handleCodeComplete = (value: string) => {
-    if (Number(value)) {
-      authStore.verifyIntern(phone, value).then(() => {
-        setStatus(AuthorizationStatuses.INFO);
-      });
-    }
-  };
-  const { seconds, isRunning, restart } = useTimer({
+  const {
+    seconds,
+    isRunning,
+    restart,
+    pause: pauseTimer,
+  } = useTimer({
     expiryTimestamp: getTimerDate(60),
   });
+
+  const handleCodeComplete = (value: string) => {
+    if (Number(value)) {
+      authStore
+        .verifyIntern(phone, value)
+        .then(() => {
+          setStatus(AuthorizationStatuses.INFO);
+        })
+        .then(() => {
+          const {
+            seconds,
+            isRunning,
+            restart,
+            pause: pauseTimer,
+          } = useTimer({
+            expiryTimestamp: getTimerDate(60),
+          });
+          pauseTimer();
+        });
+    }
+  };
 
   const { control, handleSubmit, formState } = useForm<SignupFormValues>({
     resolver: yupResolver(signupSchema),
