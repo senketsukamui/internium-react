@@ -3,7 +3,7 @@ import Login from "./Login";
 import Register from "./Register";
 
 const CompanyAuth: FC = () => {
-  return <Login />;
+  return <Register />;
 };
 
 export default CompanyAuth;

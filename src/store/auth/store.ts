@@ -52,7 +52,6 @@ class AuthStore {
 
   public signupIntern(data: InternInfo) {
     this.loading = true;
-    // TODO: Implement types
     return signupIntern(data).then(
       ({ data }: { data: ExistingUserResponse }) => {
         save("accessToken", data.token.accessToken);

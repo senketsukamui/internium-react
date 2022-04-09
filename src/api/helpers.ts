@@ -1,11 +1,4 @@
-import createAuthRefreshInterceptor from "axios-auth-refresh";
-
-import {
-  refreshTokenSelector,
-  accessTokenSelector,
-} from "@redux/auth/selectors";
 import { mainAxios, basicAxios } from "./utils";
-import { tokens } from "@utils";
 
 const getAccessToken = (store) => store.accessToken;
 

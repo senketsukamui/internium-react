@@ -21,7 +21,7 @@ const Register = () => {
 
   const onSubmit = () => {};
 
-  return <StudentAuth />;
+  return <CompanyAuth />;
 };
 
 export default Register;
