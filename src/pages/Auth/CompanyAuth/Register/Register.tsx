@@ -140,6 +140,7 @@ const Register: FC = () => {
                     required
                     type="phone"
                     label="Телефон"
+                    inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
                     sx={{ marginBottom: 1 }}
                   />
                 )}
