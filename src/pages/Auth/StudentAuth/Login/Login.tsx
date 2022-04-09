@@ -21,6 +21,7 @@ import DatePicker from "@mui/lab/DatePicker";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { format } from "date-fns";
 import { InternVerify } from "api/types";
+import { useNavigate } from "react-router-dom";
 
 const getTimerDate = (value: number) => new Date(Date.now() + value * 1000);
 
@@ -35,6 +36,7 @@ interface SignupFormValues {
 
 const Login: FC = () => {
   const { authStore } = useStores();
+  const navigate = useNavigate();
   const [phone, setPhone] = useState<string>("");
   const [code, setCode] = useState<string>("");
   const [status, setStatus] = useState<AuthorizationStatuses>(
@@ -58,7 +60,12 @@ const Login: FC = () => {
 
   const handleCodeComplete = (value: string) => {
     if (Number(value)) {
-      authStore.verifyIntern(phone, value).then((data: InternVerify) => {
+      authStore.verifyIntern(phone, value).then((isCreatedUser: boolean) => {
+        if (isCreatedUser) {
+          navigate("/");
+        } else {
+          setStatus(AuthorizationStatuses.INFO);
+        }
       });
     }
   };

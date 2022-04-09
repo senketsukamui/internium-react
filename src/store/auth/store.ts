@@ -5,18 +5,23 @@ import {
   signupIntern,
   verifyInternOTP,
 } from "api/auth";
-import { ExistingUserResponse, InternAuth, InternVerify } from "api/types";
+import {
+  ExistingUserResponse,
+  InternAuth,
+  InternVerify,
+  RegisteredIntern,
+} from "api/types";
 import { save } from "utils";
+import { load } from "utils";
 
 class AuthStore {
   public loading: boolean = false;
   public blockTimer: number | null = null;
   public codeSent: boolean = false;
   public registerToken: string | null = null;
-  public accessToken: string | null = null;
-  public refreshToken: string | null = null;
-  // TODO: Implement types
-  public user: object = {};
+  public accessToken: string | null = load("accessToken") || null;
+  public refreshToken: string | null = load("refreshToken") || null;
+  public user: RegisteredIntern | null = null;
 
   constructor() {
     makeAutoObservable(this);
@@ -42,7 +47,7 @@ class AuthStore {
       } else {
         this.registerToken = registerToken;
       }
-      return Boolean(registerToken);
+      return !Boolean(registerToken);
     });
   }
 
