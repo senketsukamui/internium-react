@@ -5,7 +5,7 @@ import {
   signupIntern,
   verifyInternOTP,
 } from "api/auth";
-import { InternAuth, InternVerify } from "api/types";
+import { ExistingUserResponse, InternAuth, InternVerify } from "api/types";
 import { save } from "utils";
 
 class AuthStore {
@@ -36,8 +36,13 @@ class AuthStore {
     return verifyInternOTP({
       phone,
       code,
-    }).then(({ data }: { data: InternVerify }) => {
-      this.registerToken = data.registerToken;
+    }).then(({ data }: { data: InternVerify | ExistingUserResponse }) => {
+      const { registerToken } = data as InternVerify;
+      if (!registerToken) {
+      } else {
+        this.registerToken = registerToken;
+      }
+      return Boolean(registerToken);
     });
   }
 

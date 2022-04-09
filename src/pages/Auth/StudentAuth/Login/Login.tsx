@@ -20,6 +20,7 @@ import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import DatePicker from "@mui/lab/DatePicker";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { format } from "date-fns";
+import { InternVerify } from "api/types";
 
 const getTimerDate = (value: number) => new Date(Date.now() + value * 1000);
 
@@ -57,14 +58,8 @@ const Login: FC = () => {
 
   const handleCodeComplete = (value: string) => {
     if (Number(value)) {
-      authStore
-        .verifyIntern(phone, value)
-        .then(() => {
-          setStatus(AuthorizationStatuses.INFO);
-        })
-        .then(() => {
-          pauseTimer();
-        });
+      authStore.verifyIntern(phone, value).then((data: InternVerify) => {
+      });
     }
   };
 
