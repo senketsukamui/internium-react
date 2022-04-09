@@ -11,8 +11,7 @@ import {
   InternVerify,
   RegisteredIntern,
 } from "api/types";
-import { save } from "utils";
-import { load } from "utils";
+import { save, load } from "utils";
 
 class AuthStore {
   public loading: boolean = false;
@@ -54,13 +53,15 @@ class AuthStore {
   public signupIntern(data: InternInfo) {
     this.loading = true;
     // TODO: Implement types
-    return signupIntern(data).then(({ data }) => {
-      save("accessToken", data.token.accessToken);
-      save("refreshToken", data.token.refreshToken);
-      this.accessToken = data.token.accessToken;
-      this.refreshToken = data.token.refreshToken;
-      this.user = data.intern;
-    });
+    return signupIntern(data).then(
+      ({ data }: { data: ExistingUserResponse }) => {
+        save("accessToken", data.token.accessToken);
+        save("refreshToken", data.token.refreshToken);
+        this.accessToken = data.token.accessToken;
+        this.refreshToken = data.token.refreshToken;
+        this.user = data.intern;
+      }
+    );
   }
 }
 
