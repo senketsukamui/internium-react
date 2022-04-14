@@ -1,27 +1,67 @@
 import React, { useMemo, useState } from "react";
-import { useForm } from "react-hook-form";
 import { RegisterTypes, SCHEMAS } from "./constants";
 import s from "./Auth.module.scss";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { StudentFormValues } from "./types";
 import CompanyAuth from "./CompanyAuth";
 import StudentAuth from "./StudentAuth";
+import { CssBaseline, Paper, Container, Typography } from "@mui/material";
+import StudentIcon from "components/icons/StudentIcon";
+import { useNavigate } from "react-router-dom";
 
-const Register = () => {
-  // TODO: update code after implementing company employee register
-  const [registerMode, setRegisterMode] = useState<RegisterTypes | null>(null);
-  const currentSchema = useMemo(() => {
-    if (registerMode) {
-      return SCHEMAS[registerMode];
-    }
-  }, [registerMode]);
-  const { register, handleSubmit, formState } = useForm<StudentFormValues>({
-    resolver: yupResolver(),
-  });
-
-  const onSubmit = () => {};
-
-  return <CompanyAuth />;
+const Auth = () => {
+  const navigate = useNavigate();
+  return (
+    <main
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        height: "100vh",
+      }}
+    >
+      <Container>
+        <CssBaseline />
+        <Typography variant="h3" align="center">
+          Кто вы?
+        </Typography>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            marginTop: "30px",
+          }}
+        >
+          <div
+            style={{
+              padding: "0 50px",
+              cursor: "pointer",
+            }}
+            onClick={() => {
+              navigate("/auth/student");
+            }}
+          >
+            <StudentIcon width={200} height={200} />
+            <Typography variant="h5" align="center">
+              Студент
+            </Typography>
+          </div>
+          <div
+            style={{
+              padding: "0 50px",
+              cursor: "pointer",
+            }}
+            onClick={() => {
+              navigate("/auth/company/register");
+            }}
+          >
+            <StudentIcon width={200} height={200} />{" "}
+            <Typography variant="h5" align="center">
+              Компания
+            </Typography>
+          </div>
+        </div>
+      </Container>
+    </main>
+  );
 };
 
-export default Register;
+export default Auth;
