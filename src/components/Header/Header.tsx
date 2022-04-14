@@ -11,9 +11,8 @@ const Header = () => {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             Internium
           </Typography>
-          <Button color="inherit">Вход</Button>
           <Button onClick={() => navigate("/auth")} color="inherit">
-            Регистрация
+            Авторизация
           </Button>
         </Toolbar>
       </AppBar>

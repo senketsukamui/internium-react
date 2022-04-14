@@ -1,8 +1,5 @@
 import React, { useMemo, useState } from "react";
 import { RegisterTypes, SCHEMAS } from "./constants";
-import s from "./Auth.module.scss";
-import CompanyAuth from "./CompanyAuth";
-import StudentAuth from "./StudentAuth";
 import { CssBaseline, Paper, Container, Typography } from "@mui/material";
 import StudentIcon from "components/icons/StudentIcon";
 import { useNavigate } from "react-router-dom";

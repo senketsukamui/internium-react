@@ -82,10 +82,17 @@ const Login: FC = () => {
   });
 
   const onSignUpSubmit = (values: SignupFormValues) => {
-    authStore.signupIntern({
-      ...values,
-      birthdate: format(new Date(values.birthdate.toISOString()), "yyyy-MM-dd"),
-    });
+    authStore
+      .signupIntern({
+        ...values,
+        birthdate: format(
+          new Date(values.birthdate.toISOString()),
+          "yyyy-MM-dd"
+        ),
+      })
+      .finally(() => {
+        navigate("/");
+      });
   };
 
   useEffect(() => {

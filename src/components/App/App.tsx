@@ -13,13 +13,11 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/*" element={<Home />} />
-          <Route path="auth" element={<Auth />}>
-            <Route path="company">
-              <Route path="register" element={<CompanyRegister />} />
-              <Route path="login" element={<CompanyLogin />} />
-            </Route>
-            <Route path="student" element={<StudentAuth />} />
-          </Route>
+          <Route path="auth" element={<Auth />} />
+          // TODO: Refactor this
+          <Route path="auth/company/register" element={<CompanyRegister />} />
+          <Route path="auth/company/login" element={<CompanyLogin />} />
+          <Route path="auth/student" element={<StudentAuth />} />
         </Routes>
       </BrowserRouter>
     </div>
