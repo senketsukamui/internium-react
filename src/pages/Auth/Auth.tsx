@@ -1,7 +1,8 @@
 import React, { useMemo, useState } from "react";
 import { RegisterTypes, SCHEMAS } from "./constants";
 import { CssBaseline, Paper, Container, Typography } from "@mui/material";
-import StudentIcon from "components/icons/StudentIcon";
+import StudentIcon from "components/Icons/StudentIcon";
+import CompanyIcon from "components/Icons/CompanyIcon";
 import { useNavigate } from "react-router-dom";
 
 const Auth = () => {
@@ -50,7 +51,7 @@ const Auth = () => {
               navigate("/auth/company/register");
             }}
           >
-            <StudentIcon width={200} height={200} />{" "}
+            <CompanyIcon width={200} height={200} />{" "}
             <Typography variant="h5" align="center">
               Компания
             </Typography>
