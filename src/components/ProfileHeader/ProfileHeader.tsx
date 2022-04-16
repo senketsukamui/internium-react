@@ -10,7 +10,7 @@ const ProfileHeader = (props: ProfileHeaderProps) => {
   const { user } = props;
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
-  const handleClick = (event) => {
+  const handleClick = (event: React.SyntheticEvent) => {
     setAnchorEl(event.currentTarget);
   };
   const handleClose = () => {
