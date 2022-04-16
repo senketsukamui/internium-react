@@ -8,7 +8,8 @@ import { useNavigate } from "react-router-dom";
 const Header = () => {
   const navigate = useNavigate();
   const { authStore } = useStores();
-  console.log(authStore.user);
+  const userObject = authStore.getUserObject;
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
@@ -16,12 +17,12 @@ const Header = () => {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             Internium
           </Typography>
-          {!authStore.user && (
+          {!userObject && (
             <Button onClick={() => navigate("/auth")} color="inherit">
               Авторизация
             </Button>
           )}
-          <ProfileHeader user={authStore.user} />
+          {userObject && <ProfileHeader user={userObject} />}
         </Toolbar>
       </AppBar>
     </Box>

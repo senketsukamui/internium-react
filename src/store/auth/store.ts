@@ -1,11 +1,13 @@
-import { makeAutoObservable } from "mobx";
+import { makeAutoObservable, toJS } from "mobx";
 import {
+  createCompanyInvitationRequest,
   InternInfo,
-  signinIntern,
-  signupIntern,
-  verifyInternOTP,
+  signinInternRequest,
+  signupInternRequest,
+  verifyInternOTPRequest,
 } from "api/auth";
 import {
+  CompanyInvitationResponse,
   ExistingUserResponse,
   InternAuth,
   InternVerify,
@@ -26,10 +28,15 @@ class AuthStore {
     makeAutoObservable(this);
   }
 
+  // TODO: Find a better solution for getting objects
+  get getUserObject() {
+    return toJS(this.user);
+  }
+
   public loginIntern(phone: string) {
     this.loading = true;
     this.codeSent = false;
-    return signinIntern(phone).then(({ data }: { data: InternAuth }) => {
+    return signinInternRequest(phone).then(({ data }: { data: InternAuth }) => {
       this.blockTimer = data.blockTime;
       this.codeSent = true;
     });
@@ -37,12 +44,14 @@ class AuthStore {
 
   public verifyIntern(phone: string, code: string) {
     this.loading = true;
-    return verifyInternOTP({
+    return verifyInternOTPRequest({
       phone,
       code,
     }).then(({ data }: { data: InternVerify | ExistingUserResponse }) => {
       const { registerToken } = data as InternVerify;
       if (!registerToken) {
+        const { intern } = data as ExistingUserResponse;
+        this.user = intern;
       } else {
         this.registerToken = registerToken;
       }
@@ -52,13 +61,22 @@ class AuthStore {
 
   public signupIntern(data: InternInfo) {
     this.loading = true;
-    return signupIntern(data).then(
+    return signupInternRequest(data).then(
       ({ data }: { data: ExistingUserResponse }) => {
         save("accessToken", data.token.accessToken);
         save("refreshToken", data.token.refreshToken);
         this.accessToken = data.token.accessToken;
         this.refreshToken = data.token.refreshToken;
         this.user = data.intern;
+      }
+    );
+  }
+
+  public createCompanyInvitation(email: string) {
+    this.loading = true;
+    return createCompanyInvitationRequest({ email }).then(
+      ({ data }: { data: CompanyInvitationResponse }) => {
+        this.loading = false;
       }
     );
   }

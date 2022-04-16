@@ -34,3 +34,7 @@ export interface ExistingUserResponse {
   token: JWTTokenResponse;
   intern: RegisteredIntern;
 }
+
+export interface CompanyInvitationResponse {
+  success: boolean;
+}
