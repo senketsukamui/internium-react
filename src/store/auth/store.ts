@@ -1,9 +1,16 @@
 import { makeAutoObservable, toJS } from "mobx";
 import {
+  authorizeCurrentCompanyUserRequest,
+  CompanyAuth,
+  CompanyInvitationVerify,
+  CompanyUser,
   createCompanyInvitationRequest,
+  createCompanyUserRequest,
+  getCurrentCompanyUserRequest,
   InternInfo,
   signinInternRequest,
   signupInternRequest,
+  verifyCompanyInvitationRequest,
   verifyInternOTPRequest,
 } from "api/auth";
 import {
@@ -74,11 +81,46 @@ class AuthStore {
 
   public createCompanyInvitation(email: string) {
     this.loading = true;
+    // TODO: Deal with action and types
+
     return createCompanyInvitationRequest({ email }).then(
       ({ data }: { data: CompanyInvitationResponse }) => {
         this.loading = false;
       }
     );
+  }
+
+  public getCurrentCompanyUser() {
+    this.loading = true;
+    // TODO: Deal with action and types
+    return getCurrentCompanyUserRequest().then((data: any) => {
+      this.loading = false;
+      console.log(data);
+    });
+  }
+
+  public verifyCompanyInvitation(data: CompanyInvitationVerify) {
+    this.loading = true;
+    // TODO: Deal with action and types
+    return verifyCompanyInvitationRequest(data).then((data: any) => {
+      this.loading = false;
+    });
+  }
+
+  public createCompanyUser(data: CompanyUser) {
+    this.loading = true;
+    // TODO: Deal with action and types
+    return createCompanyUserRequest(data).then((data: any) => {
+      this.loading = false;
+    });
+  }
+
+  public authorizeCompanyUser(data: CompanyAuth) {
+    this.loading = true;
+    // TODO: Deal with action and types
+    return authorizeCurrentCompanyUserRequest(data).then((data: any) => {
+      this.loading = false;
+    });
   }
 }
 
