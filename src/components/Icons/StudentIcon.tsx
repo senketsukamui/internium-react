@@ -3,9 +3,6 @@ import { DefaultIconProps } from "./types";
 
 const SvgStudent = (props: DefaultIconProps) => (
   <svg
-    style={{
-      enableBackground: "new 0 0 110 110",
-    }}
     viewBox="0 0 110 110"
     xmlSpace="preserve"
     xmlns="http://www.w3.org/2000/svg"

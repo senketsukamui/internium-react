@@ -21,6 +21,7 @@ import {
   RegisteredIntern,
 } from "api/types";
 import { save, load } from "utils";
+import { RegisterTypes } from "pages/Auth/constants";
 
 class AuthStore {
   public loading: boolean = false;
@@ -30,6 +31,7 @@ class AuthStore {
   public accessToken: string | null = load("accessToken") || null;
   public refreshToken: string | null = load("refreshToken") || null;
   public user: RegisteredIntern | null = null;
+  public userTypes: RegisterTypes | null = null;  
 
   constructor() {
     makeAutoObservable(this);

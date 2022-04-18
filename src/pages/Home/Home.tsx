@@ -4,6 +4,7 @@ import Main from "./Main";
 import { Box } from "@mui/material";
 import { Route, Routes } from "react-router-dom";
 import Search from "./Search";
+import Profile from "pages/Profile";
 
 const Home = () => {
   return (
@@ -17,6 +18,7 @@ const Home = () => {
         <Routes>
           <Route path="/" element={<Main />} />
           <Route path="/search" element={<Search />} />
+          <Route path="/profile/:id" element={<Profile />} />
         </Routes>
       </Box>
     </>
