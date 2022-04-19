@@ -17,8 +17,8 @@ export interface CompanyInfo {
   name: string;
   email: string;
   city: string;
-  phone: string;
   password: string;
+  tin: string;
 }
 
 export interface CompanyInvitation {
@@ -60,7 +60,7 @@ export const verifyInternOTPRequest = (internOTPInfo: InternOTPInfo) =>
 // Company
 
 export const signupCompanyRequest = (companyInfo: CompanyInfo) =>
-  basicAxios.post("/company/signup", companyInfo);
+  basicAxios.post("/companies/signup", companyInfo);
 
 // Company users
 

@@ -2,6 +2,7 @@ import { makeAutoObservable, toJS } from "mobx";
 import {
   authorizeCurrentCompanyUserRequest,
   CompanyAuth,
+  CompanyInfo,
   CompanyInvitationVerify,
   CompanyUser,
   createCompanyInvitationRequest,
@@ -9,6 +10,7 @@ import {
   getCurrentCompanyUserRequest,
   InternInfo,
   signinInternRequest,
+  signupCompanyRequest,
   signupInternRequest,
   verifyCompanyInvitationRequest,
   verifyInternOTPRequest,
@@ -18,6 +20,7 @@ import {
   ExistingUserResponse,
   InternAuth,
   InternVerify,
+  JWTTokenResponse,
   RegisteredIntern,
 } from "api/types";
 import { save, load } from "utils";
@@ -31,7 +34,7 @@ class AuthStore {
   public accessToken: string | null = load("accessToken") || null;
   public refreshToken: string | null = load("refreshToken") || null;
   public user: RegisteredIntern | null = null;
-  public userTypes: RegisterTypes | null = null;  
+  public userTypes: RegisterTypes | null = null;
 
   constructor() {
     makeAutoObservable(this);
@@ -81,6 +84,13 @@ class AuthStore {
     );
   }
 
+  public signupCompany(data: CompanyInfo) {
+    this.loading = true;
+    return signupCompanyRequest(data).then(() => {
+      this.loading = false;
+    });
+  }
+
   public createCompanyInvitation(email: string) {
     this.loading = true;
     // TODO: Deal with action and types
@@ -120,9 +130,16 @@ class AuthStore {
   public authorizeCompanyUser(data: CompanyAuth) {
     this.loading = true;
     // TODO: Deal with action and types
-    return authorizeCurrentCompanyUserRequest(data).then((data: any) => {
-      this.loading = false;
-    });
+    return authorizeCurrentCompanyUserRequest(data).then(
+      ({ data }: { data: JWTTokenResponse }) => {
+        console.log(data);
+        this.loading = false;
+        save("accessToken", data.accessToken);
+        save("refreshToken", data.refreshToken);
+        this.accessToken = data.accessToken;
+        this.refreshToken = data.refreshToken;
+      }
+    );
   }
 }
 

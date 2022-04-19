@@ -9,6 +9,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import { useStores } from "hooks/useStores";
 import React, { FC } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { loginSchema } from "./constants";
@@ -19,6 +20,7 @@ interface LoginFormValues {
 }
 
 const Login: FC = () => {
+  const { authStore } = useStores();
   const { control, handleSubmit, formState } = useForm<LoginFormValues>({
     resolver: yupResolver(loginSchema),
     defaultValues: {
@@ -28,7 +30,7 @@ const Login: FC = () => {
   });
 
   const handleLogin = (values: LoginFormValues) => {
-    console.log(values);
+    authStore.authorizeCompanyUser(values);
   };
   return (
     <Container component="main" maxWidth="xs">

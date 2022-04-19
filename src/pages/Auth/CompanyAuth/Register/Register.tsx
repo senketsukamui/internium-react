@@ -12,31 +12,26 @@ import {
 import { registerSchema } from "./constants";
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-
-interface RegisterFormValues {
-  name: string;
-  email: string;
-  city: string;
-  phone: string;
-  password: string;
-  tin: string;
-}
+import { useStores } from "hooks/useStores";
+import { CompanyInfo } from "api/auth";
 
 const Register: FC = () => {
-  const { control, handleSubmit, formState } = useForm<RegisterFormValues>({
+  const { authStore } = useStores();
+  const { control, handleSubmit, formState } = useForm<CompanyInfo>({
     resolver: yupResolver(registerSchema),
     defaultValues: {
       name: "",
       email: "",
       city: "",
-      phone: "",
       password: "",
       tin: "",
     },
   });
 
-  const handleRegister = (values: RegisterFormValues) => {
-    console.log(values);
+  console.log(formState.errors);
+
+  const handleRegister = (values: CompanyInfo) => {
+    authStore.signupCompany(values);
   };
 
   return (
@@ -84,7 +79,7 @@ const Register: FC = () => {
             </Grid>
             <Grid item xs={12} sm={6}>
               <Controller
-                name="city"
+                name="email"
                 control={control}
                 defaultValue=""
                 render={({ field, fieldState }) => (
@@ -92,12 +87,11 @@ const Register: FC = () => {
                     {...field}
                     error={Boolean(fieldState?.error)}
                     helperText={
-                      fieldState?.error ? "Пожалуйста введите город" : null
+                      fieldState?.error ? "Пожалуйста введите почту" : null
                     }
                     fullWidth
                     required
-                    type="city"
-                    label="Город"
+                    label="Почта"
                     sx={{ marginBottom: 1 }}
                   />
                 )}
@@ -119,28 +113,6 @@ const Register: FC = () => {
                     required
                     type="city"
                     label="Город"
-                    sx={{ marginBottom: 1 }}
-                  />
-                )}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <Controller
-                name="phone"
-                control={control}
-                defaultValue=""
-                render={({ field, fieldState }) => (
-                  <TextField
-                    {...field}
-                    error={Boolean(fieldState?.error)}
-                    helperText={
-                      fieldState?.error ? "Пожалуйста введите телефон" : null
-                    }
-                    fullWidth
-                    required
-                    type="phone"
-                    label="Телефон"
-                    inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
                     sx={{ marginBottom: 1 }}
                   />
                 )}
@@ -195,7 +167,7 @@ const Register: FC = () => {
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
           >
-            Sign Up
+            Зарегистрироваться
           </Button>
           <Grid container justifyContent="center">
             <Grid item>

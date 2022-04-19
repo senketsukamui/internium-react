@@ -6,7 +6,6 @@ export const registerSchema = yup
     name: yup.string().required(),
     email: yup.string().required(),
     city: yup.string().required(),
-    phone: yup.string().required(),
     password: yup.string().required(),
     tin: yup.string().required(),
   })
