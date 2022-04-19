@@ -20,6 +20,7 @@ specifiers:
   material-ui-phone-number: ^3.0.0
   mobx: ^6.5.0
   mobx-react: ^7.3.0
+  notistack: ^2.0.4
   query-string: ^7.1.1
   react: ^17.0.2
   react-dom: ^17.0.2
@@ -49,6 +50,7 @@ dependencies:
   material-ui-phone-number: 3.0.0_d062f63d2d842f39362fb3cb26bc02c3
   mobx: 6.5.0
   mobx-react: 7.3.0_3b110ddd052df537d55bc762cdd4d0b8
+  notistack: 2.0.4_d062f63d2d842f39362fb3cb26bc02c3
   query-string: 7.1.1
   react: 17.0.2
   react-dom: 17.0.2_react@17.0.2
@@ -1630,6 +1632,29 @@ packages:
     resolution: {integrity: sha512-6eZs5Ls3WtCisHWp9S2GUy8dqkpGi4BVSz3GaqiE6ezub0512ESztXUwUB6C6IKbQkY2Pnb/mD4WYojCRwcwLA==}
     engines: {node: '>=0.10.0'}
     dev: true
+
+  /notistack/2.0.4_d062f63d2d842f39362fb3cb26bc02c3:
+    resolution: {integrity: sha512-kOJmKvTG91ElMzi4aHu82BDe1liQ0zMrBp+TnWJptgowDsTbeTKbZmsRqJNIj145BmlOtZsEE9xjcrN46zVo3w==}
+    peerDependencies:
+      '@emotion/react': ^11.4.1
+      '@emotion/styled': ^11.3.0
+      '@mui/material': ^5.0.0
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
+    peerDependenciesMeta:
+      '@emotion/react':
+        optional: true
+      '@emotion/styled':
+        optional: true
+    dependencies:
+      '@emotion/react': 11.8.1_a0c521d4794c7ad97f5f4c1c4a7d5818
+      '@emotion/styled': 11.8.1_d24c5a2cd50724e2cbcff1306f0cc72d
+      '@mui/material': 5.4.3_a557939b8cd577a0014b488227bec235
+      clsx: 1.1.1
+      hoist-non-react-statics: 3.3.2
+      react: 17.0.2
+      react-dom: 17.0.2_react@17.0.2
+    dev: false
 
   /object-assign/4.1.1:
     resolution: {integrity: sha1-IQmtx5ZYh8/AXLvUQsrIv7s2CGM=}
