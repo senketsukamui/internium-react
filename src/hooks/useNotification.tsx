@@ -1,12 +1,18 @@
-import { useSnackbar } from "notistack";
+import { SnackbarKey, useSnackbar, VariantType } from "notistack";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/material/SvgIcon/SvgIcon";
-import React, { Fragment, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
+
+interface Notification {
+  msg: string;
+  variant: string;
+}
 
 const useNotification = () => {
-  const [conf, setConf] = useState({});
+  const [conf, setConf] = useState<Partial<Notification>>({});
+  console.log(conf);
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
-  const action = (key) => (
+  const action = (key: SnackbarKey | undefined) => (
     <>
       <IconButton
         onClick={() => {
@@ -24,7 +30,7 @@ const useNotification = () => {
         variant = conf.variant;
       }
       enqueueSnackbar(conf.msg, {
-        variant: variant,
+        variant: variant as VariantType,
         autoHideDuration: 5000,
         action,
       });
