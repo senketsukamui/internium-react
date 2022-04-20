@@ -57,10 +57,15 @@ export const signinInternRequest = (phone: string) =>
 export const verifyInternOTPRequest = (internOTPInfo: InternOTPInfo) =>
   basicAxios.post("/intern/verify", internOTPInfo);
 
+export const getCurrentInternRequest = () => basicAxios.get("/intern/current");
+
 // Company
 
 export const signupCompanyRequest = (companyInfo: CompanyInfo) =>
   basicAxios.post("/companies/signup", companyInfo);
+
+export const getCurrentCompanyRequest = () =>
+  basicAxios.get("/companies/current");
 
 // Company users
 

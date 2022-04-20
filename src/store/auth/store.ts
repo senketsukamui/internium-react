@@ -7,7 +7,9 @@ import {
   CompanyUser,
   createCompanyInvitationRequest,
   createCompanyUserRequest,
+  getCurrentCompanyRequest,
   getCurrentCompanyUserRequest,
+  getCurrentInternRequest,
   InternInfo,
   signinInternRequest,
   signupCompanyRequest,
@@ -84,6 +86,15 @@ class AuthStore {
     );
   }
 
+  public getCurrentIntern() {
+    this.loading = true;
+    return getCurrentInternRequest().then(
+      ({ data }: { data: RegisteredIntern }) => {
+        this.user = data;
+      }
+    );
+  }
+
   public signupCompany(data: CompanyInfo) {
     this.loading = true;
     return signupCompanyRequest(data).then(() => {
@@ -100,6 +111,15 @@ class AuthStore {
         this.loading = false;
       }
     );
+  }
+
+  public getCurrentCompany() {
+    this.loading = true;
+
+    return getCurrentCompanyRequest().then(({ data }) => {
+      this.user = data;
+      this.loading = false;
+    });
   }
 
   public getCurrentCompanyUser() {

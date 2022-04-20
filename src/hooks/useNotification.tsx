@@ -10,7 +10,6 @@ interface Notification {
 
 const useNotification = () => {
   const [conf, setConf] = useState<Partial<Notification>>({});
-  console.log(conf);
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const action = (key: SnackbarKey | undefined) => (
     <>
