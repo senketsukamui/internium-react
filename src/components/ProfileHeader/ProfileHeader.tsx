@@ -8,7 +8,7 @@ interface ProfileHeaderProps {
 }
 
 const ProfileHeader = (props: ProfileHeaderProps) => {
-  const { user } = props;
+  const { user, loading } = props;
   const [anchorEl, setAnchorEl] = React.useState(null);
   const navigate = useNavigate();
   const open = Boolean(anchorEl);

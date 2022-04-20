@@ -29,10 +29,9 @@ const getAccessToken = (store) => store.accessToken;
 //   });
 // };
 
-export const createWrappedApiInterceptor = (store) => {
+export const createWrappedApiInterceptor = (store: any) => {
   // TODO: Implement types
-  basicAxios.interceptors.request.use((request) => {
-    console.log(store.registerToken);
+  basicAxios.interceptors.request.use((request: any) => {
     let tokenHeaders = `Bearer ${store.accessToken}`;
     if (request.url === "/intern/signup") {
       tokenHeaders = store.registerToken;

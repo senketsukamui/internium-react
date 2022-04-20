@@ -4,10 +4,9 @@ import {
   CompanyAuth,
   CompanyInfo,
   CompanyInvitationVerify,
-  CompanyUser,
+  CompanyUserRequest,
   createCompanyInvitationRequest,
   createCompanyUserRequest,
-  getCurrentCompanyRequest,
   getCurrentCompanyUserRequest,
   getCurrentInternRequest,
   InternInfo,
@@ -25,8 +24,9 @@ import {
   JWTTokenResponse,
   RegisteredIntern,
 } from "api/types";
-import { save, load } from "utils";
+import { save, load } from "../../utils";
 import { RegisterTypes } from "pages/Auth/constants";
+import { CompanyUser } from "./types";
 
 class AuthStore {
   public loading: boolean = false;
@@ -35,8 +35,8 @@ class AuthStore {
   public registerToken: string | null = null;
   public accessToken: string | null = load("accessToken") || null;
   public refreshToken: string | null = load("refreshToken") || null;
-  public user: RegisteredIntern | null = null;
-  public userTypes: RegisterTypes | null = null;
+  public user: RegisteredIntern | CompanyUser | null = null;
+  public userType: RegisterTypes | null = null;
 
   constructor() {
     makeAutoObservable(this);
@@ -51,6 +51,7 @@ class AuthStore {
     this.loading = true;
     this.codeSent = false;
     return signinInternRequest(phone).then(({ data }: { data: InternAuth }) => {
+      this.loading = false;
       this.blockTimer = data.blockTime;
       this.codeSent = true;
     });
@@ -66,6 +67,7 @@ class AuthStore {
       if (!registerToken) {
         const { intern } = data as ExistingUserResponse;
         this.user = intern;
+        this.userType = RegisterTypes.INTERN;
       } else {
         this.registerToken = registerToken;
       }
@@ -79,6 +81,7 @@ class AuthStore {
       ({ data }: { data: ExistingUserResponse }) => {
         save("accessToken", data.token.accessToken);
         save("refreshToken", data.token.refreshToken);
+        this.userType = RegisterTypes.INTERN;
         this.accessToken = data.token.accessToken;
         this.refreshToken = data.token.refreshToken;
         this.user = data.intern;
@@ -116,10 +119,13 @@ class AuthStore {
   public getCurrentCompany() {
     this.loading = true;
 
-    return getCurrentCompanyRequest().then(({ data }) => {
-      this.user = data;
-      this.loading = false;
-    });
+    return getCurrentCompanyUserRequest().then(
+      ({ data }: { data: CompanyUser }) => {
+        console.log(data);
+        this.user = data;
+        this.loading = false;
+      }
+    );
   }
 
   public getCurrentCompanyUser() {
@@ -139,7 +145,7 @@ class AuthStore {
     });
   }
 
-  public createCompanyUser(data: CompanyUser) {
+  public createCompanyUser(data: CompanyUserRequest) {
     this.loading = true;
     // TODO: Deal with action and types
     return createCompanyUserRequest(data).then((data: any) => {
@@ -152,12 +158,12 @@ class AuthStore {
     // TODO: Deal with action and types
     return authorizeCurrentCompanyUserRequest(data).then(
       ({ data }: { data: JWTTokenResponse }) => {
-        console.log(data);
         this.loading = false;
         save("accessToken", data.accessToken);
         save("refreshToken", data.refreshToken);
         this.accessToken = data.accessToken;
         this.refreshToken = data.refreshToken;
+        this.getCurrentCompany();
       }
     );
   }

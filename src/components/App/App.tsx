@@ -7,8 +7,38 @@ import CompanyRegister from "pages/Auth/CompanyAuth/Register";
 import CompanyLogin from "pages/Auth/CompanyAuth/Login";
 import StudentAuth from "pages/Auth/StudentAuth/Login";
 import { SnackbarProvider } from "notistack";
+import { useStores } from "hooks/useStores";
+import jwtDecode from "jwt-decode";
+import { TokenEntities } from "store/auth/types";
+
+interface DecodedJWT {
+  id: string;
+  entity: TokenEntities;
+  iat: string;
+}
 
 function App() {
+  const { authStore } = useStores();
+  React.useEffect(() => {
+    console.log(authStore.accessToken);
+    if (authStore.accessToken) {
+      const decoded = jwtDecode<DecodedJWT>(authStore.accessToken);
+      const { entity } = decoded;
+      console.log(entity === TokenEntities.COMPANY_USER);
+      switch (entity) {
+        case TokenEntities.OWNER:
+        case TokenEntities.COMPANY_USER: {
+          authStore.getCurrentCompany();
+          break;
+        }
+        case TokenEntities.INTERN: {
+          authStore.getCurrentIntern();
+          break;
+        }
+        default:
+      }
+    }
+  }, []);
   return (
     <div className={s.app}>
       <SnackbarProvider maxSnack={4}>

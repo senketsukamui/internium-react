@@ -2,8 +2,8 @@ import * as yup from "yup";
 
 export enum RegisterTypes {
   COMPANY = "COMPANY",
-  EMPLOYEE = "EMPLOYEE",
-  STUDENT = "STUDENT",
+  COMPANY_USER = "COMPANY_USER",
+  INTERN = "INTERN",
 }
 
 export const SCHEMAS = {

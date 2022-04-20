@@ -29,7 +29,7 @@ export interface CompanyInvitationVerify {
   token: string;
 }
 
-export interface CompanyUser {
+export interface CompanyUserRequest {
   password: string;
   firstName: string;
   lastName: string;
@@ -64,9 +64,6 @@ export const getCurrentInternRequest = () => basicAxios.get("/intern/current");
 export const signupCompanyRequest = (companyInfo: CompanyInfo) =>
   basicAxios.post("/companies/signup", companyInfo);
 
-export const getCurrentCompanyRequest = () =>
-  basicAxios.get("/companies/current");
-
 // Company users
 
 export const createCompanyInvitationRequest = (
@@ -80,7 +77,7 @@ export const verifyCompanyInvitationRequest = (
     params: companyInvitationVerify,
   });
 
-export const createCompanyUserRequest = (companyUser: CompanyUser) =>
+export const createCompanyUserRequest = (companyUser: CompanyUserRequest) =>
   basicAxios.post("/companyUsers", companyUser);
 
 export const getCurrentCompanyUserRequest = () =>

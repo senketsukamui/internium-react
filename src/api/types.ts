@@ -35,6 +35,8 @@ export interface ExistingUserResponse {
   intern: RegisteredIntern;
 }
 
+
+
 export interface CompanyInvitationResponse {
   success: boolean;
 }
