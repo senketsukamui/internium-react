@@ -16,6 +16,7 @@ specifiers:
   axios: ^0.26.1
   axios-auth-refresh: ^3.2.2
   date-fns: ^2.28.0
+  jwt-decode: ^3.1.2
   lodash: ^4.17.21
   material-ui-phone-number: ^3.0.0
   mobx: ^6.5.0
@@ -46,6 +47,7 @@ dependencies:
   axios: 0.26.1
   axios-auth-refresh: 3.2.2_axios@0.26.1
   date-fns: 2.28.0
+  jwt-decode: 3.1.2
   lodash: 4.17.21
   material-ui-phone-number: 3.0.0_d062f63d2d842f39362fb3cb26bc02c3
   mobx: 6.5.0
@@ -1524,6 +1526,10 @@ packages:
     dependencies:
       minimist: 1.2.5
     dev: true
+
+  /jwt-decode/3.1.2:
+    resolution: {integrity: sha512-UfpWE/VZn0iP50d8cz9NrZLM9lSWhcJ+0Gt/nm4by88UL+J1SiKN8/5dkjMmbEzwL2CAe+67GsegCbIKtbp75A==}
+    dev: false
 
   /lines-and-columns/1.2.4:
     resolution: {integrity: sha512-7ylylesZQ/PV29jhEDl3Ufjo6ZX7gCqJr5F7PKrqc93v7fzSymt1BpwEU8nAUXs8qzzvqhbjhK5QZg6Mt/HkBg==}
