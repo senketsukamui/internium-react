@@ -6,6 +6,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import CompanyRegister from "pages/Auth/CompanyAuth/Register";
 import CompanyLogin from "pages/Auth/CompanyAuth/Login";
 import StudentAuth from "pages/Auth/StudentAuth/Login";
+import CompanyUserRegister from "pages/Auth/CompanyUserAuth/Register";
 import { SnackbarProvider } from "notistack";
 import { useStores } from "hooks/useStores";
 import jwtDecode from "jwt-decode";
@@ -50,6 +51,7 @@ function App() {
             <Route path="auth/company/register" element={<CompanyRegister />} />
             <Route path="auth/company/login" element={<CompanyLogin />} />
             <Route path="auth/student" element={<StudentAuth />} />
+            <Route path="auth/company-user" element={<CompanyUserRegister />} />
           </Routes>
         </BrowserRouter>
       </SnackbarProvider>
