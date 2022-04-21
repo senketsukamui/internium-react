@@ -37,7 +37,10 @@ export const createWrappedApiInterceptor = (store: any) => {
       tokenHeaders = store.registerToken;
     }
 
-    request.headers["Authorization"] = tokenHeaders;
+    if (request.url !== "/companyUsers") {
+      request.headers["Authorization"] = tokenHeaders;
+    }
+
     return request;
   });
 };

@@ -28,8 +28,6 @@ const Register: FC = () => {
     },
   });
 
-  console.log(formState.errors);
-
   const handleRegister = (values: CompanyInfo) => {
     authStore.signupCompany(values);
   };
@@ -171,7 +169,7 @@ const Register: FC = () => {
           </Button>
           <Grid container justifyContent="center">
             <Grid item>
-              <Link href="#" variant="body2">
+              <Link href="/auth/company/login" variant="body2">
                 Уже есть аккаунт? Перейдите на страницу авторизации
               </Link>
             </Grid>

@@ -81,7 +81,6 @@ class AuthStore {
       ({ data }: { data: ExistingUserResponse }) => {
         save("accessToken", data.token.accessToken);
         save("refreshToken", data.token.refreshToken);
-        this.userType = RegisterTypes.INTERN;
         this.accessToken = data.token.accessToken;
         this.refreshToken = data.token.refreshToken;
         this.user = data.intern;
@@ -128,15 +127,6 @@ class AuthStore {
     );
   }
 
-  public getCurrentCompanyUser() {
-    this.loading = true;
-    // TODO: Deal with action and types
-    return getCurrentCompanyUserRequest().then((data: any) => {
-      this.loading = false;
-      console.log(data);
-    });
-  }
-
   public verifyCompanyInvitation(data: CompanyInvitationVerify) {
     this.loading = true;
     // TODO: Deal with action and types
@@ -145,12 +135,20 @@ class AuthStore {
     });
   }
 
-  public createCompanyUser(data: CompanyUserRequest) {
+  public createCompanyUser(data: CompanyUserRequest, token: string) {
     this.loading = true;
     // TODO: Deal with action and types
-    return createCompanyUserRequest(data).then((data: any) => {
-      this.loading = false;
-    });
+    return createCompanyUserRequest(data, token).then(
+      ({ data }: { data: JWTTokenResponse }) => {
+        console.log(data);
+        save("accessToken", data.accessToken);
+        save("refreshToken", data.refreshToken);
+        this.accessToken = data.accessToken;
+        this.refreshToken = data.refreshToken;
+        this.loading = false;
+        this.getCurrentCompany();
+      }
+    );
   }
 
   public authorizeCompanyUser(data: CompanyAuth) {

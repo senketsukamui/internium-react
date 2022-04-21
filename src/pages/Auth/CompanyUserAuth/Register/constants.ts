@@ -7,7 +7,8 @@ export const signupSchema = yup
     lastName: yup.string().required(),
     middleName: yup.string(),
     position: yup.string(),
-    email: yup.string().required(),
+    phone: yup.string().required(),
+    password: yup.string().required(),
     birthdate: yup.date().required(),
   })
   .required();

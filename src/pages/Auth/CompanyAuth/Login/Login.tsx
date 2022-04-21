@@ -12,6 +12,7 @@ import {
 import { useStores } from "hooks/useStores";
 import React, { FC } from "react";
 import { Controller, useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import { loginSchema } from "./constants";
 
 interface LoginFormValues {
@@ -21,6 +22,7 @@ interface LoginFormValues {
 
 const Login: FC = () => {
   const { authStore } = useStores();
+  const navigate = useNavigate();
   const { control, handleSubmit, formState } = useForm<LoginFormValues>({
     resolver: yupResolver(loginSchema),
     defaultValues: {
@@ -30,7 +32,9 @@ const Login: FC = () => {
   });
 
   const handleLogin = (values: LoginFormValues) => {
-    authStore.authorizeCompanyUser(values);
+    authStore.authorizeCompanyUser(values).finally(() => {
+      navigate("/");
+    });
   };
   return (
     <Container component="main" maxWidth="xs">
@@ -102,7 +106,7 @@ const Login: FC = () => {
           </Button>
           <Grid container justifyContent="center">
             <Grid item>
-              <Link href="#" variant="body2">
+              <Link href="/auth/company/register" variant="body2">
                 Ещё нет аккаунта? Зарегистрируйте его
               </Link>
             </Grid>

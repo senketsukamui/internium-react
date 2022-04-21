@@ -19,13 +19,12 @@ import { format } from "date-fns";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import useNotification from "hooks/useNotification";
 
-const getTimerDate = (value: number) => new Date(Date.now() + value * 1000);
-
 interface SignupFormValues {
-  email: string;
+  phone: string;
   birthdate: Date;
   firstName: string;
   lastName: string;
+  password: string;
   middleName: string;
   position: string;
 }
@@ -35,14 +34,14 @@ const Register: FC = () => {
   const [searchParams, _setSearchParams] = useSearchParams();
   const navigate = useNavigate();
 
+  const token = searchParams.get("access_token");
+
   const [message, sendMessage] = useNotification();
 
   React.useEffect(() => {
-    authStore
-      .verifyCompanyInvitation({ token: searchParams.get("access_token") })
-      .then(() => {
-        sendMessage({ msg: "Token successfully verified", variant: "success" });
-      });
+    authStore.verifyCompanyInvitation({ token }).then(() => {
+      sendMessage({ msg: "Token successfully verified", variant: "success" });
+    });
   }, []);
 
   const { control, handleSubmit, formState } = useForm<SignupFormValues>({
@@ -50,7 +49,9 @@ const Register: FC = () => {
     defaultValues: {
       firstName: "",
       middleName: "",
+      phone: "",
       lastName: "",
+      password: "",
       position: "",
       birthdate: new Date(Date.now()),
     },
@@ -58,14 +59,17 @@ const Register: FC = () => {
 
   const onSignUpSubmit = (values: SignupFormValues) => {
     authStore
-      .signupIntern({
-        ...values,
-        birthdate: format(
-          new Date(values.birthdate.toISOString()),
-          "yyyy-MM-dd"
-        ),
-      })
-      .finally(() => {
+      .createCompanyUser(
+        {
+          ...values,
+          birthdate: format(
+            new Date(values.birthdate.toISOString()),
+            "yyyy-MM-dd"
+          ),
+        },
+        token
+      )
+      .then(() => {
         navigate("/");
       });
   };
@@ -141,7 +145,22 @@ const Register: FC = () => {
                 )}
               />
               <Controller
-                name="email"
+                name="password"
+                control={control}
+                defaultValue=""
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    fullWidth
+                    type="password"
+                    label="Пароль"
+                    sx={{ marginBottom: 1 }}
+                    required
+                  />
+                )}
+              />
+              <Controller
+                name="phone"
                 control={control}
                 defaultValue=""
                 render={({ field, fieldState }) => (
@@ -149,10 +168,10 @@ const Register: FC = () => {
                     {...field}
                     error={Boolean(fieldState?.error)}
                     helperText={
-                      fieldState?.error ? "Пожалуйста введите почту" : null
+                      fieldState?.error ? "Пожалуйста введите телефон" : null
                     }
                     fullWidth
-                    label="Почта"
+                    label="Телефон"
                     required
                     sx={{ marginBottom: 1 }}
                   />

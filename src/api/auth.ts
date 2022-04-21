@@ -77,8 +77,15 @@ export const verifyCompanyInvitationRequest = (
     params: companyInvitationVerify,
   });
 
-export const createCompanyUserRequest = (companyUser: CompanyUserRequest) =>
-  basicAxios.post("/companyUsers", companyUser);
+export const createCompanyUserRequest = (
+  companyUser: CompanyUserRequest,
+  verifiedToken: string
+) =>
+  basicAxios.post("/companyUsers", companyUser, {
+    headers: {
+      Authorization: verifiedToken,
+    },
+  });
 
 export const getCurrentCompanyUserRequest = () =>
   basicAxios.get("/companyUsers/current");

@@ -10,7 +10,7 @@ interface ProfileHeaderProps {
 
 const ProfileHeader = (props: ProfileHeaderProps) => {
   const { authStore } = useStores();
-  const { user, loading } = props;
+  const { user } = props;
   const [anchorEl, setAnchorEl] = React.useState(null);
   const navigate = useNavigate();
   const open = Boolean(anchorEl);
