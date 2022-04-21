@@ -24,7 +24,7 @@ import {
   JWTTokenResponse,
   RegisteredIntern,
 } from "api/types";
-import { save, load } from "../../utils";
+import { save, load, remove } from "../../utils";
 import { RegisterTypes } from "pages/Auth/constants";
 import { CompanyUser } from "./types";
 
@@ -166,6 +166,14 @@ class AuthStore {
         this.getCurrentCompany();
       }
     );
+  }
+
+  public logout() {
+    this.user = null;
+    this.accessToken = null;
+    this.refreshToken = null;
+    remove("accessToken");
+    remove("refreshToken");
   }
 }
 
