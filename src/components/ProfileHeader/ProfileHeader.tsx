@@ -2,12 +2,14 @@ import { Button, Menu, MenuItem } from "@mui/material";
 import React, { FC } from "react";
 import { RegisteredIntern } from "api/types";
 import { useNavigate } from "react-router-dom";
+import { useStores } from "hooks/useStores";
 
 interface ProfileHeaderProps {
   user: RegisteredIntern;
 }
 
 const ProfileHeader = (props: ProfileHeaderProps) => {
+  const { authStore } = useStores();
   const { user, loading } = props;
   const [anchorEl, setAnchorEl] = React.useState(null);
   const navigate = useNavigate();
@@ -18,6 +20,11 @@ const ProfileHeader = (props: ProfileHeaderProps) => {
 
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleLogout = () => {
+    authStore.logout();
+    handleClose();
   };
 
   const handleProfileClick = () => {
@@ -44,7 +51,7 @@ const ProfileHeader = (props: ProfileHeaderProps) => {
         onClose={handleClose}
       >
         <MenuItem onClick={handleProfileClick}>Профиль</MenuItem>
-        <MenuItem onClick={handleClose}>Выйти</MenuItem>
+        <MenuItem onClick={handleLogout}>Выйти</MenuItem>
       </Menu>
     </div>
   );
