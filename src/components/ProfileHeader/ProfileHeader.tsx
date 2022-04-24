@@ -3,6 +3,7 @@ import React, { FC } from "react";
 import { RegisteredIntern } from "api/types";
 import { useNavigate } from "react-router-dom";
 import { useStores } from "hooks/useStores";
+import { getHeaderName } from "./utils";
 
 interface ProfileHeaderProps {
   user: RegisteredIntern;
@@ -42,7 +43,7 @@ const ProfileHeader = (props: ProfileHeaderProps) => {
         aria-expanded={open ? "true" : undefined}
         onClick={handleClick}
       >
-        Глеб Потапов
+        {getHeaderName(authStore.getUserObject)}
       </Button>
       <Menu
         id="basic-menu"
