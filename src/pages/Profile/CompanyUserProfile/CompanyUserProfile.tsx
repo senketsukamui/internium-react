@@ -14,6 +14,7 @@ import {
   Typography,
 } from "@mui/material";
 import SvgCompany from "components/Icons/CompanyIcon";
+import VacancyModal from "components/VacancyModal";
 import useNotification from "hooks/useNotification";
 import { useStores } from "hooks/useStores";
 import React from "react";
@@ -22,12 +23,17 @@ const CompanyUserProfile = () => {
   const { authStore } = useStores();
   const [message, sendMessage] = useNotification();
   const [employeeEmail, setEmployeeEmail] = React.useState<string>("");
+  const [modalOpen, setModalOpen] = React.useState<boolean>(false);
 
   const handleEmailSend = (e: React.SyntheticEvent) => {
     e.preventDefault();
     authStore
       .createCompanyInvitation(employeeEmail)
       .catch(() => sendMessage({ msg: "Error", variant: "error" }));
+  };
+
+  const handleModalOpen = () => {
+    setModalOpen(true);
   };
 
   return (
@@ -65,42 +71,14 @@ const CompanyUserProfile = () => {
                     website.com
                   </Link>
                 </Paper>
-                <Paper
-                  sx={{
-                    padding: "15px",
-                  }}
-                  elevation={3}
-                >
-                  <Typography
-                    align="center"
-                    sx={{ fontWeight: "bold" }}
-                    paragraph
-                    gutterBottom
+                <Paper elevation={3} sx={{ padding: "15px" }}>
+                  <Button
+                    fullWidth
+                    variant="contained"
+                    onClick={handleModalOpen}
                   >
-                    Пригласить сотрудника
-                  </Typography>
-                  <Box
-                    component="form"
-                    sx={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                    }}
-                    onSubmit={handleEmailSend}
-                  >
-                    <TextField
-                      size="small"
-                      sx={{
-                        marginRight: "5px",
-                      }}
-                      value={employeeEmail}
-                      onChange={(e) => {
-                        setEmployeeEmail(e.target.value);
-                      }}
-                    />
-                    <Button size="small" type="submit" variant="outlined">
-                      Отправить
-                    </Button>
-                  </Box>
+                    Создать новую стажировку
+                  </Button>
                 </Paper>
               </Stack>
             </Container>
@@ -192,6 +170,7 @@ const CompanyUserProfile = () => {
           </Grid>
         </Grid>
       </Box>
+      <VacancyModal open={modalOpen} setOpen={setModalOpen} />
     </Container>
   );
 };

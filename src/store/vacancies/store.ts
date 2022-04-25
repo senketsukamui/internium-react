@@ -1,10 +1,15 @@
-import { createVacancyRequest, getVacancyRequest } from "api/vacancies";
+import {
+  createVacancyRequest,
+  getVacanciesRequest,
+  getVacancyRequest,
+} from "api/vacancies";
 import { makeAutoObservable } from "mobx";
 import { Vacancy, VacancyModel } from "./types";
 
 class VacanciesStore {
   public loading: boolean = false;
   public vacancies: VacancyModel[] = [];
+  public vacancy: VacancyModel | null = null;
 
   constructor() {
     makeAutoObservable(this);
@@ -14,6 +19,14 @@ class VacanciesStore {
     this.loading = true;
     return getVacancyRequest(id).then(({ data }: { data: VacancyModel }) => {
       this.loading = false;
+    });
+  }
+
+  public getVacancies() {
+    this.loading = true;
+    return getVacanciesRequest().then(({ data }: { data: VacancyModel[] }) => {
+      this.loading = false;
+      this.vacancies = data;
     });
   }
 
