@@ -1,6 +1,7 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import {
   Box,
+  Button,
   MenuItem,
   Modal,
   Select,
@@ -9,7 +10,13 @@ import {
 } from "@mui/material";
 import React, { FC } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { LocationStatuses, PaidStatuses, vacancySchema } from "./constants";
+import {
+  LocationStatuses,
+  LocationStatusesTranslations,
+  PaidStatuses,
+  PaidStatusesTranslations,
+  vacancySchema,
+} from "./constants";
 
 interface VacancyModalProps {
   open: boolean;
@@ -20,6 +27,8 @@ interface VacancyFormValues {
   title: string;
   paid: PaidStatuses;
   location: LocationStatuses;
+  salary: number;
+  description: string;
 }
 
 const style = {
@@ -39,11 +48,14 @@ const VacancyModal: FC<VacancyModalProps> = ({ open, setOpen }) => {
     setOpen(false);
   };
 
-  const { control, handleSubmit, formState } = useForm<VacancyFormValues>({
+  const { control, handleSubmit, watch } = useForm<VacancyFormValues>({
     resolver: yupResolver(vacancySchema),
     defaultValues: {
       title: "",
-      location: "",
+      paid: PaidStatuses.PAID,
+      location: LocationStatuses.REMOTE,
+      description: "",
+      salary: 0,
     },
   });
 
@@ -73,24 +85,6 @@ const VacancyModal: FC<VacancyModalProps> = ({ open, setOpen }) => {
           )}
         />
         <Controller
-          name="paid"
-          control={control}
-          render={({ field, fieldState }) => (
-            <Select
-              {...field}
-              error={Boolean(fieldState?.error)}
-              fullWidth
-              required
-              type="paid"
-              sx={{ marginBottom: 1 }}
-            >
-              {Object.entries(PaidStatuses).map((status) => (
-                <MenuItem value={status[0]}>{status[1]}</MenuItem>
-              ))}
-            </Select>
-          )}
-        />
-        <Controller
           name="location"
           control={control}
           render={({ field, fieldState }) => (
@@ -102,12 +96,76 @@ const VacancyModal: FC<VacancyModalProps> = ({ open, setOpen }) => {
               type="location"
               sx={{ marginBottom: 1 }}
             >
-              {Object.entries(LocationStatuses).map((status) => (
-                <MenuItem value={status[0]}>{status[1]}</MenuItem>
+              {Object.keys(LocationStatuses).map((status) => (
+                <MenuItem value={status}>
+                  {LocationStatusesTranslations[status as LocationStatuses]}
+                </MenuItem>
               ))}
             </Select>
           )}
         />
+        <Controller
+          name="paid"
+          control={control}
+          render={({ field, fieldState }) => (
+            <Select
+              {...field}
+              error={Boolean(fieldState?.error)}
+              fullWidth
+              required
+              type="paid"
+              sx={{ marginBottom: 1 }}
+            >
+              {Object.keys(PaidStatuses).map((status) => (
+                <MenuItem value={status}>
+                  {PaidStatusesTranslations[status as PaidStatuses]}
+                </MenuItem>
+              ))}
+            </Select>
+          )}
+        />
+        {watch("paid") === PaidStatuses.PAID && (
+          <Controller
+            name="salary"
+            control={control}
+            render={({ field, fieldState }) => (
+              <TextField
+                {...field}
+                error={Boolean(fieldState?.error)}
+                helperText={
+                  fieldState?.error ? "Пожалуйста введите название" : null
+                }
+                fullWidth
+                required
+                type="salary"
+                label="Название"
+                sx={{ marginBottom: 1 }}
+              />
+            )}
+          />
+        )}
+        <Controller
+          name="description"
+          control={control}
+          defaultValue=""
+          render={({ field, fieldState }) => (
+            <TextField
+              {...field}
+              error={Boolean(fieldState?.error)}
+              helperText={
+                fieldState?.error ? "Пожалуйста введите описание" : null
+              }
+              fullWidth
+              required
+              type="description"
+              label="Описание"
+              multiline
+              rows={3}
+              sx={{ marginBottom: 1 }}
+            />
+          )}
+        />
+        <Button variant="contained">Создать</Button>
       </Box>
     </Modal>
   );
