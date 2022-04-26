@@ -170,7 +170,7 @@ const CompanyUserProfile = () => {
           </Grid>
         </Grid>
       </Box>
-      <VacancyModal open={modalOpen} setOpen={setModalOpen} />
+      {modalOpen && <VacancyModal open={modalOpen} setOpen={setModalOpen} />}
     </Container>
   );
 };
