@@ -68,12 +68,12 @@ export const signupCompanyRequest = (companyInfo: CompanyInfo) =>
 
 export const createCompanyInvitationRequest = (
   companyInvitation: CompanyInvitation
-) => basicAxios.post("/companyInvitations", companyInvitation);
+) => basicAxios.post("/company-invitations", companyInvitation);
 
 export const verifyCompanyInvitationRequest = (
   companyInvitationVerify: CompanyInvitationVerify
 ) =>
-  mainAxios.get("/companyInvitations/verify", {
+  mainAxios.get("/company-invitations/verify", {
     params: companyInvitationVerify,
   });
 
@@ -81,14 +81,14 @@ export const createCompanyUserRequest = (
   companyUser: CompanyUserRequest,
   verifiedToken: string
 ) =>
-  basicAxios.post("/companyUsers", companyUser, {
+  basicAxios.post("/company-users", companyUser, {
     headers: {
       Authorization: verifiedToken,
     },
   });
 
 export const getCurrentCompanyUserRequest = () =>
-  basicAxios.get("/companyUsers/current");
+  basicAxios.get("/company-users/current");
 
 export const authorizeCurrentCompanyUserRequest = (currentUser: CompanyAuth) =>
-  basicAxios.post("/companyUsers/authorize", currentUser);
+  basicAxios.post("/company-users/authorize", currentUser);
