@@ -8,6 +8,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import SpecializationSelect from "components/SpecializationSelect";
 import React, { FC } from "react";
 import { Controller, useForm } from "react-hook-form";
 import {
@@ -36,6 +37,8 @@ const style = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
+  maxHeight: "50%",
+  overflow: "auto",
   width: 400,
   bgcolor: "background.paper",
   border: "2px solid #000",
@@ -165,7 +168,15 @@ const VacancyModal: FC<VacancyModalProps> = ({ open, setOpen }) => {
             />
           )}
         />
-        <Button variant="contained">Создать</Button>
+        <SpecializationSelect />
+        <Button
+          sx={{
+            marginTop: 3,
+          }}
+          variant="contained"
+        >
+          Создать
+        </Button>
       </Box>
     </Modal>
   );

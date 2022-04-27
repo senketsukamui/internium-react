@@ -2,7 +2,7 @@ import {
   getSpecializationRequest,
   getSpecializationsRequest,
 } from "api/specializations";
-import { makeAutoObservable } from "mobx";
+import { makeAutoObservable, toJS } from "mobx";
 import { Specialization } from "./types";
 
 class SpecializationsStore {
@@ -14,12 +14,20 @@ class SpecializationsStore {
     makeAutoObservable(this);
   }
 
+  public getSpecializationsValue() {
+    return toJS(this.specializations);
+  }
+
+  public getSpecializationValue() {
+    return toJS(this.specialization);
+  }
+
   public getSpecializations() {
     this.loading = true;
     return getSpecializationsRequest().then(
-      ({ data }: { data: Specialization[] }) => {
+      ({ data }: { data: { specializations: Specialization[] } }) => {
         this.loading = false;
-        this.specializations = data;
+        this.specializations = data.specializations;
       }
     );
   }
