@@ -1,18 +1,21 @@
 import { Divider, List, ListItem, ListItemButton } from "@mui/material";
 import { useStores } from "hooks/useStores";
 import { observer } from "mobx-react";
-import React from "react";
+import React, { FC } from "react";
 import { Ability, Specialization } from "store/specializations/types";
 import s from "./SpecializationSelect.module.scss";
 
-const SpecializationSelect = () => {
+interface SelectProps {
+  abilities: number[];
+  setAbilities: any;
+}
+
+const SpecializationSelect: FC<SelectProps> = ({ abilities, setAbilities }) => {
   const { specializationsStore } = useStores();
 
   const [specialization, setSpecialization] = React.useState<number | null>(
     null
   );
-
-  const [abilities, setAbilities] = React.useState<number[]>([]);
 
   React.useEffect(() => {
     specializationsStore.getSpecializations();

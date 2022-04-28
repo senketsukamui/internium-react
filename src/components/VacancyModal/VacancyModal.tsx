@@ -1,4 +1,5 @@
 import { yupResolver } from "@hookform/resolvers/yup";
+import { FireplaceTwoTone } from "@mui/icons-material";
 import {
   Box,
   Button,
@@ -9,6 +10,7 @@ import {
   Typography,
 } from "@mui/material";
 import SpecializationSelect from "components/SpecializationSelect";
+import { useStores } from "hooks/useStores";
 import React, { FC } from "react";
 import { Controller, useForm } from "react-hook-form";
 import {
@@ -18,7 +20,6 @@ import {
   PaidStatusesTranslations,
   vacancySchema,
 } from "./constants";
-
 interface VacancyModalProps {
   open: boolean;
   setOpen: (value: boolean) => void;
@@ -47,24 +48,37 @@ const style = {
 };
 
 const VacancyModal: FC<VacancyModalProps> = ({ open, setOpen }) => {
+  const { vacanciesStore, authStore } = useStores();
   const handleModalClose = () => {
     setOpen(false);
   };
+  const [abilities, setAbilities] = React.useState<number[]>([]);
 
-  const { control, handleSubmit, watch } = useForm<VacancyFormValues>({
-    resolver: yupResolver(vacancySchema),
-    defaultValues: {
-      title: "",
-      paid: PaidStatuses.PAID,
-      location: LocationStatuses.REMOTE,
-      description: "",
-      salary: 0,
-    },
-  });
+  const { control, handleSubmit, watch, formState } =
+    useForm<VacancyFormValues>({
+      resolver: yupResolver(vacancySchema),
+      defaultValues: {
+        title: "",
+        paid: PaidStatuses.PAID,
+        location: LocationStatuses.REMOTE,
+        description: "",
+        salary: 0,
+      },
+    });
+
+  const onSubmit = (values: VacancyFormValues) => {
+    vacanciesStore
+      .createVacancy({
+        ...values,
+        abilities,
+        companyId: authStore.getUserObject.company.id,
+      })
+      .then(() => setOpen(false));
+  };
 
   return (
     <Modal onClose={handleModalClose} open={open}>
-      <Box sx={style} component="form">
+      <Box sx={style} onSubmit={handleSubmit(onSubmit)} component="form">
         <Typography variant="h5" gutterBottom sx={{ textAlign: "center" }}>
           Создать новую вакансию
         </Typography>
@@ -136,12 +150,12 @@ const VacancyModal: FC<VacancyModalProps> = ({ open, setOpen }) => {
                 {...field}
                 error={Boolean(fieldState?.error)}
                 helperText={
-                  fieldState?.error ? "Пожалуйста введите название" : null
+                  fieldState?.error ? "Пожалуйста введите зарплату" : null
                 }
                 fullWidth
                 required
                 type="salary"
-                label="Название"
+                label="Зарплата"
                 sx={{ marginBottom: 1 }}
               />
             )}
@@ -168,12 +182,16 @@ const VacancyModal: FC<VacancyModalProps> = ({ open, setOpen }) => {
             />
           )}
         />
-        <SpecializationSelect />
+        <SpecializationSelect
+          abilities={abilities}
+          setAbilities={setAbilities}
+        />
         <Button
           sx={{
             marginTop: 3,
           }}
           variant="contained"
+          type="submit"
         >
           Создать
         </Button>
