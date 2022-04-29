@@ -5,12 +5,14 @@ import {
   Card,
   CardContent,
   CardMedia,
+  Chip,
   Container,
   Divider,
   FormControl,
   Grid,
   MenuItem,
   OutlinedInput,
+  Pagination,
   Paper,
   Select,
   SelectChangeEvent,
@@ -19,34 +21,57 @@ import {
 } from "@mui/material";
 import React, { FC, SyntheticEvent, useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { SortLabels, SortTypes } from "./constants";
+import { SortByLabels, SortByTypes, SortLabels, SortTypes } from "./constants";
 import queryString from "query-string";
 import CheckboxGroup from "components/CheckboxGroup";
+import { useStores } from "hooks/useStores";
+import { observer } from "mobx-react";
 
 const Search: FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [search, setSearch] = useState<string | number | null>(
     searchParams.get("search")
   );
-  const [sort, setSort] = useState<SortTypes>(SortTypes.Popularity);
+  const [page, setPage] = useState(1);
 
-  const sortOptions = Object.values(SortTypes).map((type: string) => (
+  const handlePageChange = (
+    event: React.ChangeEvent<unknown>,
+    value: number
+  ) => {
+    setPage(value);
+  };
+
+  const { vacanciesStore } = useStores();
+
+  const [sort, setSort] = useState<SortTypes>(SortTypes.desc);
+  const [sortBy, setSortBy] = useState<SortByTypes>(SortByTypes.bestMatch);
+
+  const sortOptions = Object.values(SortTypes).map((type: SortTypes) => (
     <MenuItem key={type} value={type}>
       {SortLabels[type]}
     </MenuItem>
   ));
-  console.log();
+
+  const sortByOptions = Object.values(SortByTypes).map((type: SortByTypes) => (
+    <MenuItem key={type} value={type}>
+      {SortByLabels[type]}
+    </MenuItem>
+  ));
 
   useEffect(() => {
     const currentSearchString = searchParams.get("search") || "";
-    console.log(currentSearchString);
     setSearchParams(
       queryString.stringify({
         sort,
+        sortBy,
         search: currentSearchString,
       })
     );
-  }, [sort]);
+  }, [sort, search, sortBy]);
+
+  useEffect(() => {
+    vacanciesStore.getVacancies(searchParams);
+  }, [sort, search, sortBy]);
 
   return (
     <main>
@@ -72,9 +97,8 @@ const Search: FC = () => {
               <Container
                 sx={{
                   display: "flex",
-                  justifyContent: "space-between",
+                  flexDirection: "column",
                 }}
-                disableGutters
               >
                 <OutlinedInput
                   endAdornment={<SearchOffOutlined color="primary" />}
@@ -88,6 +112,13 @@ const Search: FC = () => {
                     marginRight: 1,
                   }}
                 />
+              </Container>
+              <Container
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                }}
+              >
                 <Select
                   value={sort}
                   onChange={(e: SelectChangeEvent) => setSort(e.target.value)}
@@ -97,27 +128,43 @@ const Search: FC = () => {
                 >
                   {sortOptions}
                 </Select>
+                <Select
+                  value={sortBy}
+                  onChange={(e: SelectChangeEvent) => setSortBy(e.target.value)}
+                  displayEmpty
+                  inputProps={{ "aria-label": "Without label" }}
+                  sx={{ minWidth: "40%" }}
+                >
+                  {sortByOptions}
+                </Select>
               </Container>
             </Stack>
           </Paper>
           <Paper>
-            <Stack spacing={1}>
-              <Card>
-                <CardContent>
-                  <Typography
-                    sx={{
-                      fontWeight: "bold",
-                    }}
-                  >
-                    Компания
-                  </Typography>
-                  <Typography paragraph>
-                    Привет это я твой единственный зритель
-                  </Typography>
-                </CardContent>
-              </Card>
+            <Stack spacing={2}>
+              {vacanciesStore.getVacanciesValue()?.map((item) => (
+                <Card key={item.id}>
+                  <CardContent>
+                    <Typography
+                      sx={{
+                        fontWeight: "bold",
+                      }}
+                    >
+                      {item.title}
+                    </Typography>
+                    <Typography paragraph>{item.description}</Typography>
+                    {item?.abilities.map((ability) => (
+                      <Chip label={ability.title} />
+                    ))}
+                  </CardContent>
+                </Card>
+              ))}
             </Stack>
           </Paper>
+          <Stack spacing={2}>
+            <Typography>Page: {page}</Typography>
+            <Pagination count={10} page={page} onChange={handlePageChange} />
+          </Stack>
         </Grid>
         <Grid item xs={4}>
           <Paper sx={{ padding: 2 }}>
@@ -134,4 +181,4 @@ const Search: FC = () => {
   );
 };
 
-export default Search;
+export default observer(Search);

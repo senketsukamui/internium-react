@@ -3,7 +3,7 @@ import {
   getVacanciesRequest,
   getVacancyRequest,
 } from "api/vacancies";
-import { makeAutoObservable } from "mobx";
+import { makeAutoObservable, toJS } from "mobx";
 import { Vacancy, VacancyModel } from "./types";
 
 class VacanciesStore {
@@ -15,6 +15,10 @@ class VacanciesStore {
     makeAutoObservable(this);
   }
 
+  public getVacanciesValue() {
+    return toJS(this.vacancies);
+  }
+
   public getVacancy(id: number) {
     this.loading = true;
     return getVacancyRequest(id).then(({ data }: { data: VacancyModel }) => {
@@ -22,12 +26,14 @@ class VacanciesStore {
     });
   }
 
-  public getVacancies() {
+  public getVacancies(params) {
     this.loading = true;
-    return getVacanciesRequest().then(({ data }: { data: VacancyModel[] }) => {
-      this.loading = false;
-      this.vacancies = data;
-    });
+    return getVacanciesRequest(params).then(
+      ({ data }: { data: { vacancies: VacancyModel[] } }) => {
+        this.loading = false;
+        this.vacancies = data.vacancies;
+      }
+    );
   }
 
   public createVacancy(data: Vacancy) {
