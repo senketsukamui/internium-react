@@ -30,7 +30,7 @@ import { observer } from "mobx-react";
 const Search: FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [search, setSearch] = useState<string | number | null>(
-    searchParams.get("search")
+    searchParams.get("includeText") || ""
   );
   const [page, setPage] = useState(1);
 
@@ -43,8 +43,10 @@ const Search: FC = () => {
 
   const { vacanciesStore } = useStores();
 
-  const [sort, setSort] = useState<SortTypes>(SortTypes.desc);
+  const [sortType, setSortType] = useState<SortTypes>(SortTypes.desc);
   const [sortBy, setSortBy] = useState<SortByTypes>(SortByTypes.bestMatch);
+
+  console.log(sortType);
 
   const sortOptions = Object.values(SortTypes).map((type: SortTypes) => (
     <MenuItem key={type} value={type}>
@@ -59,19 +61,14 @@ const Search: FC = () => {
   ));
 
   useEffect(() => {
-    const currentSearchString = searchParams.get("search") || "";
-    setSearchParams(
-      queryString.stringify({
-        sort,
-        sortBy,
-        search: currentSearchString,
-      })
-    );
-  }, [sort, search, sortBy]);
-
-  useEffect(() => {
-    vacanciesStore.getVacancies(searchParams);
-  }, [sort, search, sortBy]);
+    const params = queryString.stringify({
+      sortType,
+      sortBy,
+      includeText: search,
+    });
+    setSearchParams(params);
+    vacanciesStore.getVacancies(params);
+  }, [sortType, search, sortBy]);
 
   return (
     <main>
@@ -120,8 +117,10 @@ const Search: FC = () => {
                 }}
               >
                 <Select
-                  value={sort}
-                  onChange={(e: SelectChangeEvent) => setSort(e.target.value)}
+                  value={sortType}
+                  onChange={(e: SelectChangeEvent) =>
+                    setSortType(e.target.value)
+                  }
                   displayEmpty
                   inputProps={{ "aria-label": "Without label" }}
                   sx={{ minWidth: "40%" }}
@@ -154,7 +153,7 @@ const Search: FC = () => {
                     </Typography>
                     <Typography paragraph>{item.description}</Typography>
                     {item?.abilities.map((ability) => (
-                      <Chip label={ability.title} />
+                      <Chip key={ability.id} label={ability.title} />
                     ))}
                   </CardContent>
                 </Card>
