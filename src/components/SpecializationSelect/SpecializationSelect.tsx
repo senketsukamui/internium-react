@@ -1,4 +1,4 @@
-import { Divider, List, ListItem, ListItemButton } from "@mui/material";
+import { Button, Divider, List, ListItem, ListItemButton } from "@mui/material";
 import { useStores } from "hooks/useStores";
 import { observer } from "mobx-react";
 import React, { FC } from "react";
@@ -43,8 +43,6 @@ const SpecializationSelect: FC<SelectProps> = ({ abilities, setAbilities }) => {
   const specializations = specializationsStore.getSpecializationsValue();
 
   const specializationValue = specializationsStore.getSpecializationValue();
-
-  console.log(specializationValue);
 
   return (
     <div className={s.root}>

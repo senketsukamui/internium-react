@@ -20,6 +20,7 @@ import {
   PaidStatusesTranslations,
   vacancySchema,
 } from "./constants";
+
 interface VacancyModalProps {
   open: boolean;
   setOpen: (value: boolean) => void;
