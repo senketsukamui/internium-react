@@ -15,13 +15,18 @@ class VacanciesStore {
     makeAutoObservable(this);
   }
 
-  public getVacanciesValue() {
+  get getVacancyValue() {
+    return toJS(this.vacancy);
+  }
+
+  get getVacanciesValue() {
     return toJS(this.vacancies);
   }
 
   public getVacancy(id: number) {
     this.loading = true;
     return getVacancyRequest(id).then(({ data }: { data: VacancyModel }) => {
+      this.vacancy = data;
       this.loading = false;
     });
   }
