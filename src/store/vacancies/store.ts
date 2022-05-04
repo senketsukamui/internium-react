@@ -2,6 +2,7 @@ import {
   createVacancyRequest,
   getVacanciesRequest,
   getVacancyRequest,
+  updateVacancyRequest,
 } from "api/vacancies";
 import { makeAutoObservable, toJS } from "mobx";
 import { Vacancy, VacancyModel } from "./types";
@@ -47,6 +48,16 @@ class VacanciesStore {
       ({ data }: { data: VacancyModel }) => {
         this.loading = false;
         this.vacancies.push(data);
+      }
+    );
+  }
+
+  public updateVacancy(data: Vacancy, id: number) {
+    this.loading = true;
+    return updateVacancyRequest(data, id).then(
+      ({ data }: { data: VacancyModel }) => {
+        this.loading = false;
+        this.vacancy = data;
       }
     );
   }

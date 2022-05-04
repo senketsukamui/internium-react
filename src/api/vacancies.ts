@@ -9,3 +9,6 @@ export const getVacanciesRequest = (params) =>
 
 export const createVacancyRequest = (data: Vacancy) =>
   basicAxios.post("/vacancies", data);
+
+export const updateVacancyRequest = (data: Vacancy, id: number) =>
+  basicAxios.put(`/vacancies/${id}`, data);

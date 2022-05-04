@@ -6,6 +6,7 @@ import { Route, Routes } from "react-router-dom";
 import Search from "./Search";
 import Profile from "pages/Profile";
 import Vacancy from "pages/Vacancy";
+import VacancyEdit from "pages/VacancyEdit";
 
 const Home = () => {
   return (
@@ -21,6 +22,7 @@ const Home = () => {
           <Route path="/search" element={<Search />} />
           <Route path="/profile/:id" element={<Profile />} />
           <Route path="/vacancy/:id" element={<Vacancy />} />
+          <Route path="/vacancy/:id/edit" element={<VacancyEdit />} />
         </Routes>
       </Box>
     </>
