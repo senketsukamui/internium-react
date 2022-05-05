@@ -1,17 +1,24 @@
-import { Box, Chip, Divider, Grid, Paper, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Chip,
+  Divider,
+  Grid,
+  Paper,
+  Typography,
+} from "@mui/material";
 import SvgCompany from "components/Icons/CompanyIcon";
 import { useStores } from "hooks/useStores";
 import { observer } from "mobx-react";
 import React from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const Vacancy = () => {
   const { id } = useParams();
   const { vacanciesStore } = useStores();
+  const navigate = useNavigate();
 
   const vacancy = vacanciesStore.getVacancyValue;
-
-  console.log(vacancy);
 
   React.useEffect(() => {
     vacanciesStore.getVacancy(id);
@@ -106,9 +113,21 @@ const Vacancy = () => {
               >
                 <SvgCompany width={160} height={160} />
               </Box>
-              <Typography align="center" variant="h5" sx={{ marginTop: 1 }}>
+              <Typography
+                gutterBottom
+                align="center"
+                variant="h5"
+                sx={{ marginTop: 1 }}
+              >
                 {vacancy.company.name}
               </Typography>
+              <Button
+                variant="contained"
+                onClick={() => navigate(`/vacancy/${id}/edit`)}
+                fullWidth
+              >
+                Редактировать
+              </Button>
             </Paper>
           </Grid>
         </>
