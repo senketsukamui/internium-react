@@ -223,9 +223,9 @@ const Search: FC = () => {
               </Container>
             </Stack>
           </Paper>
-          <Paper>
-            <Stack spacing={2}>
-              {vacanciesStore.getVacanciesValue?.map((item: VacancyModel) => (
+          <Stack spacing={2}>
+            {vacanciesStore.getVacanciesValue?.map((item) => (
+              <Paper elevation={2}>
                 <Card key={item.id}>
                   <CardContent>
                     <Typography
@@ -235,15 +235,20 @@ const Search: FC = () => {
                     >
                       {item.title}
                     </Typography>
+                    {item.salary && (
+                      <Typography
+                        paragraph
+                      >{`${item.salary} рублей`}</Typography>
+                    )}
                     <Typography paragraph>{item.description}</Typography>
                     {item?.abilities.map((ability: Ability) => (
                       <Chip key={ability.id} label={ability.title} />
                     ))}
                   </CardContent>
                 </Card>
-              ))}
-            </Stack>
-          </Paper>
+              </Paper>
+            ))}
+          </Stack>
           <Stack spacing={2}>
             <Typography>Page: {page}</Typography>
             <Pagination count={10} page={page} onChange={handlePageChange} />
