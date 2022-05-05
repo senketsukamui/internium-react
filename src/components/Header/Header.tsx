@@ -1,3 +1,4 @@
+import { SearchRounded } from "@mui/icons-material";
 import { AppBar, Box, Button, Toolbar, Typography } from "@mui/material";
 import ProfileHeader from "components/ProfileHeader";
 import { useStores } from "hooks/useStores";
@@ -7,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 
 const Header = () => {
   const navigate = useNavigate();
+
   const { authStore } = useStores();
   const userObject = authStore.getUserObject;
 
@@ -22,6 +24,7 @@ const Header = () => {
               Авторизация
             </Button>
           )}
+          <SearchRounded onClick={() => navigate("/search")} />
           {userObject && <ProfileHeader user={userObject} />}
         </Toolbar>
       </AppBar>
