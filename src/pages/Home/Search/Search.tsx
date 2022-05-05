@@ -17,6 +17,7 @@ import {
   Paper,
   Select,
   SelectChangeEvent,
+  Slider,
   Stack,
   TextField,
   Typography,
@@ -37,11 +38,6 @@ import {
 } from "components/VacancyModal/constants";
 import { Ability } from "store/specializations/types";
 import { VacancyModel } from "store/vacancies/types";
-
-interface SalaryFilter {
-  salaryFrom: number;
-  salaryTo: number;
-}
 
 const Search: FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -67,10 +63,10 @@ const Search: FC = () => {
   );
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [abilities, setAbilities] = useState<number[]>([]);
-  const [salary, setSalary] = useState<SalaryFilter>({
-    salaryFrom: Number(searchParams.get("salaryFrom")) || 0,
-    salaryTo: Number(searchParams.get("salaryTo")) || 0,
-  });
+  const [salary, setSalary] = useState<number[]>([
+    Number(searchParams.get("salaryFrom")) || 0,
+    Number(searchParams.get("salaryTo")) || 1000000,
+  ]);
   const [location, setLocation] = useState<LocationStatuses>(
     LocationStatuses.REMOTE
   );
@@ -139,9 +135,20 @@ const Search: FC = () => {
     setModalOpen(true);
   };
 
-  const handleSalaryChange = (e) => {
-    setSalary({ ...salary, [e.target.name]: e.target.value || 0 });
+  const handleSalaryChange = (event: Event, newValue: number | number[]) => {
+    setSalary(newValue as number[]);
   };
+
+  const salaryMarks = [
+    {
+      value: 0,
+      label: 0,
+    },
+    {
+      value: 1000000,
+      label: 1000000,
+    },
+  ];
 
   const closeModal = () => {
     setModalOpen(false);
@@ -218,7 +225,7 @@ const Search: FC = () => {
           </Paper>
           <Paper>
             <Stack spacing={2}>
-              {vacanciesStore.getVacanciesValue()?.map((item: VacancyModel) => (
+              {vacanciesStore.getVacanciesValue?.map((item: VacancyModel) => (
                 <Card key={item.id}>
                   <CardContent>
                     <Typography
@@ -286,7 +293,7 @@ const Search: FC = () => {
               Зарплата
             </Typography>
             <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-              <TextField
+              {/* <TextField
                 label="От"
                 type="number"
                 name="salaryFrom"
@@ -299,6 +306,15 @@ const Search: FC = () => {
                 onChange={handleSalaryChange}
                 name="salaryTo"
                 value={salary.salaryTo}
+              /> */}
+              <Slider
+                min={5000}
+                max={1000000}
+                valueLabelDisplay="auto"
+                step={5000}
+                value={salary}
+                marks={salaryMarks}
+                onChange={handleSalaryChange}
               />
             </Box>
           </Paper>
