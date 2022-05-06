@@ -1,9 +1,14 @@
 import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
   Box,
   Button,
   Chip,
   Divider,
   Grid,
+  List,
+  ListItemButton,
   Paper,
   Typography,
 } from "@mui/material";
@@ -15,14 +20,21 @@ import { useNavigate, useParams } from "react-router-dom";
 
 const Vacancy = () => {
   const { id } = useParams();
-  const { vacanciesStore } = useStores();
+  const { vacanciesStore, companiesStore } = useStores();
   const navigate = useNavigate();
 
   const vacancy = vacanciesStore.getVacancyValue;
+  const companyVacancies = companiesStore.companyVacancies;
 
   React.useEffect(() => {
     vacanciesStore.getVacancy(id);
-  }, []);
+  }, [id]);
+
+  React.useEffect(() => {
+    if (vacancy) {
+      companiesStore.getCompanyVacancies(vacancy.company.id);
+    }
+  }, [vacancy]);
 
   return (
     <Grid
@@ -102,6 +114,7 @@ const Vacancy = () => {
             <Paper
               sx={{
                 padding: "30px",
+                marginBottom: 1,
               }}
               elevation={2}
             >
@@ -128,6 +141,27 @@ const Vacancy = () => {
               >
                 Редактировать
               </Button>
+            </Paper>
+            <Paper>
+              <Accordion>
+                <AccordionSummary>{`Все вакансии компании (${
+                  companyVacancies?.length - 1
+                })`}</AccordionSummary>
+                <AccordionDetails>
+                  <List>
+                    {companyVacancies
+                      ?.filter((vacancy) => vacancy?.id !== id)
+                      ?.map((vacancy) => (
+                        <ListItemButton
+                          onClick={() => navigate(`/vacancy/${vacancy.id}`)}
+                          divider
+                        >
+                          {vacancy.title}
+                        </ListItemButton>
+                      ))}
+                  </List>
+                </AccordionDetails>
+              </Accordion>
             </Paper>
           </Grid>
         </>
