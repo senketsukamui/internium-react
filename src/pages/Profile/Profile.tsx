@@ -4,7 +4,7 @@ import CompanyUserProfile from "./CompanyUserProfile";
 import StudentProfile from "./StudentProfile";
 
 const Profile: FC = () => {
-  return <CompanyUserProfile />;
+  return <CompanyProfile />;
 };
 
 export default Profile;

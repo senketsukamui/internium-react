@@ -5,6 +5,7 @@ import {
   CardActions,
   CardContent,
   CardHeader,
+  Chip,
   Container,
   Grid,
   Link,
@@ -17,11 +18,16 @@ import SvgCompany from "components/Icons/CompanyIcon";
 import useNotification from "hooks/useNotification";
 import { useStores } from "hooks/useStores";
 import React from "react";
+import { useParams } from "react-router-dom";
+import { Ability } from "store/specializations/types";
 
 const CompanyProfile = () => {
-  const { authStore } = useStores();
+  const { id } = useParams();
+  const { authStore, companiesStore } = useStores();
   const [message, sendMessage] = useNotification();
   const [employeeEmail, setEmployeeEmail] = React.useState<string>("");
+
+  const companyVacancies = companiesStore.companyVacancies;
 
   const handleEmailSend = (e: React.SyntheticEvent) => {
     e.preventDefault();
@@ -29,6 +35,10 @@ const CompanyProfile = () => {
       .createCompanyInvitation(employeeEmail)
       .catch(() => sendMessage({ msg: "Error", variant: "error" }));
   };
+
+  React.useEffect(() => {
+    companiesStore.getCompanyVacancies(id);
+  }, [id]);
 
   return (
     <Container maxWidth="lg">
@@ -171,22 +181,28 @@ const CompanyProfile = () => {
                 </Card>
               </Paper>
               <Paper elevation={3}>
-                <Card sx={{ position: "relative" }}>
-                  <CardHeader title="Курсы" />
-                  <CardContent>Информация о пройдённых курсах</CardContent>
-                  <CardActions
-                    sx={{
-                      position: "absolute",
-                      top: "16px",
-                      right: "16px",
-                      padding: 0,
-                    }}
-                  >
-                    <Link underline="hover" variant="h5">
-                      Изменить
-                    </Link>
-                  </CardActions>
-                </Card>
+                {companyVacancies?.map((vacancy) => (
+                  <Card key={vacancy.id}>
+                    <CardContent>
+                      <Typography
+                        sx={{
+                          fontWeight: "bold",
+                        }}
+                      >
+                        {vacancy.title}
+                      </Typography>
+                      {vacancy.salary && (
+                        <Typography
+                          paragraph
+                        >{`${vacancy.salary} рублей`}</Typography>
+                      )}
+                      <Typography paragraph>{vacancy.description}</Typography>
+                      {vacancy?.abilities.map((ability: Ability) => (
+                        <Chip key={ability.id} label={ability.title} />
+                      ))}
+                    </CardContent>
+                  </Card>
+                ))}
               </Paper>
             </Stack>
           </Grid>
