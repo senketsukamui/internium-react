@@ -1,5 +1,4 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import { FireplaceTwoTone } from "@mui/icons-material";
 import {
   Box,
   Button,
@@ -13,6 +12,7 @@ import SpecializationSelect from "components/SpecializationSelect";
 import { useStores } from "hooks/useStores";
 import React, { FC } from "react";
 import { Controller, useForm } from "react-hook-form";
+import ReactQuill from "react-quill";
 import {
   LocationStatuses,
   LocationStatusesTranslations,
@@ -20,6 +20,7 @@ import {
   PaidStatusesTranslations,
   vacancySchema,
 } from "./constants";
+import "react-quill/dist/quill.snow.css";
 
 interface VacancyModalProps {
   open: boolean;
@@ -162,7 +163,7 @@ const VacancyModal: FC<VacancyModalProps> = ({ open, setOpen }) => {
             )}
           />
         )}
-        <Controller
+        {/* <Controller
           name="description"
           control={control}
           defaultValue=""
@@ -181,6 +182,28 @@ const VacancyModal: FC<VacancyModalProps> = ({ open, setOpen }) => {
               rows={3}
               sx={{ marginBottom: 1 }}
             />
+          )}
+        /> */}
+        <Typography gutterBottom sx={{ fontSize: "1.2rem" }}>
+          Описание
+        </Typography>
+        <Controller
+          name="description"
+          control={control}
+          defaultValue=""
+          render={({ field, fieldState }) => (
+            <>
+              <ReactQuill
+                value={field.value}
+                onChange={field.onChange}
+                theme="snow"
+              />
+              {fieldState.error && (
+                <Typography sx={{ color: "red" }}>
+                  Пожалуйста введите описание
+                </Typography>
+              )}
+            </>
           )}
         />
         <SpecializationSelect
