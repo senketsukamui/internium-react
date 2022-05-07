@@ -30,6 +30,7 @@ export const vacancySchema = yup
     title: yup.string().required(),
     location: yup.string().required(),
     paid: yup.string().required(),
+    description: yup.string().required(),
     salary: yup.number().when("paid", {
       is: PaidStatuses.PAID,
       then: yup.number().required("Пожалуйста введите зарплату"),
