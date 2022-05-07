@@ -15,9 +15,22 @@ import {
   Typography,
 } from "@mui/material";
 import SvgStudent from "components/Icons/StudentIcon";
+import { differenceInYears, format } from "date-fns";
+import { useStores } from "hooks/useStores";
+import { observer } from "mobx-react";
 import React, { FC } from "react";
+import { useParams } from "react-router-dom";
+import { calculateAge } from "utils";
 
 const StudentProfile: FC = () => {
+  const { id } = useParams();
+  const { internsStore } = useStores();
+  const profile = internsStore.getProfile;
+
+  React.useEffect(() => {
+    internsStore.getInternProfile(id);
+  }, [id]);
+
   return (
     <Container maxWidth="lg">
       <Box sx={{ flexGrow: 1 }}>
@@ -39,16 +52,24 @@ const StudentProfile: FC = () => {
                     gutterBottom
                     sx={{ fontWeight: "bold" }}
                   >
-                    Глеб Потапов
+                    {`${profile?.firstName} ${profile?.lastName}`}
                   </Typography>
                   <Typography component="p" gutterBottom>
-                    Frontend-разработчик
+                    {profile?.location}
                   </Typography>
+
                   <Typography
                     component="p"
-                    sx={{ color: "green", fontWeight: "bold" }}
+                    sx={{
+                      color: `${
+                        profile?.status === "ACTIVE" ? "green" : "red"
+                      }`,
+                      fontWeight: "bold",
+                    }}
                   >
-                    В поисках стажировки
+                    {profile?.status === "ACTIVE"
+                      ? "Ищу стажировку"
+                      : "Не ищу стажировку"}
                   </Typography>
                 </Paper>
                 <Paper
@@ -60,19 +81,29 @@ const StudentProfile: FC = () => {
                 >
                   <List dense>
                     <ListItem>
-                      <ListItemText>Возраст: 21 год</ListItemText>
+                      <ListItemText>{`Возраст: ${calculateAge(
+                        profile?.birthdate
+                      )}`}</ListItemText>
                     </ListItem>
                     <ListItem>
-                      <ListItemText>Курс: 4</ListItemText>
+                      <ListItemText>{`Почта: ${profile?.email}`}</ListItemText>
                     </ListItem>
                     <ListItem>
-                      <ListItemText>Регистрация: 20.20.20</ListItemText>
+                      <ListItemText>{`Регистрация: ${
+                        profile?.createdAt &&
+                        format(new Date(profile?.createdAt), "dd.mm.yy")
+                      }`}</ListItemText>
                     </ListItem>
                     <ListItem>
-                      <ListItemText>Навыки: JavaScript Python ML</ListItemText>
+                      <ListItemText>{`Последнее обновление: ${
+                        profile?.createdAt &&
+                        format(new Date(profile?.updatedAt), "dd.mm.yy")
+                      }`}</ListItemText>
                     </ListItem>
                     <ListItem>
-                      <ListItemText>Telegram @user</ListItemText>
+                      <ListItemText>{`Навыки: ${profile?.abilities
+                        ?.map((item) => item.title)
+                        .join("*")}`}</ListItemText>
                     </ListItem>
                   </List>
                 </Paper>
@@ -85,69 +116,8 @@ const StudentProfile: FC = () => {
                 <Card sx={{ position: "relative" }}>
                   <CardHeader title="Обо мне" />
                   <CardContent>
-                    Занимаюсь разработкой веб-приложений на React и Redux уже 3
-                    года, из которых 1.5 года в коммерческой разработке. Имею
-                    опыт разработки приложений различных видов, интеграции
-                    различных сервисов, оценки и анализа задач бизнеса.
-                    Программированием занимаюсь уже больше 4 лет. Помимо
-                    JavaScript имею опыт с Python.
+                    {profile?.description || "Нет информации"}
                   </CardContent>
-                  <CardActions
-                    sx={{
-                      position: "absolute",
-                      top: "16px",
-                      right: "16px",
-                      padding: 0,
-                    }}
-                  >
-                    <Link underline="hover" variant="h5">
-                      Изменить
-                    </Link>
-                  </CardActions>
-                </Card>
-              </Paper>
-              <Paper elevation={3}>
-                <Card sx={{ position: "relative" }}>
-                  <CardHeader title="GitHub" />
-                  <CardContent>
-                    * здесь должна быть ссылка на github *
-                  </CardContent>
-                  <CardActions
-                    sx={{
-                      position: "absolute",
-                      top: "16px",
-                      right: "16px",
-                      padding: 0,
-                    }}
-                  >
-                    <Link underline="hover" variant="h5">
-                      Изменить
-                    </Link>
-                  </CardActions>
-                </Card>
-              </Paper>
-              <Paper elevation={3}>
-                <Card sx={{ position: "relative" }}>
-                  <CardHeader title="Образование" />
-                  <CardContent>Информация об образовании</CardContent>
-                  <CardActions
-                    sx={{
-                      position: "absolute",
-                      top: "16px",
-                      right: "16px",
-                      padding: 0,
-                    }}
-                  >
-                    <Link underline="hover" variant="h5">
-                      Изменить
-                    </Link>
-                  </CardActions>
-                </Card>
-              </Paper>
-              <Paper elevation={3}>
-                <Card sx={{ position: "relative" }}>
-                  <CardHeader title="Курсы" />
-                  <CardContent>Информация о пройдённых курсах</CardContent>
                   <CardActions
                     sx={{
                       position: "absolute",
@@ -170,4 +140,4 @@ const StudentProfile: FC = () => {
   );
 };
 
-export default StudentProfile;
+export default observer(StudentProfile);

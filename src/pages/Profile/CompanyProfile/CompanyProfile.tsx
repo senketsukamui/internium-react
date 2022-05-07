@@ -40,6 +40,10 @@ const CompanyProfile = () => {
     companiesStore.getCompanyVacancies(id);
   }, [id]);
 
+  React.useEffect(() => {
+    companiesStore.getCompanyProfile(id);
+  }, [id]);
+
   return (
     <Container maxWidth="lg">
       <Box sx={{ flexGrow: 1 }}>

@@ -17,24 +17,28 @@ import SvgCompany from "components/Icons/CompanyIcon";
 import VacancyModal from "components/VacancyModal";
 import useNotification from "hooks/useNotification";
 import { useStores } from "hooks/useStores";
+import { observer } from "mobx-react";
 import React from "react";
+import { useParams } from "react-router-dom";
 
 const CompanyUserProfile = () => {
-  const { authStore } = useStores();
+  const { id } = useParams();
+  const { authStore, companyUsersStore } = useStores();
   const [message, sendMessage] = useNotification();
   const [employeeEmail, setEmployeeEmail] = React.useState<string>("");
   const [modalOpen, setModalOpen] = React.useState<boolean>(false);
 
-  const handleEmailSend = (e: React.SyntheticEvent) => {
-    e.preventDefault();
-    authStore
-      .createCompanyInvitation(employeeEmail)
-      .catch(() => sendMessage({ msg: "Error", variant: "error" }));
-  };
+  const profile = companyUsersStore.getProfile;
+
+  console.log(profile);
 
   const handleModalOpen = () => {
     setModalOpen(true);
   };
+
+  React.useEffect(() => {
+    companyUsersStore.getCompanyUserProfile(id);
+  }, [id]);
 
   return (
     <Container maxWidth="lg">
@@ -58,17 +62,41 @@ const CompanyUserProfile = () => {
                     gutterBottom
                     sx={{ fontWeight: "bold" }}
                   >
-                    Quantori
+                    {`${profile?.userInfo?.firstName} ${profile?.userInfo?.lastName}`}
                   </Typography>
                   <Typography align="center" component="p" gutterBottom>
-                    Frontend-разработчик
+                    {profile?.userInfo?.position}
                   </Typography>
+                  <Typography align="center" component="p" gutterBottom>
+                    {profile?.userInfo?.phone}
+                  </Typography>
+                </Paper>
+                <Paper
+                  elevation={3}
+                  sx={{
+                    padding: "15px",
+                  }}
+                >
+                  <Box sx={{ display: "flex", justifyContent: "center" }}>
+                    <SvgCompany width={150} height={150} />
+                  </Box>
                   <Link
-                    component="p"
-                    align="center"
-                    sx={{ fontWeight: "bold" }}
+                    variant="h5"
+                    gutterBottom
+                    href={`/company/profile/${profile?.company?.id}`}
+                    sx={{
+                      fontWeight: "bold",
+                      display: "flex",
+                      justifyContent: "center",
+                    }}
                   >
-                    website.com
+                    {profile?.company?.name}
+                  </Link>
+                  <Typography align="center" component="p" gutterBottom>
+                    {profile?.company?.city}
+                  </Typography>
+                  <Link align="center" component="p" gutterBottom>
+                    {profile?.userInfo?.website}
                   </Link>
                 </Paper>
                 <Paper elevation={3} sx={{ padding: "15px" }}>
@@ -175,4 +203,4 @@ const CompanyUserProfile = () => {
   );
 };
 
-export default CompanyUserProfile;
+export default observer(CompanyUserProfile);
