@@ -7,6 +7,7 @@ import {
   Chip,
   Divider,
   Grid,
+  Link,
   List,
   ListItemButton,
   Paper,
@@ -103,11 +104,11 @@ const Vacancy = () => {
               <Typography variant="h5">Описание</Typography>
               <Divider
                 sx={{
-                  margin: "5px 0",
+                  margin: "8px 0",
                 }}
                 variant="fullWidth"
               />
-              <Typography paragraph>{vacancy.description}</Typography>
+              <div dangerouslySetInnerHTML={{ __html: vacancy.description }} />
             </Paper>
           </Grid>
           <Grid item xs={4}>
@@ -126,14 +127,18 @@ const Vacancy = () => {
               >
                 <SvgCompany width={160} height={160} />
               </Box>
-              <Typography
-                gutterBottom
-                align="center"
+              <Link
+                href={`/company/profile/${vacancy.company.id}`}
                 variant="h5"
-                sx={{ marginTop: 1 }}
+                sx={{
+                  marginTop: 1,
+                  marginBottom: 1,
+                  display: "flex",
+                  justifyContent: "center",
+                }}
               >
                 {vacancy.company.name}
-              </Typography>
+              </Link>
               <Button
                 variant="contained"
                 onClick={() => navigate(`/vacancy/${id}/edit`)}

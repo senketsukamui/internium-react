@@ -3,7 +3,7 @@ import React, { FC } from "react";
 import { RegisteredIntern } from "api/types";
 import { useNavigate } from "react-router-dom";
 import { useStores } from "hooks/useStores";
-import { getHeaderName } from "./utils";
+import { getHeaderName, getProfileLink } from "./utils";
 
 interface ProfileHeaderProps {
   user: RegisteredIntern;
@@ -29,7 +29,7 @@ const ProfileHeader = (props: ProfileHeaderProps) => {
   };
 
   const handleProfileClick = () => {
-    navigate(`/profile/${user.id}`);
+    navigate(`/${getProfileLink(user)}/profile/${user.id}`);
     handleClose();
   };
 

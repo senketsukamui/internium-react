@@ -24,7 +24,10 @@ const Header = () => {
               Авторизация
             </Button>
           )}
-          <SearchRounded onClick={() => navigate("/search")} />
+          <SearchRounded
+            sx={{ marginRight: 1, cursor: "pointer" }}
+            onClick={() => navigate("/search")}
+          />
           {userObject && <ProfileHeader user={userObject} />}
         </Toolbar>
       </AppBar>

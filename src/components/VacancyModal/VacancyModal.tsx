@@ -163,27 +163,6 @@ const VacancyModal: FC<VacancyModalProps> = ({ open, setOpen }) => {
             )}
           />
         )}
-        {/* <Controller
-          name="description"
-          control={control}
-          defaultValue=""
-          render={({ field, fieldState }) => (
-            <TextField
-              {...field}
-              error={Boolean(fieldState?.error)}
-              helperText={
-                fieldState?.error ? "Пожалуйста введите описание" : null
-              }
-              fullWidth
-              required
-              type="description"
-              label="Описание"
-              multiline
-              rows={3}
-              sx={{ marginBottom: 1 }}
-            />
-          )}
-        /> */}
         <Typography gutterBottom sx={{ fontSize: "1.2rem" }}>
           Описание
         </Typography>

@@ -1,3 +1,4 @@
+import { CheckCircle } from "@mui/icons-material";
 import {
   Box,
   Button,
@@ -9,17 +10,22 @@ import {
   Container,
   Grid,
   Link,
+  List,
+  ListItem,
   Paper,
   Stack,
   TextField,
   Typography,
 } from "@mui/material";
 import SvgCompany from "components/Icons/CompanyIcon";
+import VacancyCard from "components/VacancyCard";
 import useNotification from "hooks/useNotification";
 import { useStores } from "hooks/useStores";
+import { observer } from "mobx-react";
 import React from "react";
 import { useParams } from "react-router-dom";
 import { Ability } from "store/specializations/types";
+import { VacancyModel } from "store/vacancies/types";
 
 const CompanyProfile = () => {
   const { id } = useParams();
@@ -28,6 +34,8 @@ const CompanyProfile = () => {
   const [employeeEmail, setEmployeeEmail] = React.useState<string>("");
 
   const companyVacancies = companiesStore.companyVacancies;
+
+  const profile = companiesStore.companyProfile;
 
   const handleEmailSend = (e: React.SyntheticEvent) => {
     e.preventDefault();
@@ -64,19 +72,28 @@ const CompanyProfile = () => {
                     variant="h5"
                     align="center"
                     gutterBottom
-                    sx={{ fontWeight: "bold" }}
+                    sx={{
+                      fontWeight: "bold",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
                   >
-                    Quantori
+                    {profile?.name}{" "}
+                    {profile?.verified && (
+                      <CheckCircle color="success" sx={{ marginLeft: 1 }} />
+                    )}
                   </Typography>
-                  <Typography align="center" component="p" gutterBottom>
-                    Frontend-разработчик
+                  <Typography gutterBottom align="center">
+                    {profile?.city}
                   </Typography>
+
                   <Link
                     component="p"
                     align="center"
                     sx={{ fontWeight: "bold" }}
                   >
-                    website.com
+                    {profile?.website}
                   </Link>
                 </Paper>
                 <Paper
@@ -123,90 +140,27 @@ const CompanyProfile = () => {
             <Stack direction="column" spacing={2}>
               <Paper elevation={3}>
                 <Card sx={{ position: "relative" }}>
-                  <CardHeader title="Обо мне" />
+                  <CardHeader title="Описание" />
                   <CardContent>
-                    Занимаюсь разработкой веб-приложений на React и Redux уже 3
-                    года, из которых 1.5 года в коммерческой разработке. Имею
-                    опыт разработки приложений различных видов, интеграции
-                    различных сервисов, оценки и анализа задач бизнеса.
-                    Программированием занимаюсь уже больше 4 лет. Помимо
-                    JavaScript имею опыт с Python.
+                    <div
+                      dangerouslySetInnerHTML={{ __html: profile?.description }}
+                    />
                   </CardContent>
-                  <CardActions
-                    sx={{
-                      position: "absolute",
-                      top: "16px",
-                      right: "16px",
-                      padding: 0,
-                    }}
-                  >
-                    <Link underline="hover" variant="h5">
-                      Изменить
-                    </Link>
-                  </CardActions>
                 </Card>
               </Paper>
-              <Paper elevation={3}>
-                <Card sx={{ position: "relative" }}>
-                  <CardHeader title="GitHub" />
-                  <CardContent>
-                    * здесь должна быть ссылка на github *
-                  </CardContent>
-                  <CardActions
-                    sx={{
-                      position: "absolute",
-                      top: "16px",
-                      right: "16px",
-                      padding: 0,
-                    }}
-                  >
-                    <Link underline="hover" variant="h5">
-                      Изменить
-                    </Link>
-                  </CardActions>
-                </Card>
-              </Paper>
-              <Paper elevation={3}>
-                <Card sx={{ position: "relative" }}>
-                  <CardHeader title="Образование" />
-                  <CardContent>Информация об образовании</CardContent>
-                  <CardActions
-                    sx={{
-                      position: "absolute",
-                      top: "16px",
-                      right: "16px",
-                      padding: 0,
-                    }}
-                  >
-                    <Link underline="hover" variant="h5">
-                      Изменить
-                    </Link>
-                  </CardActions>
-                </Card>
-              </Paper>
-              <Paper elevation={3}>
-                {companyVacancies?.map((vacancy) => (
-                  <Card key={vacancy.id}>
-                    <CardContent>
-                      <Typography
-                        sx={{
-                          fontWeight: "bold",
-                        }}
-                      >
-                        {vacancy.title}
-                      </Typography>
-                      {vacancy.salary && (
-                        <Typography
-                          paragraph
-                        >{`${vacancy.salary} рублей`}</Typography>
-                      )}
-                      <Typography paragraph>{vacancy.description}</Typography>
-                      {vacancy?.abilities.map((ability: Ability) => (
-                        <Chip key={ability.id} label={ability.title} />
-                      ))}
-                    </CardContent>
-                  </Card>
-                ))}
+
+              <Paper
+                elevation={3}
+                sx={{
+                  padding: "10px",
+                }}
+              >
+                <Stack spacing={2}>
+                  <Typography variant="h5">Вакансии компании</Typography>
+                  {companyVacancies?.map((vacancy: VacancyModel) => (
+                    <VacancyCard item={vacancy} key={vacancy.id} />
+                  ))}
+                </Stack>
               </Paper>
             </Stack>
           </Grid>
@@ -216,4 +170,4 @@ const CompanyProfile = () => {
   );
 };
 
-export default CompanyProfile;
+export default observer(CompanyProfile);

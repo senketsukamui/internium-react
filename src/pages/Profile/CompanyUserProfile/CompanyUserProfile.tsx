@@ -30,8 +30,6 @@ const CompanyUserProfile = () => {
 
   const profile = companyUsersStore.getProfile;
 
-  console.log(profile);
-
   const handleModalOpen = () => {
     setModalOpen(true);
   };
@@ -96,7 +94,7 @@ const CompanyUserProfile = () => {
                     {profile?.company?.city}
                   </Typography>
                   <Link align="center" component="p" gutterBottom>
-                    {profile?.userInfo?.website}
+                    {profile?.company?.website}
                   </Link>
                 </Paper>
                 <Paper elevation={3} sx={{ padding: "15px" }}>
@@ -124,62 +122,6 @@ const CompanyUserProfile = () => {
                     Программированием занимаюсь уже больше 4 лет. Помимо
                     JavaScript имею опыт с Python.
                   </CardContent>
-                  <CardActions
-                    sx={{
-                      position: "absolute",
-                      top: "16px",
-                      right: "16px",
-                      padding: 0,
-                    }}
-                  >
-                    <Link underline="hover" variant="h5">
-                      Изменить
-                    </Link>
-                  </CardActions>
-                </Card>
-              </Paper>
-              <Paper elevation={3}>
-                <Card sx={{ position: "relative" }}>
-                  <CardHeader title="GitHub" />
-                  <CardContent>
-                    * здесь должна быть ссылка на github *
-                  </CardContent>
-                  <CardActions
-                    sx={{
-                      position: "absolute",
-                      top: "16px",
-                      right: "16px",
-                      padding: 0,
-                    }}
-                  >
-                    <Link underline="hover" variant="h5">
-                      Изменить
-                    </Link>
-                  </CardActions>
-                </Card>
-              </Paper>
-              <Paper elevation={3}>
-                <Card sx={{ position: "relative" }}>
-                  <CardHeader title="Образование" />
-                  <CardContent>Информация об образовании</CardContent>
-                  <CardActions
-                    sx={{
-                      position: "absolute",
-                      top: "16px",
-                      right: "16px",
-                      padding: 0,
-                    }}
-                  >
-                    <Link underline="hover" variant="h5">
-                      Изменить
-                    </Link>
-                  </CardActions>
-                </Card>
-              </Paper>
-              <Paper elevation={3}>
-                <Card sx={{ position: "relative" }}>
-                  <CardHeader title="Курсы" />
-                  <CardContent>Информация о пройдённых курсах</CardContent>
                   <CardActions
                     sx={{
                       position: "absolute",

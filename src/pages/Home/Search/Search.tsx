@@ -8,6 +8,7 @@ import {
   CardMedia,
   Chip,
   Container,
+  debounce,
   Divider,
   FormControl,
   Grid,
@@ -38,6 +39,8 @@ import {
 } from "components/VacancyModal/constants";
 import { Ability } from "store/specializations/types";
 import { VacancyModel } from "store/vacancies/types";
+import Vacancy from "components/VacancyCard";
+import VacancyCard from "components/VacancyCard";
 
 const Search: FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -121,12 +124,13 @@ const Search: FC = () => {
         search,
         paid,
         location,
-        salaryFrom: salary.salaryFrom,
-        salaryTo: salary.salaryTo,
+        salaryFrom: salary[0],
+        salaryTo: salary[1],
         abilities,
       },
       { arrayFormat: "bracket" }
     );
+
     setSearchParams(params);
     vacanciesStore.getVacancies(params);
   }, [sortType, search, sortBy, paid, location, salary, abilities]);
@@ -225,28 +229,7 @@ const Search: FC = () => {
           </Paper>
           <Stack spacing={2}>
             {vacanciesStore.getVacanciesValue?.map((item) => (
-              <Paper elevation={2}>
-                <Card key={item.id}>
-                  <CardContent>
-                    <Typography
-                      sx={{
-                        fontWeight: "bold",
-                      }}
-                    >
-                      {item.title}
-                    </Typography>
-                    {item.salary && (
-                      <Typography
-                        paragraph
-                      >{`${item.salary} рублей`}</Typography>
-                    )}
-                    <Typography paragraph>{item.description}</Typography>
-                    {item?.abilities.map((ability: Ability) => (
-                      <Chip key={ability.id} label={ability.title} />
-                    ))}
-                  </CardContent>
-                </Card>
-              </Paper>
+              <VacancyCard item={item} key={item.id} />
             ))}
           </Stack>
           <Stack spacing={2}>
@@ -298,20 +281,6 @@ const Search: FC = () => {
               Зарплата
             </Typography>
             <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-              {/* <TextField
-                label="От"
-                type="number"
-                name="salaryFrom"
-                onChange={handleSalaryChange}
-                value={salary.salaryFrom}
-              />
-              <TextField
-                label="До"
-                type="number"
-                onChange={handleSalaryChange}
-                name="salaryTo"
-                value={salary.salaryTo}
-              /> */}
               <Slider
                 min={5000}
                 max={1000000}

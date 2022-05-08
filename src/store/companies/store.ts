@@ -33,6 +33,7 @@ class CompaniesStore {
     this.loading = true;
     return getCompanyProfile(id).then(({ data }) => {
       this.loading = false;
+      this.profile = data;
     });
   }
 }

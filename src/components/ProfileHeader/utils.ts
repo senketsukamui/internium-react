@@ -16,3 +16,17 @@ export const getHeaderName = (user: RegisteredIntern | CompanyUser) => {
     return `${intern.firstName} ${intern.lastName}`;
   }
 };
+
+export const getProfileLink = (user: RegisteredIntern | CompanyUser) => {
+  const role = get(user, "role");
+  if (role) {
+    if (role === "OWNER") {
+      return "company";
+    }
+    if (role === "USER") {
+      return "company-user";
+    }
+  } else {
+    return "intern";
+  }
+};
