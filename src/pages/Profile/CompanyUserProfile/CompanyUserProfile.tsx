@@ -19,11 +19,12 @@ import useNotification from "hooks/useNotification";
 import { useStores } from "hooks/useStores";
 import { observer } from "mobx-react";
 import React from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const CompanyUserProfile = () => {
   const { id } = useParams();
   const { authStore, companyUsersStore } = useStores();
+  const navigate = useNavigate();
   const [message, sendMessage] = useNotification();
   const [employeeEmail, setEmployeeEmail] = React.useState<string>("");
   const [modalOpen, setModalOpen] = React.useState<boolean>(false);
@@ -68,6 +69,16 @@ const CompanyUserProfile = () => {
                   <Typography align="center" component="p" gutterBottom>
                     {profile?.userInfo?.phone}
                   </Typography>
+                  <Button
+                    variant="contained"
+                    onClick={() => navigate(`/company-user/profile/${id}/edit`)}
+                    sx={{
+                      marginTop: 1,
+                    }}
+                    fullWidth
+                  >
+                    Редактировать
+                  </Button>
                 </Paper>
                 <Paper
                   elevation={3}

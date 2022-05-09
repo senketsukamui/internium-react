@@ -35,7 +35,22 @@ export interface ExistingUserResponse {
   intern: RegisteredIntern;
 }
 
+export interface CompanyUpdateInterface {
+  city: string;
+  description: string;
+  shortDescription: string;
+  hidden: boolean;
+  website: string;
+}
 
+export interface CompanyUserUpdateInterface {
+  firstName: string;
+  lastName: string;
+  middleName: string;
+  position: string;
+  phone: string;
+  birthdate: string;
+}
 
 export interface CompanyInvitationResponse {
   success: boolean;

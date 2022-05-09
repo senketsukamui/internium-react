@@ -29,8 +29,10 @@ const ProfileHeader = (props: ProfileHeaderProps) => {
   };
 
   const handleProfileClick = () => {
-    navigate(`/${getProfileLink(user)}/profile/${user.id}`);
-    handleClose();
+    if (user) {
+      navigate(getProfileLink(user));
+      handleClose();
+    }
   };
 
   return (

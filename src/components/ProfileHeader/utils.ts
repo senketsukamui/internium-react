@@ -21,12 +21,13 @@ export const getProfileLink = (user: RegisteredIntern | CompanyUser) => {
   const role = get(user, "role");
   if (role) {
     if (role === "OWNER") {
-      return "company";
+      const company = user as CompanyUser;
+      return `/company/profile/${company.companyId}`;
     }
     if (role === "USER") {
-      return "company-user";
+      return `/company-user/profile/${user.id}`;
     }
   } else {
-    return "intern";
+    return `/intern/profile/${user.id}`;
   }
 };

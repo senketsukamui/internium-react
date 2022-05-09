@@ -1,10 +1,14 @@
-import { getCompanyProfile, getCompanyVacanciesRequest } from "api/companies";
-import { getCompanyUserProfileRequest } from "api/company-users";
+import {
+  getCompanyUserProfileRequest,
+  updateCompanyUserProfileRequest,
+} from "api/company-users";
+import { CompanyUserUpdateInterface } from "api/types";
 import { makeAutoObservable, toJS } from "mobx";
+import { CompanyUserModel } from "./types";
 
 class CompanyUsersStore {
   public loading: boolean = false;
-  public profile = null;
+  public profile: CompanyUserModel | null = null;
 
   constructor() {
     makeAutoObservable(this);
@@ -16,11 +20,23 @@ class CompanyUsersStore {
 
   public getCompanyUserProfile = (id: number) => {
     this.loading = true;
-    return getCompanyUserProfileRequest(id).then(({ data }) => {
-      this.loading = false;
-      this.profile = data;
-    });
+    return getCompanyUserProfileRequest(id).then(
+      ({ data }: { data: CompanyUserModel }) => {
+        this.loading = false;
+        this.profile = data;
+      }
+    );
   };
+
+  public updateCompanyUserProfile(data: CompanyUserUpdateInterface, id: number) {
+    this.loading = true;
+    return updateCompanyUserProfileRequest(data, id).then(
+      ({ data }: { data: CompanyUserModel }) => {
+        this.loading = false;
+        this.profile = data;
+      }
+    );
+  }
 }
 
 export default new CompanyUsersStore();

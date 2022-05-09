@@ -23,12 +23,13 @@ import useNotification from "hooks/useNotification";
 import { useStores } from "hooks/useStores";
 import { observer } from "mobx-react";
 import React from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Ability } from "store/specializations/types";
 import { VacancyModel } from "store/vacancies/types";
 
 const CompanyProfile = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const { authStore, companiesStore } = useStores();
   const [message, sendMessage] = useNotification();
   const [employeeEmail, setEmployeeEmail] = React.useState<string>("");
@@ -95,6 +96,16 @@ const CompanyProfile = () => {
                   >
                     {profile?.website}
                   </Link>
+                  <Button
+                    variant="contained"
+                    onClick={() => navigate(`/company/profile/${id}/edit`)}
+                    sx={{
+                      marginTop: 1,
+                    }}
+                    fullWidth
+                  >
+                    Редактировать
+                  </Button>
                 </Paper>
                 <Paper
                   sx={{
