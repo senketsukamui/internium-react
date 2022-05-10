@@ -19,8 +19,6 @@ const CompanyUserProfileEdit: React.FC = () => {
   const navigate = useNavigate();
   const profile = companyUsersStore.getProfile;
 
-  console.log(profile);
-
   const { control, handleSubmit, reset, watch, formState } =
     useForm<CompanyUserUpdateInterface>({
       resolver: yupResolver(companyUserUpdateSchema),
@@ -63,8 +61,6 @@ const CompanyUserProfileEdit: React.FC = () => {
       });
     }
   }, [profile]);
-
-  console.log(formState.errors);
 
   return (
     <Grid

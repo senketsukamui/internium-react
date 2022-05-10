@@ -32,7 +32,7 @@ class VacanciesStore {
     });
   }
 
-  public getVacancies(params) {
+  public getVacancies(params: string) {
     this.loading = true;
     return getVacanciesRequest(params).then(
       ({ data }: { data: { vacancies: VacancyModel[] } }) => {

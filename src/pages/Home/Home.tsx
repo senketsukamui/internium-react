@@ -12,6 +12,7 @@ import CompanyProfile from "pages/Profile/CompanyProfile";
 import CompanyUserProfile from "pages/Profile/CompanyUserProfile";
 import CompanyProfileEdit from "pages/ProfileEdit/CompanyProfileEdit";
 import CompanyUserProfileEdit from "pages/ProfileEdit/CompanyUserProfileEdit";
+import InternProfileEdit from "pages/ProfileEdit/InternProfileEdit";
 
 const Home = () => {
   return (
@@ -26,6 +27,10 @@ const Home = () => {
           <Route path="/" element={<Main />} />
           <Route path="/search" element={<Search />} />
           <Route path="/intern/profile/:id" element={<StudentProfile />} />
+          <Route
+            path="/intern/profile/:id/edit"
+            element={<InternProfileEdit />}
+          />
           <Route path="/company/profile/:id" element={<CompanyProfile />} />
           <Route
             path="/company/profile/:id/edit"

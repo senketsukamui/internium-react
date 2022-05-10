@@ -19,6 +19,7 @@ import {
 } from "@mui/material";
 import SvgCompany from "components/Icons/CompanyIcon";
 import VacancyCard from "components/VacancyCard";
+import VacancyModal from "components/VacancyModal";
 import useNotification from "hooks/useNotification";
 import { useStores } from "hooks/useStores";
 import { observer } from "mobx-react";
@@ -37,12 +38,17 @@ const CompanyProfile = () => {
   const companyVacancies = companiesStore.companyVacancies;
 
   const profile = companiesStore.companyProfile;
+  const [modalOpen, setModalOpen] = React.useState<boolean>(false);
 
   const handleEmailSend = (e: React.SyntheticEvent) => {
     e.preventDefault();
     authStore
       .createCompanyInvitation(employeeEmail)
       .catch(() => sendMessage({ msg: "Error", variant: "error" }));
+  };
+
+  const handleModalOpen = () => {
+    setModalOpen(true);
   };
 
   React.useEffect(() => {
@@ -105,6 +111,15 @@ const CompanyProfile = () => {
                     fullWidth
                   >
                     Редактировать
+                  </Button>
+                </Paper>
+                <Paper elevation={3} sx={{ padding: "15px" }}>
+                  <Button
+                    fullWidth
+                    variant="contained"
+                    onClick={handleModalOpen}
+                  >
+                    Создать новую стажировку
                   </Button>
                 </Paper>
                 <Paper
@@ -177,6 +192,7 @@ const CompanyProfile = () => {
           </Grid>
         </Grid>
       </Box>
+      {modalOpen && <VacancyModal open={modalOpen} setOpen={setModalOpen} />}
     </Container>
   );
 };

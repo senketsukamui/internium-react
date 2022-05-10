@@ -73,7 +73,6 @@ const VacancyModal: FC<VacancyModalProps> = ({ open, setOpen }) => {
       .createVacancy({
         ...values,
         abilities,
-        companyId: authStore.getUserObject.company.id,
       })
       .then(() => setOpen(false));
   };
