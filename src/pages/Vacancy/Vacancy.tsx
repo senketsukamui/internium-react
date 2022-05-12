@@ -14,6 +14,7 @@ import {
   Typography,
 } from "@mui/material";
 import SvgCompany from "components/Icons/CompanyIcon";
+import useNotification from "hooks/useNotification";
 import { useStores } from "hooks/useStores";
 import { observer } from "mobx-react";
 import React from "react";
@@ -21,11 +22,30 @@ import { useNavigate, useParams } from "react-router-dom";
 
 const Vacancy = () => {
   const { id } = useParams();
-  const { vacanciesStore, companiesStore } = useStores();
+  const { vacanciesStore, companiesStore, reactionsStore } = useStores();
+  const [message, sendMessage] = useNotification();
   const navigate = useNavigate();
 
   const vacancy = vacanciesStore.getVacancyValue;
   const companyVacancies = companiesStore.companyVacancies;
+
+  const handleReact = () => {
+    reactionsStore.createReaction(Number(id)).then(() =>
+      sendMessage({
+        msg: "Вы успешно откликнулись на вакансию!",
+        variant: "success",
+      })
+    );
+  };
+
+  const handleDeleteReaction = () => {
+    reactionsStore.deleteReaction(Number(id)).then(() =>
+      sendMessage({
+        msg: "Вы успешно удалили отклик на вакансию!",
+        variant: "danger",
+      })
+    );
+  };
 
   React.useEffect(() => {
     vacanciesStore.getVacancy(id);
@@ -90,9 +110,11 @@ const Vacancy = () => {
                 Навыки
               </Typography>
               <Box>
-                {vacancy?.abilities.map((item) => (
-                  <Chip label={item.title} />
-                ))}
+                {Boolean(vacancy?.abilities.length) ? (
+                  vacancy?.abilities.map((item) => <Chip label={item.title} />)
+                ) : (
+                  <Typography paragraph>Не указаны</Typography>
+                )}
               </Box>
             </Paper>
             <Paper
@@ -145,6 +167,22 @@ const Vacancy = () => {
                 fullWidth
               >
                 Редактировать
+              </Button>
+              <Button
+                variant="contained"
+                onClick={handleReact}
+                fullWidth
+                sx={{ marginTop: 1 }}
+              >
+                Откликнуться
+              </Button>
+              <Button
+                variant="contained"
+                onClick={handleDeleteReaction}
+                fullWidth
+                sx={{ marginTop: 1 }}
+              >
+                Убрать отклик
               </Button>
             </Paper>
             <Paper>
