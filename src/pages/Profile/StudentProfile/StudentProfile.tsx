@@ -24,11 +24,16 @@ import { calculateAge } from "utils";
 
 const StudentProfile: FC = () => {
   const { id } = useParams();
-  const { internsStore } = useStores();
-  const profile = internsStore.getProfile;
+  const { internsStore, authStore } = useStores();
+  const isCurrentUser = authStore.isCurrentUser(id);
+  const profile = isCurrentUser
+    ? authStore.getUserObject
+    : internsStore.getProfile;
 
   React.useEffect(() => {
-    internsStore.getInternProfile(id);
+    if (authStore.getUserObject && !isCurrentUser) {
+      internsStore.getInternProfile(id);
+    }
   }, [id]);
 
   return (

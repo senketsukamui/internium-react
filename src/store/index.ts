@@ -5,6 +5,7 @@ import SpecializationsStore from "./specializations";
 import CompaniesStore from "./companies";
 import InternsStore from "./interns";
 import CompanyUsersStore from "./company-users";
+import ReactionsStore from "./reactions";
 import { createWrappedApiInterceptor } from "api/helpers";
 
 (function initStore() {
@@ -18,4 +19,5 @@ export const rootStoreContext = createContext({
   companiesStore: CompaniesStore,
   companyUsersStore: CompanyUsersStore,
   internsStore: InternsStore,
+  reactionsStore: ReactionsStore,
 });

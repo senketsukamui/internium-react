@@ -25,18 +25,20 @@ const CompanyUserProfile = () => {
   const { id } = useParams();
   const { authStore, companyUsersStore } = useStores();
   const navigate = useNavigate();
-  const [message, sendMessage] = useNotification();
-  const [employeeEmail, setEmployeeEmail] = React.useState<string>("");
   const [modalOpen, setModalOpen] = React.useState<boolean>(false);
-
-  const profile = companyUsersStore.getProfile;
+  const isCurrentUser = authStore.isCurrentUser(id);
+  const profile = isCurrentUser
+    ? authStore.getUserObject
+    : companyUsersStore.getProfile;
 
   const handleModalOpen = () => {
     setModalOpen(true);
   };
 
   React.useEffect(() => {
-    companyUsersStore.getCompanyUserProfile(id);
+    if (authStore.getUserObject && !isCurrentUser) {
+      companyUsersStore.getCompanyUserProfile(id);
+    }
   }, [id]);
 
   return (

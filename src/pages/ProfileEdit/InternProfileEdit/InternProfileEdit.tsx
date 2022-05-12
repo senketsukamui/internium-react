@@ -22,11 +22,15 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useStores } from "hooks/useStores";
 import { observer } from "mobx-react";
 
-const InternProfileEdit: React.FC = () => {
+interface InternProps {
+  user?: any;
+}
+
+const InternProfileEdit: React.FC<InternProps> = ({ user }) => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { internsStore } = useStores();
-  const profile = internsStore.getProfile;
+  const profile = user || internsStore.getProfile;
   const { control, handleSubmit, reset, watch, formState } =
     useForm<InternUpdateInterface>({
       resolver: yupResolver(internUpdateSchema),
@@ -43,6 +47,7 @@ const InternProfileEdit: React.FC = () => {
 
   const [abilities, setAbilities] = React.useState<number[]>([]);
   const onSubmit = (values: InternUpdateInterface) => {
+    console.log(values);
     internsStore
       .updateInternProfile(
         {
@@ -52,12 +57,14 @@ const InternProfileEdit: React.FC = () => {
         id
       )
       .then(() => {
-        navigate(`/company/profile/${id}`);
+        navigate(`/intern/profile/${id}`);
       });
   };
 
   React.useEffect(() => {
-    internsStore.getInternProfile(id);
+    if (!user) {
+      internsStore.getInternProfile(id);
+    }
   }, []);
 
   React.useEffect(() => {
@@ -73,8 +80,6 @@ const InternProfileEdit: React.FC = () => {
       });
     }
   }, [profile]);
-
-  console.log(formState.errors);
 
   return (
     <Grid

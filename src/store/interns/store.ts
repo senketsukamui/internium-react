@@ -1,7 +1,11 @@
 import { getCompanyUserProfileRequest } from "api/company-users";
-import { getInternProfileRequest, updateInternProfileRequest } from "api/interns";
+import {
+  getInternProfileRequest,
+  updateInternProfileRequest,
+} from "api/interns";
 import { makeAutoObservable, toJS } from "mobx";
 import { InternUpdateInterface } from "./types";
+import AuthStore from "../auth";
 
 class InternsStore {
   public loading: boolean = false;
@@ -27,6 +31,7 @@ class InternsStore {
     this.loading = true;
     return updateInternProfileRequest(data, id).then(({ data }) => {
       this.loading = false;
+      AuthStore.user = data;
     });
   };
 }

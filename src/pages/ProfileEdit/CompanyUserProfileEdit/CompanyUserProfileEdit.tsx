@@ -13,11 +13,15 @@ import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import { DatePicker, LocalizationProvider } from "@mui/lab";
 import { companyUserUpdateSchema } from "./constants";
 
-const CompanyUserProfileEdit: React.FC = () => {
+interface CompanyUserProps {
+  user?: any;
+}
+
+const CompanyUserProfileEdit: React.FC<CompanyUserProps> = ({ user }) => {
   const { id } = useParams();
   const { companyUsersStore } = useStores();
   const navigate = useNavigate();
-  const profile = companyUsersStore.getProfile;
+  const profile = user || companyUsersStore.getProfile;
 
   const { control, handleSubmit, reset, watch, formState } =
     useForm<CompanyUserUpdateInterface>({
@@ -46,7 +50,9 @@ const CompanyUserProfileEdit: React.FC = () => {
   };
 
   React.useEffect(() => {
-    companyUsersStore.getCompanyUserProfile(id);
+    if (!user) {
+      companyUsersStore.getCompanyUserProfile(id);
+    }
   }, []);
 
   React.useEffect(() => {

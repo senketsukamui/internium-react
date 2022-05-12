@@ -47,6 +47,10 @@ class AuthStore {
     return toJS(this.user);
   }
 
+  public isCurrentUser(id: string) {
+    return this.user?.id === Number(id) || this.user?.companyId === Number(id);
+  }
+
   public loginIntern(phone: string) {
     this.loading = true;
     this.codeSent = false;

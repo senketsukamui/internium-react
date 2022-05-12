@@ -4,7 +4,7 @@ import { basicAxios, mainAxios } from "./utils";
 export const getVacancyRequest = (id: number) =>
   basicAxios.get(`/vacancies/${id}`);
 
-export const getVacanciesRequest = (params) =>
+export const getVacanciesRequest = (params: string) =>
   basicAxios.get(`/vacancies/?${params}`);
 
 export const createVacancyRequest = (data: Vacancy) =>

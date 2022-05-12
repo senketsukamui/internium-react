@@ -1,1 +1,1 @@
-export { default } from "./InternProfileEdit";
+export { default } from "./InternProfileEditContainer";

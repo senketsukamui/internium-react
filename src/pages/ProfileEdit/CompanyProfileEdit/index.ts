@@ -1,1 +1,1 @@
-export { default } from "./CompanyProfileEdit";
+export { default } from "./CompanyProfileEditContainer";

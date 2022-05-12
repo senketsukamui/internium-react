@@ -10,11 +10,17 @@ import ReactQuill from "react-quill";
 import { useNavigate, useParams } from "react-router-dom";
 import { CompanyModel } from "store/companies/types";
 
-const CompanyProfileEdit: React.FC = () => {
+interface CompanyProps {
+  user?: any;
+}
+
+const CompanyProfileEdit: React.FC<CompanyProps> = ({ user }) => {
   const { id } = useParams();
   const { companiesStore } = useStores();
   const navigate = useNavigate();
-  const profile = companiesStore.companyProfile;
+  const profile = user || companiesStore.companyProfile;
+
+  console.log(user, profile);
 
   const { control, handleSubmit, reset, watch, formState } =
     useForm<CompanyUpdateInterface>({
@@ -42,7 +48,9 @@ const CompanyProfileEdit: React.FC = () => {
   };
 
   React.useEffect(() => {
-    companiesStore.getCompanyProfile(id);
+    if (!user) {
+      companiesStore.getCompanyProfile(id);
+    }
   }, []);
 
   React.useEffect(() => {

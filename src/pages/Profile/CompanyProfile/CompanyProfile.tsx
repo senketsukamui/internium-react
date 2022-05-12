@@ -34,10 +34,13 @@ const CompanyProfile = () => {
   const { authStore, companiesStore } = useStores();
   const [message, sendMessage] = useNotification();
   const [employeeEmail, setEmployeeEmail] = React.useState<string>("");
-
+  const isCurrentUser = authStore.isCurrentUser(id);
   const companyVacancies = companiesStore.companyVacancies;
 
-  const profile = companiesStore.companyProfile;
+  const profile = isCurrentUser
+    ? authStore.getUserObject?.company
+    : companiesStore.getProfile;
+
   const [modalOpen, setModalOpen] = React.useState<boolean>(false);
 
   const handleEmailSend = (e: React.SyntheticEvent) => {
@@ -56,7 +59,9 @@ const CompanyProfile = () => {
   }, [id]);
 
   React.useEffect(() => {
-    companiesStore.getCompanyProfile(id);
+    if (authStore.getUserObject && !isCurrentUser) {
+      companiesStore.getCompanyProfile(id);
+    }
   }, [id]);
 
   return (

@@ -7,4 +7,4 @@ export const getInternProfileRequest = (id: number) =>
 export const updateInternProfileRequest = (
   data: InternUpdateInterface,
   id: number
-) => basicAxios.put(`/intern/${id}`);
+) => basicAxios.put(`/intern/${id}`, data);
