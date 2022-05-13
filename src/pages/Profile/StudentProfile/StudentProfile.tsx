@@ -1,5 +1,6 @@
 import {
   Box,
+  Button,
   Card,
   CardActions,
   CardContent,
@@ -12,6 +13,7 @@ import {
   ListItemText,
   Paper,
   Stack,
+  Switch,
   Typography,
 } from "@mui/material";
 import SvgStudent from "components/Icons/StudentIcon";
@@ -19,11 +21,16 @@ import { differenceInYears, format } from "date-fns";
 import { useStores } from "hooks/useStores";
 import { observer } from "mobx-react";
 import React, { FC } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { InternStatuses } from "store/auth/types";
 import { calculateAge } from "utils";
 
 const StudentProfile: FC = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
+  const [status, setStatus] = React.useState<InternStatuses>(
+    InternStatuses.INACTIVE
+  );
   const { internsStore, authStore } = useStores();
   const isCurrentUser = authStore.isCurrentUser(id);
   const profile = isCurrentUser
@@ -35,6 +42,38 @@ const StudentProfile: FC = () => {
       internsStore.getInternProfile(id);
     }
   }, [id]);
+
+  React.useEffect(() => {
+    if (profile) {
+      setStatus(profile.status);
+    }
+  }, [profile]);
+
+  const handleSwitchChange = () => {
+    if (status === InternStatuses.INACTIVE) {
+      setStatus(InternStatuses.ACTIVE);
+      handleStatusChange(InternStatuses.ACTIVE);
+    } else {
+      setStatus(InternStatuses.INACTIVE);
+      handleStatusChange(InternStatuses.INACTIVE);
+    }
+  };
+
+  const handleStatusChange = (status: InternStatuses) => {
+    internsStore.updateInternProfile(
+      {
+        location: profile.location,
+        description: profile.description,
+        birthdate: profile.birthdate,
+        gender: profile.gender,
+        firstName: profile.firstName,
+        lastName: profile.lastName,
+        middleName: profile.middleName,
+        status,
+      },
+      profile.id
+    );
+  };
 
   return (
     <Container maxWidth="lg">
@@ -63,19 +102,28 @@ const StudentProfile: FC = () => {
                     {profile?.location}
                   </Typography>
 
-                  <Typography
-                    component="p"
+                  <Stack direction="row" spacing={1} alignItems="center">
+                    <Typography sx={{ color: "red" }}>
+                      Не ищу стажировку
+                    </Typography>
+                    <Switch
+                      onChange={handleSwitchChange}
+                      checked={status === InternStatuses.ACTIVE}
+                    />
+                    <Typography sx={{ color: "green" }}>
+                      В поисках стажировки
+                    </Typography>
+                  </Stack>
+                  <Button
+                    variant="contained"
+                    onClick={() => navigate(`/intern/profile/${id}/edit`)}
                     sx={{
-                      color: `${
-                        profile?.status === "ACTIVE" ? "green" : "red"
-                      }`,
-                      fontWeight: "bold",
+                      marginTop: 1,
                     }}
+                    fullWidth
                   >
-                    {profile?.status === "ACTIVE"
-                      ? "Ищу стажировку"
-                      : "Не ищу стажировку"}
-                  </Typography>
+                    Редактировать
+                  </Button>
                 </Paper>
                 <Paper
                   elevation={3}
@@ -123,18 +171,6 @@ const StudentProfile: FC = () => {
                   <CardContent>
                     {profile?.description || "Нет информации"}
                   </CardContent>
-                  <CardActions
-                    sx={{
-                      position: "absolute",
-                      top: "16px",
-                      right: "16px",
-                      padding: 0,
-                    }}
-                  >
-                    <Link underline="hover" variant="h5">
-                      Изменить
-                    </Link>
-                  </CardActions>
                 </Card>
               </Paper>
             </Stack>

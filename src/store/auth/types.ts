@@ -33,3 +33,8 @@ export enum TokenEntities {
   INTERN = "intern",
   COMPANY_USER = "companyUser",
 }
+
+export enum InternStatuses {
+  ACTIVE = "ACTIVE",
+  INACTIVE = "INACTIVE",
+}

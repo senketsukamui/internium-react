@@ -71,10 +71,13 @@ const Search: FC = () => {
     Number(searchParams.get("salaryTo")) || 1000000,
   ]);
   const [location, setLocation] = useState<LocationStatuses>(
-    LocationStatuses.REMOTE
+    (searchParams.get("location") as LocationStatuses) ||
+      LocationStatuses.REMOTE
   );
 
-  const [paid, setPaid] = useState<PaidStatuses>(PaidStatuses.PAID);
+  const [paid, setPaid] = useState<PaidStatuses>(
+    (searchParams.get("paid") as PaidStatuses) || PaidStatuses.PAID
+  );
 
   const sortOptions = React.useMemo(
     () =>
