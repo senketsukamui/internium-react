@@ -1,4 +1,4 @@
-import { SearchRounded } from "@mui/icons-material";
+import { Chat, SearchRounded } from "@mui/icons-material";
 import { AppBar, Box, Button, Toolbar, Typography } from "@mui/material";
 import ProfileHeader from "components/ProfileHeader";
 import { useStores } from "hooks/useStores";
@@ -24,6 +24,10 @@ const Header = () => {
               Авторизация
             </Button>
           )}
+          <Chat
+            onClick={() => navigate("/chat")}
+            sx={{ marginRight: 1, cursor: "pointer" }}
+          />
           <SearchRounded
             sx={{ marginRight: 1, cursor: "pointer" }}
             onClick={() => navigate("/search")}
