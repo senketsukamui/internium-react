@@ -92,3 +92,8 @@ export const getCurrentCompanyUserRequest = () =>
 
 export const authorizeCurrentCompanyUserRequest = (currentUser: CompanyAuth) =>
   basicAxios.post("/company-users/authorize", currentUser);
+
+export const removeAvatarRequest = () => basicAxios.delete("/avatars");
+
+export const addAvatarRequest = (formData: FormData) =>
+  basicAxios.post("/avatars", formData);

@@ -111,7 +111,9 @@ const Vacancy = () => {
               </Typography>
               <Box>
                 {Boolean(vacancy?.abilities.length) ? (
-                  vacancy?.abilities.map((item) => <Chip label={item.title} />)
+                  vacancy?.abilities.map((item) => (
+                    <Chip sx={{ marginRight: 1 }} label={item.title} />
+                  ))
                 ) : (
                   <Typography paragraph>Не указаны</Typography>
                 )}

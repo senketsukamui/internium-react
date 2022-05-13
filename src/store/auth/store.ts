@@ -1,5 +1,6 @@
 import { makeAutoObservable, toJS } from "mobx";
 import {
+  addAvatarRequest,
   authorizeCurrentCompanyUserRequest,
   CompanyAuth,
   CompanyInfo,
@@ -10,6 +11,7 @@ import {
   getCurrentCompanyUserRequest,
   getCurrentInternRequest,
   InternInfo,
+  removeAvatarRequest,
   signinInternRequest,
   signupCompanyRequest,
   signupInternRequest,
@@ -168,6 +170,23 @@ class AuthStore {
         this.getCurrentCompany();
       }
     );
+  }
+
+  public removeCurrentUserAvatar() {
+    this.loading = true;
+    return removeAvatarRequest().then(() => {
+      this.loading = false;
+    });
+  }
+
+  public addCurrentUserAvatar(avatar: File) {
+    this.loading = true;
+    const formData = new FormData();
+    formData.append("file", avatar);
+    return addAvatarRequest(formData).then(({ data }) => {
+      this.loading = false;
+      console.log(data);
+    });
   }
 
   public logout() {
