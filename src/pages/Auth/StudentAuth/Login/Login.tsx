@@ -70,7 +70,7 @@ const Login: FC = () => {
     }
   };
 
-  const { control, handleSubmit, formState } = useForm<SignupFormValues>({
+  const { control, handleSubmit } = useForm<SignupFormValues>({
     resolver: yupResolver(signupSchema),
     defaultValues: {
       firstName: "",
