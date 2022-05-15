@@ -24,7 +24,8 @@ const ProfileHeader = (props: ProfileHeaderProps) => {
   };
 
   const handleLogout = () => {
-    authStore.logout().then(() => navigate("/"));
+    navigate("/");
+    authStore.logout();
     handleClose();
   };
 
