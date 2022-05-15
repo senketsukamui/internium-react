@@ -7,6 +7,10 @@ import {
   Link,
   Box,
 } from "@mui/material";
+import {
+  LocationStatuses,
+  LocationStatusesTranslations,
+} from "components/VacancyModal/constants";
 import React from "react";
 import { Ability } from "store/specializations/types";
 import { VacancyModel } from "store/vacancies/types";
@@ -34,6 +38,10 @@ const VacancyCard: React.FC<VacancyCardProps> = ({ item }) => {
           >
             {item.title}
           </Link>
+          <Typography>{`${item?.company?.city} • ${
+            item.location === LocationStatuses.REMOTE &&
+            LocationStatusesTranslations[item.location]
+          }`}</Typography>
           {Boolean(item.salary) && (
             <Typography paragraph>{`${item.salary} рублей`}</Typography>
           )}

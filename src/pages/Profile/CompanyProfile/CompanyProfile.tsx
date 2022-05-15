@@ -65,10 +65,10 @@ const CompanyProfile = () => {
   }, [id]);
 
   return (
-    <Container maxWidth="lg">
+    <Container maxWidth="xl">
       <Box sx={{ flexGrow: 1 }}>
         <Grid container spacing={2}>
-          <Grid item xs={4}>
+          <Grid item xs={5}>
             <Container>
               <Stack direction="column" spacing={2}>
                 <Paper
@@ -167,15 +167,21 @@ const CompanyProfile = () => {
               </Stack>
             </Container>
           </Grid>
-          <Grid item xs={8}>
+          <Grid item xs={7}>
             <Stack direction="column" spacing={2}>
               <Paper elevation={3}>
                 <Card sx={{ position: "relative" }}>
                   <CardHeader title="Описание" />
                   <CardContent>
-                    <div
-                      dangerouslySetInnerHTML={{ __html: profile?.description }}
-                    />
+                    {profile?.description ? (
+                      <div
+                        dangerouslySetInnerHTML={{
+                          __html: profile?.description,
+                        }}
+                      />
+                    ) : (
+                      "Нет описания"
+                    )}
                   </CardContent>
                 </Card>
               </Paper>
