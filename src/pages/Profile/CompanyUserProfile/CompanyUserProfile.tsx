@@ -135,18 +135,6 @@ const CompanyUserProfile = () => {
                     Программированием занимаюсь уже больше 4 лет. Помимо
                     JavaScript имею опыт с Python.
                   </CardContent>
-                  <CardActions
-                    sx={{
-                      position: "absolute",
-                      top: "16px",
-                      right: "16px",
-                      padding: 0,
-                    }}
-                  >
-                    <Link underline="hover" variant="h5">
-                      Изменить
-                    </Link>
-                  </CardActions>
                 </Card>
               </Paper>
             </Stack>
