@@ -12,6 +12,7 @@ import { useStores } from "hooks/useStores";
 import { observer } from "mobx-react";
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import logo from "../../assets/images/logo.svg";
 import { HeaderLink } from "./HeaderLink";
 
 const Header = () => {
@@ -39,18 +40,17 @@ const Header = () => {
             paddingRight: "0 !important",
           })}
         >
-          <Grid container spacing={7} sx={{ flexWrap: "nowrap" }}>
-            <Grid item>
-              <Typography>Internium</Typography>
+          <Grid
+            item
+            container
+            wrap="nowrap"
+            spacing={6}
+            sx={{ height: "100%", alignItems: "center" }}
+          >
+            <Grid item sx={{marginTop: '8px'}}>
+              <img src={logo} alt="internium logo" height="40" />
             </Grid>
-            <Grid
-              item
-              container
-              spacing={3}
-              sx={(theme) => ({
-                paddingTop: theme.spacing(5),
-              })}
-            >
+            <Grid item container spacing={3}>
               <Grid item>
                 <HeaderLink href="">Стажировки</HeaderLink>
               </Grid>
@@ -63,6 +63,7 @@ const Header = () => {
             </Grid>
           </Grid>
           <Grid
+            item
             container
             spacing={4}
             sx={{ width: "unset", flexWrap: "nowrap", alignItems: "center" }}
