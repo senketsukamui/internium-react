@@ -1,21 +1,9 @@
-import {
-  Box,
-  Button,
-  Container,
-  createTheme,
-  Grid,
-  Input,
-  Paper,
-  ThemeProvider,
-  ToggleButton,
-  ToggleButtonGroup,
-  Typography,
-} from "@mui/material";
+import { Box, Button, Grid, Paper, Typography } from "@mui/material";
 import { BorderedInput } from "components/BorderedInput/BorderedInput";
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import SearchInput from "../../../components/SearchInput";
-import { ButtonModes, ROLE_MESSAGES } from "./constants";
+import bgMain from "../../../assets/images/bg-main.jpeg";
+import { ButtonModes } from "./constants";
 
 const Main = () => {
   const navigate = useNavigate();
@@ -41,8 +29,7 @@ const Main = () => {
       <Box
         sx={{
           padding: "105px 0",
-          background:
-            "url(https://d1d8tdgb57avhs.cloudfront.net/assets/home/cb_brand_refresh_banner-8de60da8b7da6cd5d0e6c3752231dac6eea09fe5ab145374d35ee3165c968a8d.jpg)",
+          background: `url(${bgMain})`,
           backgroundSize: "cover",
           backgroundRepeat: "no-repeat",
           backgroundPosition: "center",
