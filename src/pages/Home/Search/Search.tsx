@@ -1,33 +1,25 @@
-import { ProfileFilled, ProfileOutlined } from "@ant-design/icons";
 import { SearchOffOutlined } from "@mui/icons-material";
 import {
   Box,
   Button,
-  Card,
-  CardContent,
-  CardMedia,
-  Chip,
   Container,
-  debounce,
   Divider,
   FormControl,
   Grid,
+  InputLabel,
   MenuItem,
   OutlinedInput,
   Pagination,
-  Paper,
   Select,
   SelectChangeEvent,
   Slider,
   Stack,
-  TextField,
   Typography,
 } from "@mui/material";
 import React, { FC, SyntheticEvent, useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { SortByLabels, SortByTypes, SortLabels, SortTypes } from "./constants";
 import queryString from "query-string";
-import CheckboxGroup from "components/CheckboxGroup";
 import { useStores } from "hooks/useStores";
 import { observer } from "mobx-react";
 import SpecializationFilterModal from "components/SpecializationFilterModal/SpecializationFilterModal";
@@ -37,10 +29,9 @@ import {
   PaidStatuses,
   PaidStatusesTranslations,
 } from "components/VacancyModal/constants";
-import { Ability } from "store/specializations/types";
 import { VacancyModel } from "store/vacancies/types";
-import Vacancy from "components/VacancyCard";
 import VacancyCard from "components/VacancyCard";
+import { VacancyDetailsCard } from "components/VacancyDetailsCard/VacancyDetailsCard";
 
 const Search: FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -71,8 +62,7 @@ const Search: FC = () => {
     Number(searchParams.get("salaryTo")) || 1000000,
   ]);
   const [location, setLocation] = useState<LocationStatuses>(
-    (searchParams.get("location") as LocationStatuses) ||
-      LocationStatuses.REMOTE
+    (searchParams.get("location") as LocationStatuses) || undefined
   );
 
   const [paid, setPaid] = useState<PaidStatuses>(
@@ -161,33 +151,22 @@ const Search: FC = () => {
     setModalOpen(false);
   };
 
-  return (
-    <main>
-      <Grid container spacing={2}>
-        <Grid item xs={8}>
-          <Paper
-            sx={{
-              marginBottom: 1,
-              padding: 2,
-            }}
-          >
-            <Stack spacing={2} divider={<Divider flexItem />}>
-              <Typography
-                variant="h5"
-                sx={{
-                  fontWeight: "bold",
-                }}
-                color="primary"
-              >
-                Стажировки
-              </Typography>
+  const [displayVacancy, setDisplayVacancy] = useState<VacancyModel | null>(
+    null
+  );
 
-              <Container
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                }}
-              >
+  return (
+    <>
+      <Grid
+        container
+        spacing={2}
+        direction="column"
+        sx={(theme) => ({ paddingTop: theme.spacing(8) })}
+      >
+        <Container>
+          <Grid item>
+            <Grid container spacing={1}>
+              <Grid item flexGrow="1">
                 <OutlinedInput
                   endAdornment={<SearchOffOutlined color="primary" />}
                   placeholder="Поиск"
@@ -200,24 +179,8 @@ const Search: FC = () => {
                     marginRight: 1,
                   }}
                 />
-              </Container>
-              <Container
-                sx={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                }}
-              >
-                <Select
-                  value={sortType}
-                  onChange={(e: SelectChangeEvent) =>
-                    setSortType(e.target.value)
-                  }
-                  displayEmpty
-                  inputProps={{ "aria-label": "Without label" }}
-                  sx={{ minWidth: "40%" }}
-                >
-                  {sortOptions}
-                </Select>
+              </Grid>
+              <Grid item>
                 <Select
                   value={sortBy}
                   onChange={(e: SelectChangeEvent) => setSortBy(e.target.value)}
@@ -227,75 +190,163 @@ const Search: FC = () => {
                 >
                   {sortByOptions}
                 </Select>
-              </Container>
-            </Stack>
-          </Paper>
-          <Stack spacing={2}>
-            {vacanciesStore.getVacanciesValue?.map((item) => (
-              <VacancyCard item={item} key={item.id} />
-            ))}
-          </Stack>
-          <Stack spacing={2}>
-            <Typography>Page: {page}</Typography>
-            <Pagination count={10} page={page} onChange={handlePageChange} />
-          </Stack>
-        </Grid>
-        <Grid item xs={4}>
-          <Paper sx={{ padding: 2 }}>
-            <Button
-              variant="contained"
-              fullWidth
-              onClick={handleOpenSpecializationModal}
-            >
-              Выбрать специализацию и навыки
-            </Button>
-            <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
+              </Grid>
+              <Grid item>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  sx={(theme) => ({
+                    height: "100%",
+                    padding: `0 ${theme.spacing(3)}`,
+                  })}
+                >
+                  Поиск
+                </Button>
+              </Grid>
+            </Grid>
 
-            <Typography
-              sx={{ fontWeight: "bold", fontSize: "1.2rem", marginTop: 2 }}
-              gutterBottom
-            >
-              Локация
-            </Typography>
-            <Select
-              fullWidth
-              onChange={(e) => setLocation(e.target.value)}
-              value={location}
-            >
-              {locationOptions}
-            </Select>
-            <Typography
-              sx={{ fontWeight: "bold", fontSize: "1.2rem", marginTop: 2 }}
-              gutterBottom
-            >
-              Оплачиваемая
-            </Typography>
-            <Select
-              fullWidth
-              onChange={(e) => setPaid(e.target.value)}
-              value={paid}
-            >
-              {paidOptions}
-            </Select>
-            <Typography
-              sx={{ fontWeight: "bold", fontSize: "1.2rem" }}
-              gutterBottom
-            >
-              Зарплата
-            </Typography>
-            <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-              <Slider
-                min={5000}
-                max={1000000}
-                valueLabelDisplay="auto"
-                step={5000}
-                value={salary}
-                marks={salaryMarks}
-                onChange={handleSalaryChange}
-              />
-            </Box>
-          </Paper>
-        </Grid>
+            <Grid container spacing={2} sx={{ marginTop: "16px" }}>
+              <Grid item>
+                <FormControl>
+                  <InputLabel>Локация</InputLabel>
+
+                  <Select
+                    fullWidth
+                    value={location}
+                    label="Локация"
+                    sx={{ minWidth: "120px" }}
+                    onChange={(e) => setLocation(e.target.value)}
+                  >
+                    {locationOptions}
+                  </Select>
+                </FormControl>
+              </Grid>
+
+              <Grid item>
+                <FormControl>
+                  <InputLabel>Оплачиваемая</InputLabel>
+
+                  <Select
+                    fullWidth
+                    onChange={(e) => setPaid(e.target.value)}
+                    value={paid}
+                    label="Оплачиваемая"
+                    sx={{ minWidth: "100px" }}
+                  >
+                    {paidOptions}
+                  </Select>
+                </FormControl>
+              </Grid>
+
+              <Grid item>
+                <Button
+                  variant="contained"
+                  fullWidth
+                  onClick={handleOpenSpecializationModal}
+                >
+                  Навыки
+                </Button>
+              </Grid>
+
+              <Grid item>
+                <Typography
+                  sx={{ fontWeight: "bold", fontSize: "1.2rem" }}
+                  gutterBottom
+                >
+                  Зарплата (<sup>заменить на два инпута?</sup>)
+                </Typography>
+
+                <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                  <Slider
+                    min={5000}
+                    max={1000000}
+                    valueLabelDisplay="auto"
+                    step={5000}
+                    value={salary}
+                    marks={salaryMarks}
+                    onChange={handleSalaryChange}
+                  />
+                </Box>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Container>
+
+        <Divider sx={(theme) => ({ paddingTop: theme.spacing(5) })} />
+
+        <Container sx={(theme) => ({ marginTop: theme.spacing(2) })}>
+          <Grid item>
+            <Grid container spacing={2}>
+              <Grid
+                item
+                container
+                direction="column"
+                spacing={2}
+                sx={{ width: "45%" }}
+              >
+                <Grid item container justifyContent="space-between">
+                  <Grid
+                    item
+                    sx={(theme) => ({ paddingLeft: theme.spacing(2) })}
+                  >
+                    <Typography variant="caption">
+                      {/* TODO: Клик по каждой штуке меняет сортировку */}
+                      Сортировка по: <b>возрастанию</b> - убыванию
+                    </Typography>
+                  </Grid>
+                  <Grid
+                    item
+                    sx={(theme) => ({ paddingRight: theme.spacing(2) })}
+                  >
+                    <Typography variant="caption">Страница 1 из 10</Typography>
+                  </Grid>
+                </Grid>
+
+                {vacanciesStore.getVacanciesValue?.map((item) => (
+                  <Grid item>
+                    <VacancyCard
+                      item={item}
+                      key={item.id}
+                      onClick={(item) => {
+                        setDisplayVacancy(item);
+                      }}
+                      isActive={item.id === displayVacancy?.id}
+                    />
+                  </Grid>
+                ))}
+
+                <Stack spacing={2} justifyContent="center" sx={{ padding: 2 }}>
+                  <Pagination
+                    count={10}
+                    page={page}
+                    onChange={handlePageChange}
+                    sx={{
+                      "& ul": {
+                        justifyContent: "center",
+                      },
+                    }}
+                  />
+                </Stack>
+              </Grid>
+
+              {displayVacancy && (
+                <Grid
+                  item
+                  flexGrow="1"
+                  sx={{
+                    position: "sticky",
+                    top: 0,
+                    zIndex: 1,
+                    height: "calc(100vh - 48px)",
+                    width: "55%",
+                  }}
+                >
+                  <VacancyDetailsCard item={displayVacancy} />
+                </Grid>
+              )}
+            </Grid>
+          </Grid>
+        </Container>
       </Grid>
 
       <SpecializationFilterModal
@@ -304,7 +355,7 @@ const Search: FC = () => {
         abilities={abilities}
         setAbilities={setAbilities}
       />
-    </main>
+    </>
   );
 };
 

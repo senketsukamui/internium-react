@@ -18,36 +18,30 @@ const Home = () => {
   return (
     <>
       <Header />
-      <Box
-        sx={{
-          padding: "30px 80px",
-        }}
-      >
-        <Routes>
-          <Route path="/" element={<Main />} />
-          <Route path="/search" element={<Search />} />
-          <Route path="/intern/profile/:id" element={<StudentProfile />} />
-          <Route
-            path="/intern/profile/:id/edit"
-            element={<InternProfileEdit />}
-          />
-          <Route path="/company/profile/:id" element={<CompanyProfile />} />
-          <Route
-            path="/company/profile/:id/edit"
-            element={<CompanyProfileEdit />}
-          />
-          <Route
-            path="/company-user/profile/:id"
-            element={<CompanyUserProfile />}
-          />
-          <Route
-            path="/company-user/profile/:id/edit"
-            element={<CompanyUserProfileEdit />}
-          />
-          <Route path="/vacancy/:id" element={<Vacancy />} />
-          <Route path="/vacancy/:id/edit" element={<VacancyEdit />} />
-        </Routes>
-      </Box>
+      <Routes>
+        <Route path="/" element={<Main />} />
+        <Route path="/search" element={<Search />} />
+        <Route path="/intern/profile/:id" element={<StudentProfile />} />
+        <Route
+          path="/intern/profile/:id/edit"
+          element={<InternProfileEdit />}
+        />
+        <Route path="/company/profile/:id" element={<CompanyProfile />} />
+        <Route
+          path="/company/profile/:id/edit"
+          element={<CompanyProfileEdit />}
+        />
+        <Route
+          path="/company-user/profile/:id"
+          element={<CompanyUserProfile />}
+        />
+        <Route
+          path="/company-user/profile/:id/edit"
+          element={<CompanyUserProfileEdit />}
+        />
+        <Route path="/vacancy/:id" element={<Vacancy />} />
+        <Route path="/vacancy/:id/edit" element={<VacancyEdit />} />
+      </Routes>
     </>
   );
 };
