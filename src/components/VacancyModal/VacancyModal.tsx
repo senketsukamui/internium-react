@@ -42,7 +42,7 @@ const style = {
   transform: "translate(-50%, -50%)",
   maxHeight: "50%",
   overflow: "auto",
-  width: 400,
+  width: 600,
   bgcolor: "background.paper",
   border: "2px solid #000",
   boxShadow: 24,

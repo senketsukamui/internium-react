@@ -33,7 +33,7 @@ class ReactionStore {
     });
   }
 
-  public getReactions(vacancyId: number) {
+  public getReactions(vacancyId: string) {
     this.loading = true;
     return getReactionsRequest({ vacancyId }).then(({ data }) => {
       this.loading = false;

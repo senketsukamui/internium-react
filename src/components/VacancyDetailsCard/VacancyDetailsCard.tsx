@@ -112,57 +112,6 @@ export const VacancyDetailsCard: React.FC<VacancyCardProps> = ({ item }) => {
           </Grid>
 
           <Grid item>
-            <Typography variant="body2">
-              Lorem ipsum, dolor sit amet consectetur adipisicing elit. Cum
-              molestiae hic harum laboriosam dicta totam eum similique ratione?
-              Deleniti laborum quam dolore facilis consequatur ipsa, rem aliquid
-              autem fugiat veritatis! Lorem ipsum, dolor sit amet consectetur
-              adipisicing elit. Cum molestiae hic harum laboriosam dicta totam
-              eum similique ratione? Deleniti laborum quam dolore facilis
-              consequatur ipsa, rem aliquid autem fugiat veritatis! Lorem ipsum,
-              dolor sit amet consectetur adipisicing elit. Cum molestiae hic
-              harum laboriosam dicta totam eum similique ratione? Deleniti
-              laborum quam dolore facilis consequatur ipsa, rem aliquid autem
-              fugiat veritatis! Lorem ipsum, dolor sit amet consectetur
-              adipisicing elit. Cum molestiae hic harum laboriosam dicta totam
-              eum similique ratione? Deleniti laborum quam dolore facilis
-              consequatur ipsa, rem aliquid autem fugiat veritatis! Lorem ipsum,
-              dolor sit amet consectetur adipisicing elit. Cum molestiae hic
-              harum laboriosam dicta totam eum similique ratione? Deleniti
-              laborum quam dolore facilis consequatur ipsa, rem aliquid autem
-              fugiat veritatis! Lorem ipsum, dolor sit amet consectetur
-              adipisicing elit. Cum molestiae hic harum laboriosam dicta totam
-              eum similique ratione? Deleniti laborum quam dolore facilis
-              consequatur ipsa, rem aliquid autem fugiat veritatis! Lorem ipsum,
-              dolor sit amet consectetur adipisicing elit. Cum molestiae hic
-              harum laboriosam dicta totam eum similique ratione? Deleniti
-              laborum quam dolore facilis consequatur ipsa, rem aliquid autem
-              fugiat veritatis! Lorem ipsum, dolor sit amet consectetur
-              adipisicing elit. Cum molestiae hic harum laboriosam dicta totam
-              eum similique ratione? Deleniti laborum quam dolore facilis
-              consequatur ipsa, rem aliquid autem fugiat veritatis! Lorem ipsum,
-              dolor sit amet consectetur adipisicing elit. Cum molestiae hic
-              harum laboriosam dicta totam eum similique ratione? Deleniti
-              laborum quam dolore facilis consequatur ipsa, rem aliquid autem
-              fugiat veritatis! Lorem ipsum, dolor sit amet consectetur
-              adipisicing elit. Cum molestiae hic harum laboriosam dicta totam
-              eum similique ratione? Deleniti laborum quam dolore facilis
-              consequatur ipsa, rem aliquid autem fugiat veritatis! Lorem ipsum,
-              dolor sit amet consectetur adipisicing elit. Cum molestiae hic
-              harum laboriosam dicta totam eum similique ratione? Deleniti
-              laborum quam dolore facilis consequatur ipsa, rem aliquid autem
-              fugiat veritatis! Lorem ipsum, dolor sit amet consectetur
-              adipisicing elit. Cum molestiae hic harum laboriosam dicta totam
-              eum similique ratione? Deleniti laborum quam dolore facilis
-              consequatur ipsa, rem aliquid autem fugiat veritatis! Lorem ipsum,
-              dolor sit amet consectetur adipisicing elit. Cum molestiae hic
-              harum laboriosam dicta totam eum similique ratione? Deleniti
-              laborum quam dolore facilis consequatur ipsa, rem aliquid autem
-              fugiat veritatis! v
-            </Typography>
-          </Grid>
-
-          <Grid item>
             <Grid item container spacing={1}>
               {item?.abilities.map((ability: Ability) => (
                 <Grid item key={ability.id}>

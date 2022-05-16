@@ -11,7 +11,7 @@ import { SnackbarProvider } from "notistack";
 import { useStores } from "hooks/useStores";
 import jwtDecode from "jwt-decode";
 import { TokenEntities } from "store/auth/types";
-import {  ThemeProvider } from "@mui/system";
+import { ThemeProvider } from "@mui/system";
 import { theme } from "styles/theme";
 import { CssBaseline } from "@mui/material";
 
@@ -24,11 +24,9 @@ interface DecodedJWT {
 function App() {
   const { authStore } = useStores();
   React.useEffect(() => {
-    console.log(authStore.accessToken);
     if (authStore.accessToken) {
       const decoded = jwtDecode<DecodedJWT>(authStore.accessToken);
       const { entity } = decoded;
-      console.log(entity === TokenEntities.COMPANY_USER);
       switch (entity) {
         case TokenEntities.OWNER:
         case TokenEntities.COMPANY_USER: {

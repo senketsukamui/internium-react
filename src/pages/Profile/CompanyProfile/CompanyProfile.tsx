@@ -117,14 +117,15 @@ const CompanyProfile = () => {
                   >
                     Редактировать
                   </Button>
-                </Paper>
-                <Paper elevation={3} sx={{ padding: "15px" }}>
                   <Button
                     fullWidth
                     variant="contained"
                     onClick={handleModalOpen}
+                    sx={{
+                      marginTop: 1,
+                    }}
                   >
-                    Создать новую стажировку
+                    Создать новую вакансию
                   </Button>
                 </Paper>
                 <Paper
@@ -145,7 +146,6 @@ const CompanyProfile = () => {
                     component="form"
                     sx={{
                       display: "flex",
-                      justifyContent: "space-between",
                     }}
                     onSubmit={handleEmailSend}
                   >
@@ -153,7 +153,9 @@ const CompanyProfile = () => {
                       size="small"
                       sx={{
                         marginRight: "5px",
+                        width: "100%",
                       }}
+                      placeholder="Электронная почта"
                       value={employeeEmail}
                       onChange={(e) => {
                         setEmployeeEmail(e.target.value);

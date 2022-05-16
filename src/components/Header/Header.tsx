@@ -47,7 +47,7 @@ const Header = () => {
             spacing={6}
             sx={{ height: "100%", alignItems: "center" }}
           >
-            <Grid item sx={{marginTop: '8px'}}>
+            <Grid item sx={{ marginTop: "8px" }}>
               <img src={logo} alt="internium logo" height="40" />
             </Grid>
             <Grid item container spacing={3}>
@@ -86,7 +86,7 @@ const Header = () => {
             {!userObject && (
               <Grid item>
                 <Link
-                  href="/auth/intern"
+                  href="/auth"
                   color="inheirt"
                   variant="body2"
                   underline="none"

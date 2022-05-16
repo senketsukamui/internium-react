@@ -7,6 +7,7 @@ import {
   FormControl,
   Grid,
   InputLabel,
+  Menu,
   MenuItem,
   OutlinedInput,
   Pagination,
@@ -16,7 +17,7 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import React, { FC, SyntheticEvent, useEffect, useState } from "react";
+import React, { FC, SyntheticEvent, useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { SortByLabels, SortByTypes, SortLabels, SortTypes } from "./constants";
 import queryString from "query-string";
@@ -32,23 +33,29 @@ import {
 import { VacancyModel } from "store/vacancies/types";
 import VacancyCard from "components/VacancyCard";
 import { VacancyDetailsCard } from "components/VacancyDetailsCard/VacancyDetailsCard";
+import { isEmpty } from "lodash";
+
+const buttonStyles = {
+  height: "56px",
+  textTransform: "capitalize",
+  color: "currentColor",
+  borderColor: "rgba(0, 0, 0, 0.23)",
+  "&:hover": {
+    backgroundColor: "#fff",
+    color: "currentColor",
+    borderColor: "currentColor",
+  },
+};
 
 const Search: FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
+
   const [search, setSearch] = useState<string | number | null>(
     searchParams.get("search") || ""
   );
+
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [page, setPage] = useState(1);
-
-  const handlePageChange = (
-    event: React.ChangeEvent<unknown>,
-    value: number
-  ) => {
-    setPage(value);
-  };
-
-  const { vacanciesStore } = useStores();
-
   const [sortType, setSortType] = useState<SortTypes>(
     (searchParams.get("sortType") as SortTypes) || SortTypes.desc
   );
@@ -56,7 +63,9 @@ const Search: FC = () => {
     (searchParams.get("sortBy") as SortByTypes) || SortByTypes.bestMatch
   );
   const [modalOpen, setModalOpen] = useState<boolean>(false);
-  const [abilities, setAbilities] = useState<number[]>([]);
+  const [abilities, setAbilities] = useState<number[]>(
+    searchParams.getAll("abilities").map((i) => Number(i)) || []
+  );
   const [salary, setSalary] = useState<number[]>([
     Number(searchParams.get("salaryFrom")) || 0,
     Number(searchParams.get("salaryTo")) || 1000000,
@@ -69,15 +78,32 @@ const Search: FC = () => {
     (searchParams.get("paid") as PaidStatuses) || PaidStatuses.PAID
   );
 
-  const sortOptions = React.useMemo(
+  const params = useMemo(
     () =>
-      Object.values(SortTypes).map((type: SortTypes) => (
-        <MenuItem key={type} value={type}>
-          {SortLabels[type]}
-        </MenuItem>
-      )),
-    []
+      queryString.stringify(
+        {
+          sortType,
+          sortBy,
+          search,
+          paid,
+          location,
+          salaryFrom: salary[0],
+          salaryTo: salary[1],
+          abilities,
+        },
+        { arrayFormat: "bracket" }
+      ),
+    [sortType, sortBy, search, paid, location, salary, abilities]
   );
+
+  const handlePageChange = (
+    event: React.ChangeEvent<unknown>,
+    value: number
+  ) => {
+    setPage(value);
+  };
+
+  const { vacanciesStore } = useStores();
 
   const sortByOptions = React.useMemo(
     () =>
@@ -110,23 +136,12 @@ const Search: FC = () => {
   );
 
   useEffect(() => {
-    const params = queryString.stringify(
-      {
-        sortType,
-        sortBy,
-        search,
-        paid,
-        location,
-        salaryFrom: salary[0],
-        salaryTo: salary[1],
-        abilities,
-      },
-      { arrayFormat: "bracket" }
-    );
-
     setSearchParams(params);
+  }, [params]);
+
+  useEffect(() => {
     vacanciesStore.getVacancies(params);
-  }, [sortType, search, sortBy, paid, location, salary, abilities]);
+  }, []);
 
   const handleOpenSpecializationModal = () => {
     setModalOpen(true);
@@ -134,6 +149,19 @@ const Search: FC = () => {
 
   const handleSalaryChange = (event: Event, newValue: number | number[]) => {
     setSalary(newValue as number[]);
+  };
+
+  const handleMenuClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleSearch = () => {
+    console.log(params);
+    vacanciesStore.getVacancies(params);
   };
 
   const salaryMarks = [
@@ -195,6 +223,7 @@ const Search: FC = () => {
                 <Button
                   variant="contained"
                   color="primary"
+                  onClick={handleSearch}
                   sx={(theme) => ({
                     height: "100%",
                     padding: `0 ${theme.spacing(3)}`,
@@ -240,33 +269,57 @@ const Search: FC = () => {
 
               <Grid item>
                 <Button
-                  variant="contained"
+                  variant="outlined"
+                  size="large"
                   fullWidth
                   onClick={handleOpenSpecializationModal}
+                  sx={buttonStyles}
                 >
-                  Навыки
+                  {isEmpty(abilities)
+                    ? "Навыки"
+                    : `Выбрано ${abilities.length} навыков`}
                 </Button>
               </Grid>
 
               <Grid item>
-                <Typography
-                  sx={{ fontWeight: "bold", fontSize: "1.2rem" }}
-                  gutterBottom
+                <Button
+                  variant="outlined"
+                  size="large"
+                  fullWidth
+                  sx={buttonStyles}
+                  onClick={handleMenuClick}
                 >
-                  Зарплата (<sup>заменить на два инпута?</sup>)
-                </Typography>
-
-                <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                  <Slider
-                    min={5000}
-                    max={1000000}
-                    valueLabelDisplay="auto"
-                    step={5000}
-                    value={salary}
-                    marks={salaryMarks}
-                    onChange={handleSalaryChange}
-                  />
-                </Box>
+                  Зарплата
+                </Button>
+                <Menu
+                  open={Boolean(anchorEl)}
+                  anchorEl={anchorEl}
+                  onClose={handleMenuClose}
+                >
+                  <MenuItem
+                    component={({ children }) => (
+                      <Box
+                        sx={{
+                          width: "300px",
+                          height: "75px",
+                          padding: 3,
+                        }}
+                      >
+                        {children}
+                      </Box>
+                    )}
+                  >
+                    <Slider
+                      min={5000}
+                      max={1000000}
+                      valueLabelDisplay="auto"
+                      step={5000}
+                      value={salary}
+                      marks={salaryMarks}
+                      onChange={handleSalaryChange}
+                    />
+                  </MenuItem>
+                </Menu>
               </Grid>
             </Grid>
           </Grid>
@@ -291,7 +344,30 @@ const Search: FC = () => {
                   >
                     <Typography variant="caption">
                       {/* TODO: Клик по каждой штуке меняет сортировку */}
-                      Сортировка по: <b>возрастанию</b> - убыванию
+                      Сортировка по:{" "}
+                      <Typography
+                        onClick={() => setSortType(SortTypes.asc)}
+                        display="inline"
+                        sx={{
+                          fontWeight:
+                            sortType === SortTypes.asc ? "bold" : "normal",
+                          cursor: "pointer",
+                        }}
+                      >
+                        возрастанию
+                      </Typography>{" "}
+                      -{" "}
+                      <Typography
+                        sx={{
+                          fontWeight:
+                            sortType === SortTypes.desc ? "bold" : "normal",
+                          cursor: "pointer",
+                        }}
+                        display="inline"
+                        onClick={() => setSortType(SortTypes.desc)}
+                      >
+                        убыванию
+                      </Typography>
                     </Typography>
                   </Grid>
                   <Grid
