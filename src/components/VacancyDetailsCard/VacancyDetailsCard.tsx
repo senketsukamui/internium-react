@@ -3,6 +3,8 @@ import {
   LocationStatuses,
   LocationStatusesTranslations,
 } from "components/VacancyModal/constants";
+import { useStores } from "hooks/useStores";
+import { RegisterTypes } from "pages/Auth/constants";
 import React from "react";
 import { Ability } from "store/specializations/types";
 import { VacancyModel } from "store/vacancies/types";
@@ -13,6 +15,7 @@ interface VacancyCardProps {
 }
 
 export const VacancyDetailsCard: React.FC<VacancyCardProps> = ({ item }) => {
+  const { authStore } = useStores();
   return (
     <Card
       key={item.id}
@@ -74,17 +77,27 @@ export const VacancyDetailsCard: React.FC<VacancyCardProps> = ({ item }) => {
             )}
           </Grid>
 
-          <Grid item>
-            <Typography variant="caption">
-              Вы должны создать профиль в Интерниуме прежде чем откликнуться
-            </Typography>
-          </Grid>
+          {(!authStore.getUserObject ||
+            (authStore.userType &&
+              authStore.userType !== RegisterTypes.INTERN)) && (
+            <>
+              <Grid item>
+                <Typography variant="caption">
+                  Вы должны создать профиль в Интерниуме прежде чем откликнуться
+                </Typography>
+              </Grid>
 
-          <Grid item sx={{ marginTop: "6px" }}>
-            <Button variant="contained" color="primary">
-              Откликнуться
-            </Button>
-          </Grid>
+              <Grid item sx={{ marginTop: "6px" }}>
+                <Button
+                  disabled={!authStore.getUserObject}
+                  variant="contained"
+                  color="primary"
+                >
+                  Откликнуться
+                </Button>
+              </Grid>
+            </>
+          )}
         </Grid>
 
         <Grid
