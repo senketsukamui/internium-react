@@ -141,6 +141,10 @@ const Search: FC = () => {
 
   useEffect(() => {
     vacanciesStore.getVacancies(params);
+  }, [sortType]);
+
+  useEffect(() => {
+    vacanciesStore.getVacancies(params);
   }, []);
 
   const handleOpenSpecializationModal = () => {
@@ -160,7 +164,6 @@ const Search: FC = () => {
   };
 
   const handleSearch = () => {
-    console.log(params);
     vacanciesStore.getVacancies(params);
   };
 

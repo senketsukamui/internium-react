@@ -25,7 +25,6 @@ import { useStores } from "hooks/useStores";
 import { observer } from "mobx-react";
 import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Ability } from "store/specializations/types";
 import { VacancyModel } from "store/vacancies/types";
 
 const CompanyProfile = () => {

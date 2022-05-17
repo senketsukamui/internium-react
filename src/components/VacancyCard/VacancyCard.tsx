@@ -84,7 +84,7 @@ const VacancyCard: React.FC<VacancyCardProps> = ({
 
           <Grid item>
             <Grid item container spacing={1}>
-              {item?.abilities.map((ability: Ability) => (
+              {item?.abilities?.map((ability: Ability) => (
                 <Grid item key={ability.id}>
                   {/* TOOD: Move into a separated component */}
                   <Chip

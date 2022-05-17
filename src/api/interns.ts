@@ -8,3 +8,6 @@ export const updateInternProfileRequest = (
   data: InternUpdateInterface,
   id: number
 ) => basicAxios.put(`/intern/${id}`, data);
+
+export const getCurrentInternReactionsRequest = () =>
+  basicAxios.get("/intern/current/reactions");

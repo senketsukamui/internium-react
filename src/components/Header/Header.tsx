@@ -8,18 +8,22 @@ import {
   Typography,
 } from "@mui/material";
 import ProfileHeader from "components/ProfileHeader";
+import VacancyModal from "components/VacancyModal";
 import { useStores } from "hooks/useStores";
+import { startsWith } from "lodash";
 import { observer } from "mobx-react";
+import { RegisterTypes } from "pages/Auth/constants";
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import logo from "../../assets/images/logo.svg";
 import { HeaderLink } from "./HeaderLink";
 
 const Header = () => {
-  const navigate = useNavigate();
-
   const { authStore } = useStores();
   const userObject = authStore.getUserObject;
+  const [modalOpen, setModalOpen] = React.useState<boolean>(false);
+  const location = useLocation();
+  console.log(location);
 
   return (
     <AppBar
@@ -69,19 +73,22 @@ const Header = () => {
             sx={{ width: "unset", flexWrap: "nowrap", alignItems: "center" }}
           >
             {/* Check if user is not an intern */}
-            <Grid item whiteSpace="nowrap">
-              <Button
-                variant="contained"
-                color="primary"
-                href="/auth/company/login"
-                sx={{
-                  textTransform: "initial",
-                  fontWeight: 600,
-                }}
-              >
-                Создать вакансию
-              </Button>
-            </Grid>
+            {authStore.userType !== RegisterTypes.INTERN &&
+              !startsWith(location.pathname, "/company/profile") && (
+                <Grid item whiteSpace="nowrap">
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    sx={{
+                      textTransform: "initial",
+                      fontWeight: 600,
+                    }}
+                    onClick={() => setModalOpen(true)}
+                  >
+                    Создать вакансию
+                  </Button>
+                </Grid>
+              )}
 
             {!userObject && (
               <Grid item>
@@ -109,6 +116,7 @@ const Header = () => {
           </Grid>
         </Toolbar>
       </Container>
+      {modalOpen && <VacancyModal open={modalOpen} setOpen={setModalOpen} />}
     </AppBar>
   );
 };

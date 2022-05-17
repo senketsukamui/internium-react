@@ -17,8 +17,10 @@ import {
   Typography,
 } from "@mui/material";
 import SvgStudent from "components/Icons/StudentIcon";
-import { differenceInYears, format } from "date-fns";
+import VacancyCard from "components/VacancyCard";
+import { format } from "date-fns";
 import { useStores } from "hooks/useStores";
+import { isEmpty } from "lodash";
 import { observer } from "mobx-react";
 import React, { FC } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -36,12 +38,18 @@ const StudentProfile: FC = () => {
   const profile = isCurrentUser
     ? authStore.getUserObject
     : internsStore.getProfile;
+  const reactions = internsStore.getReactions;
+  console.log(reactions);
 
   React.useEffect(() => {
     if (authStore.getUserObject && !isCurrentUser) {
       internsStore.getInternProfile(id);
     }
   }, [id]);
+
+  React.useEffect(() => {
+    internsStore.getCurrentInternReactions();
+  }, []);
 
   React.useEffect(() => {
     if (profile) {
@@ -109,7 +117,15 @@ const StudentProfile: FC = () => {
                     {profile?.location}
                   </Typography>
 
-                  <Stack direction="row" spacing={1} alignItems="center">
+                  <Stack
+                    direction="row"
+                    spacing={1}
+                    alignItems="center"
+                    sx={{
+                      display: "flex",
+                      justifyContent: "center",
+                    }}
+                  >
                     <Typography sx={{ color: "red" }}>
                       Не ищу стажировку
                     </Typography>
@@ -192,6 +208,21 @@ const StudentProfile: FC = () => {
                   </CardContent>
                 </Card>
               </Paper>
+              {!isEmpty(reactions) && (
+                <Paper
+                  elevation={3}
+                  sx={{
+                    padding: "10px",
+                  }}
+                >
+                  <Stack spacing={2}>
+                    <Typography variant="h5">Мои отклики</Typography>
+                    {reactions.map((reaction: any) => (
+                      <VacancyCard item={reaction.vacancy} key={reaction.id} />
+                    ))}
+                  </Stack>
+                </Paper>
+              )}
             </Stack>
           </Grid>
         </Grid>

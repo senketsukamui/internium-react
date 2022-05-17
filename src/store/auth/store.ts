@@ -99,6 +99,7 @@ class AuthStore {
     return getCurrentInternRequest().then(
       ({ data }: { data: RegisteredIntern }) => {
         this.user = data;
+        this.userType = RegisterTypes.INTERN;
       }
     );
   }

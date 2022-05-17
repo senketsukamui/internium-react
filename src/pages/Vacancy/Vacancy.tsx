@@ -170,44 +170,50 @@ const Vacancy = () => {
               >
                 Редактировать
               </Button>
-              <Button
-                variant="contained"
-                onClick={handleReact}
-                fullWidth
-                sx={{ marginTop: 1 }}
-              >
-                Откликнуться
-              </Button>
-              <Button
-                variant="contained"
-                onClick={handleDeleteReaction}
-                fullWidth
-                sx={{ marginTop: 1 }}
-              >
-                Убрать отклик
-              </Button>
+              {vacancy.reacted ? (
+                <Button
+                  variant="contained"
+                  onClick={handleDeleteReaction}
+                  color="error"
+                  fullWidth
+                  sx={{ marginTop: 1 }}
+                >
+                  Убрать отклик
+                </Button>
+              ) : (
+                <Button
+                  variant="contained"
+                  onClick={handleReact}
+                  fullWidth
+                  sx={{ marginTop: 1 }}
+                >
+                  Откликнуться
+                </Button>
+              )}
             </Paper>
-            <Paper>
-              <Accordion>
-                <AccordionSummary>{`Все вакансии компании (${
-                  companyVacancies?.length - 1
-                })`}</AccordionSummary>
-                <AccordionDetails>
-                  <List>
-                    {companyVacancies
-                      ?.filter((vacancy) => vacancy?.id !== id)
-                      ?.map((vacancy) => (
-                        <ListItemButton
-                          onClick={() => navigate(`/vacancy/${vacancy.id}`)}
-                          divider
-                        >
-                          {vacancy.title}
-                        </ListItemButton>
-                      ))}
-                  </List>
-                </AccordionDetails>
-              </Accordion>
-            </Paper>
+            {companyVacancies?.length - 1 && (
+              <Paper>
+                <Accordion>
+                  <AccordionSummary>{`Все вакансии компании (${
+                    companyVacancies?.length - 1
+                  })`}</AccordionSummary>
+                  <AccordionDetails>
+                    <List>
+                      {companyVacancies
+                        ?.filter((vacancy) => vacancy?.id !== Number(id))
+                        ?.map((vacancy) => (
+                          <ListItemButton
+                            onClick={() => navigate(`/vacancy/${vacancy.id}`)}
+                            divider
+                          >
+                            {vacancy.title}
+                          </ListItemButton>
+                        ))}
+                    </List>
+                  </AccordionDetails>
+                </Accordion>
+              </Paper>
+            )}
           </Grid>
         </>
       )}

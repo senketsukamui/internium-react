@@ -3,6 +3,7 @@ import {
   LocationStatuses,
   LocationStatusesTranslations,
 } from "components/VacancyModal/constants";
+import useNotification from "hooks/useNotification";
 import { useStores } from "hooks/useStores";
 import { RegisterTypes } from "pages/Auth/constants";
 import React from "react";
@@ -15,7 +16,16 @@ interface VacancyCardProps {
 }
 
 export const VacancyDetailsCard: React.FC<VacancyCardProps> = ({ item }) => {
-  const { authStore } = useStores();
+  const { authStore, reactionsStore } = useStores();
+  const [message, sendMessage] = useNotification();
+  const handleReact = () => {
+    reactionsStore.createReaction(Number(item.id)).then(() =>
+      sendMessage({
+        msg: "Вы успешно откликнулись на вакансию!",
+        variant: "success",
+      })
+    );
+  };
   return (
     <Card
       key={item.id}
@@ -81,23 +91,28 @@ export const VacancyDetailsCard: React.FC<VacancyCardProps> = ({ item }) => {
             (authStore.userType &&
               authStore.userType !== RegisterTypes.INTERN)) && (
             <>
-              <Grid item>
-                <Typography variant="caption">
-                  Вы должны создать профиль в Интерниуме прежде чем откликнуться
-                </Typography>
-              </Grid>
-
-              <Grid item sx={{ marginTop: "6px" }}>
-                <Button
-                  disabled={!authStore.getUserObject}
-                  variant="contained"
-                  color="primary"
-                >
-                  Откликнуться
-                </Button>
-              </Grid>
+              {!authStore.getUserObject && (
+                <Grid item>
+                  <Typography variant="caption">
+                    Вы должны создать профиль в Интерниуме прежде чем
+                    откликнуться
+                  </Typography>
+                </Grid>
+              )}
             </>
           )}
+          {
+            <Grid item sx={{ marginTop: "6px" }}>
+              <Button
+                disabled={!authStore.getUserObject || item.reacted}
+                variant="contained"
+                color="primary"
+                onClick={handleReact}
+              >
+                Откликнуться
+              </Button>
+            </Grid>
+          }
         </Grid>
 
         <Grid
@@ -109,6 +124,7 @@ export const VacancyDetailsCard: React.FC<VacancyCardProps> = ({ item }) => {
           sx={{
             padding: "1rem",
             overflow: "scroll",
+            overflowX: "hidden",
             height: "calc(100vh - 230px)",
             marginTop: "0",
             paddingTop: "0",
