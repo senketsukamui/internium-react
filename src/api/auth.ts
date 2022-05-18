@@ -47,17 +47,17 @@ export interface CompanyAuth {
 // Interns
 
 export const signupInternRequest = (internInfo: InternInfo) =>
-  basicAxios.post("/intern/signup", internInfo);
+  basicAxios.post("/interns/signup", internInfo);
 
 export const signinInternRequest = (phone: string) =>
-  basicAxios.post("/intern/auth", {
+  basicAxios.post("/interns/auth", {
     phone,
   });
 
 export const verifyInternOTPRequest = (internOTPInfo: InternOTPInfo) =>
-  basicAxios.post("/intern/verify", internOTPInfo);
+  basicAxios.post("/interns/verify", internOTPInfo);
 
-export const getCurrentInternRequest = () => basicAxios.get("/intern/current");
+export const getCurrentInternRequest = () => basicAxios.get("/interns/current");
 
 // Company
 

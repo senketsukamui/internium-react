@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react";
-import { RegisterTypes, SCHEMAS } from "./constants";
+import { RegisterTypes } from "./constants";
 import { CssBaseline, Paper, Container, Typography } from "@mui/material";
 import StudentIcon from "components/Icons/StudentIcon";
 import CompanyIcon from "components/Icons/CompanyIcon";
@@ -34,7 +34,7 @@ const Auth = () => {
               cursor: "pointer",
             }}
             onClick={() => {
-              navigate("/auth/student");
+              navigate("/auth/intern");
             }}
           >
             <StudentIcon width={200} height={200} />

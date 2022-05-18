@@ -55,3 +55,9 @@ export interface CompanyUserUpdateInterface {
 export interface CompanyInvitationResponse {
   success: boolean;
 }
+
+export interface VacancyInvitation {
+  vacancyid: number;
+  internId: number;
+  message: string;
+}

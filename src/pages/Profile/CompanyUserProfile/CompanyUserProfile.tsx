@@ -109,8 +109,6 @@ const CompanyUserProfile = () => {
                   <Link align="center" component="p" gutterBottom>
                     {profile?.company?.website}
                   </Link>
-                </Paper>
-                <Paper elevation={3} sx={{ padding: "15px" }}>
                   <Button
                     fullWidth
                     variant="contained"

@@ -11,6 +11,9 @@ import { SnackbarProvider } from "notistack";
 import { useStores } from "hooks/useStores";
 import jwtDecode from "jwt-decode";
 import { TokenEntities } from "store/auth/types";
+import { ThemeProvider } from "@mui/system";
+import { theme } from "styles/theme";
+import { CssBaseline } from "@mui/material";
 
 interface DecodedJWT {
   id: string;
@@ -21,11 +24,9 @@ interface DecodedJWT {
 function App() {
   const { authStore } = useStores();
   React.useEffect(() => {
-    console.log(authStore.accessToken);
     if (authStore.accessToken) {
       const decoded = jwtDecode<DecodedJWT>(authStore.accessToken);
       const { entity } = decoded;
-      console.log(entity === TokenEntities.COMPANY_USER);
       switch (entity) {
         case TokenEntities.OWNER:
         case TokenEntities.COMPANY_USER: {
@@ -41,21 +42,30 @@ function App() {
     }
   }, []);
   return (
-    <div className={s.app}>
-      <SnackbarProvider maxSnack={4}>
-        <BrowserRouter>
-          <Routes>
-            <Route path="/*" element={<Home />} />
-            <Route path="auth" element={<Auth />} />
-            // TODO: Refactor this
-            <Route path="auth/company/register" element={<CompanyRegister />} />
-            <Route path="auth/company/login" element={<CompanyLogin />} />
-            <Route path="auth/student" element={<StudentAuth />} />
-            <Route path="auth/company-user" element={<CompanyUserRegister />} />
-          </Routes>
-        </BrowserRouter>
-      </SnackbarProvider>
-    </div>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <div className={s.app}>
+        <SnackbarProvider maxSnack={4}>
+          <BrowserRouter>
+            <Routes>
+              <Route path="/*" element={<Home />} />
+              <Route path="auth" element={<Auth />} />
+              // TODO: Refactor this
+              <Route
+                path="auth/company/register"
+                element={<CompanyRegister />}
+              />
+              <Route path="auth/company/login" element={<CompanyLogin />} />
+              <Route path="auth/intern" element={<StudentAuth />} />
+              <Route
+                path="auth/company-user"
+                element={<CompanyUserRegister />}
+              />
+            </Routes>
+          </BrowserRouter>
+        </SnackbarProvider>
+      </div>
+    </ThemeProvider>
   );
 }
 
