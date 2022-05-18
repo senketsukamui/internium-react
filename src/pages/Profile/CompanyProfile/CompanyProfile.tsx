@@ -46,6 +46,10 @@ const CompanyProfile = () => {
     e.preventDefault();
     authStore
       .createCompanyInvitation(employeeEmail)
+      .then(() => {
+        setEmployeeEmail("");
+        sendMessage({ msg: "Приглашение отправлено", variant: "success" });
+      })
       .catch(() => sendMessage({ msg: "Error", variant: "error" }));
   };
 
