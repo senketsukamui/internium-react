@@ -18,10 +18,12 @@ import {
 } from "@mui/material";
 import SvgStudent from "components/Icons/StudentIcon";
 import VacancyCard from "components/VacancyCard";
+import VacancyInvitationModal from "components/VacancyInvitationModal";
 import { format } from "date-fns";
 import { useStores } from "hooks/useStores";
 import { isEmpty } from "lodash";
 import { observer } from "mobx-react";
+import { RegisterTypes } from "pages/Auth/constants";
 import React, { FC } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { InternStatuses } from "store/auth/types";
@@ -33,22 +35,25 @@ const StudentProfile: FC = () => {
   const [status, setStatus] = React.useState<InternStatuses>(
     InternStatuses.INACTIVE
   );
+  const [modalOpen, setModalOpen] = React.useState<boolean>(false);
   const { internsStore, authStore } = useStores();
   const isCurrentUser = authStore.isCurrentUser(id);
   const profile = isCurrentUser
     ? authStore.getUserObject
     : internsStore.getProfile;
+
   const reactions = internsStore.getReactions;
-  console.log(reactions);
 
   React.useEffect(() => {
-    if (authStore.getUserObject && !isCurrentUser) {
+    if (!isCurrentUser && authStore.userType !== RegisterTypes.INTERN) {
       internsStore.getInternProfile(id);
     }
-  }, [id]);
+  }, [isCurrentUser, id]);
 
   React.useEffect(() => {
-    internsStore.getCurrentInternReactions();
+    if (authStore.userType === RegisterTypes.INTERN) {
+      internsStore.getCurrentInternReactions();
+    }
   }, []);
 
   React.useEffect(() => {
@@ -147,6 +152,16 @@ const StudentProfile: FC = () => {
                   >
                     Редактировать
                   </Button>
+                  <Button
+                    variant="contained"
+                    onClick={() => setModalOpen(true)}
+                    sx={{
+                      marginTop: 1,
+                    }}
+                    fullWidth
+                  >
+                    Пригласить
+                  </Button>
                 </Paper>
                 <Paper
                   elevation={3}
@@ -227,6 +242,13 @@ const StudentProfile: FC = () => {
           </Grid>
         </Grid>
       </Box>
+      {modalOpen && (
+        <VacancyInvitationModal
+          internId={Number(id)}
+          open={modalOpen}
+          setOpen={setModalOpen}
+        />
+      )}
     </Container>
   );
 };
