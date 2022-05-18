@@ -2,19 +2,25 @@ import { getCompanyUserProfileRequest } from "api/company-users";
 import {
   getCurrentInternReactionsRequest,
   getInternProfileRequest,
+  getInternsListRequest,
   updateInternProfileRequest,
 } from "api/interns";
 import { makeAutoObservable, toJS } from "mobx";
-import { InternUpdateInterface } from "./types";
+import { Intern, InternUpdateInterface } from "./types";
 import AuthStore from "../auth";
 
 class InternsStore {
   public loading: boolean = false;
   public profile = null;
   public reactions = null;
+  public interns: Intern[] | null = null;
 
   constructor() {
     makeAutoObservable(this);
+  }
+
+  get getInterns() {
+    return toJS(this.interns);
   }
 
   get getProfile() {
@@ -31,6 +37,16 @@ class InternsStore {
       this.loading = false;
       this.profile = data;
     });
+  };
+
+  public getInternsList = (params: string) => {
+    this.loading = true;
+    return getInternsListRequest(params).then(
+      ({ data }: { data: { interns: Intern[] } }) => {
+        this.loading = false;
+        this.interns = data.interns;
+      }
+    );
   };
 
   public updateInternProfile = (data: InternUpdateInterface, id: number) => {

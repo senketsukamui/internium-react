@@ -143,10 +143,6 @@ const Search: FC = () => {
     vacanciesStore.getVacancies(params);
   }, [sortType]);
 
-  useEffect(() => {
-    vacanciesStore.getVacancies(params);
-  }, []);
-
   const handleOpenSpecializationModal = () => {
     setModalOpen(true);
   };
