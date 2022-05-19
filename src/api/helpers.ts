@@ -34,7 +34,7 @@ export const createWrappedApiInterceptor = (store: any) => {
   basicAxios.interceptors.request.use((request: any) => {
     let tokenHeaders = `Bearer ${store.accessToken}`;
     console.log(request);
-    if (request.url === "/intern/signup") {
+    if (request.url === "/interns/signup") {
       tokenHeaders = store.registerToken;
     }
 

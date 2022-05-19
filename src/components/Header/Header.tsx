@@ -56,13 +56,13 @@ const Header = () => {
             </Grid>
             <Grid item container spacing={3}>
               <Grid item>
-                <HeaderLink href="">Стажировки</HeaderLink>
+                <HeaderLink href="/search">Стажировки</HeaderLink>
               </Grid>
               <Grid item>
                 <HeaderLink href="">Компании</HeaderLink>
               </Grid>
               <Grid item>
-                <HeaderLink href="">Соискатели</HeaderLink>
+                <HeaderLink href="/interns">Соискатели</HeaderLink>
               </Grid>
             </Grid>
           </Grid>

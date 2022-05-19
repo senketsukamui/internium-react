@@ -1,14 +1,16 @@
 import {
+  Avatar,
   Box,
   Button,
   Grid,
+  Input,
   Paper,
   Stack,
   Switch,
   TextField,
   Typography,
 } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 import ReactQuill from "react-quill";
 
 import { Controller, useForm } from "react-hook-form";
@@ -29,7 +31,22 @@ interface InternProps {
 const InternProfileEdit: React.FC<InternProps> = ({ user }) => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { internsStore } = useStores();
+  const [avatar, setAvatar] = useState<string | File>(user?.avatar);
+  const handleAvatarSelect = (e) => {
+    setAvatar(e.target.files[0]);
+  };
+  const { internsStore, authStore } = useStores();
+
+  const handleAvatarDelete = () => {
+    authStore.removeCurrentUserAvatar().then(() => setAvatar(null));
+  };
+
+  const handleAvatarUpload = () => {
+    if (avatar) {
+      authStore.addCurrentUserAvatar(avatar);
+    }
+  };
+
   const profile = user || internsStore.getProfile;
   const { control, handleSubmit, reset, watch, formState } =
     useForm<InternUpdateInterface>({
@@ -47,7 +64,6 @@ const InternProfileEdit: React.FC<InternProps> = ({ user }) => {
 
   const [abilities, setAbilities] = React.useState<number[]>([]);
   const onSubmit = (values: InternUpdateInterface) => {
-    console.log(values);
     internsStore
       .updateInternProfile(
         {
@@ -95,6 +111,40 @@ const InternProfileEdit: React.FC<InternProps> = ({ user }) => {
           padding: "20px",
         }}
       >
+        <Grid
+          container
+          direction="column"
+          sx={{ alignItems: "center" }}
+          spacing={1}
+        >
+          <Grid item>
+            <Box
+              component="img"
+              sx={{ width: 150, height: 150 }}
+              src={
+                typeof avatar === "string"
+                  ? `https://internium.monkeyhackers.org/${avatar}`
+                  : URL.createObjectURL(avatar as Blob)
+              }
+            />
+          </Grid>
+          <Grid item>
+            <input type="file" onChange={handleAvatarSelect} />
+          </Grid>
+          <Grid item>
+            <Button
+              color="error"
+              variant="outlined"
+              onClick={handleAvatarDelete}
+              sx={{ marginRight: 1 }}
+            >
+              Удалить
+            </Button>
+            <Button variant="outlined" onClick={handleAvatarUpload}>
+              Сохранить
+            </Button>
+          </Grid>
+        </Grid>
         <Box component="form" onSubmit={handleSubmit(onSubmit)}>
           <Controller
             name="firstName"
