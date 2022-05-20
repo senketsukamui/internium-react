@@ -2,21 +2,23 @@ import {
   Box,
   Button,
   Card,
-  CardActions,
   CardContent,
   CardHeader,
   Container,
   Grid,
-  Link,
   List,
   ListItem,
   ListItemText,
   Paper,
   Stack,
   Switch,
+  Tab,
+  Tabs,
   Typography,
 } from "@mui/material";
 import SvgStudent from "components/Icons/StudentIcon";
+import InvitationCard from "components/InvitationCard";
+import ReactionCard from "components/ReactionCard";
 import VacancyCard from "components/VacancyCard";
 import VacancyInvitationModal from "components/VacancyInvitationModal";
 import { format } from "date-fns";
@@ -28,6 +30,32 @@ import React, { FC } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { InternStatuses } from "store/auth/types";
 import { calculateAge } from "utils";
+
+interface TabPanelProps {
+  children?: React.ReactNode;
+  index: number;
+  value: number;
+}
+
+function TabPanel(props: TabPanelProps) {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      {...other}
+    >
+      {value === index && (
+        <Box sx={{ p: 3 }}>
+          <Typography>{children}</Typography>
+        </Box>
+      )}
+    </div>
+  );
+}
 
 const StudentProfile: FC = () => {
   const { id } = useParams();
@@ -43,18 +71,30 @@ const StudentProfile: FC = () => {
     : internsStore.getProfile;
 
   const reactions = internsStore.getReactions;
+  const invitations = internsStore.getInvitations;
+
+  const [value, setValue] = React.useState(0);
+
+  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+    setValue(newValue);
+  };
 
   React.useEffect(() => {
-    if (!isCurrentUser && authStore.userType !== RegisterTypes.INTERN) {
+    if (
+      !isCurrentUser &&
+      authStore.userType &&
+      authStore.userType !== RegisterTypes.INTERN
+    ) {
       internsStore.getInternProfile(id);
     }
   }, [isCurrentUser, id]);
 
   React.useEffect(() => {
-    if (authStore.userType === RegisterTypes.INTERN) {
+    if (isCurrentUser && authStore.userType === RegisterTypes.INTERN) {
       internsStore.getCurrentInternReactions();
+      internsStore.getCurrentInternInvitations();
     }
-  }, []);
+  }, [isCurrentUser]);
 
   React.useEffect(() => {
     if (profile) {
@@ -107,7 +147,19 @@ const StudentProfile: FC = () => {
                       justifyContent: "center",
                     }}
                   >
-                    <SvgStudent width={150} height={150} />
+                    {profile?.avatar ? (
+                      <Box
+                        component="img"
+                        sx={{ width: 150, height: 150, borderRadius: "50%" }}
+                        src={
+                          typeof profile.avatar === "string"
+                            ? `https://internium.monkeyhackers.org/${profile.avatar}`
+                            : URL.createObjectURL(profile.avatar as Blob)
+                        }
+                      />
+                    ) : (
+                      <SvgStudent width={150} height={150} />
+                    )}
                   </Box>
 
                   <Typography
@@ -152,16 +204,18 @@ const StudentProfile: FC = () => {
                   >
                     Редактировать
                   </Button>
-                  <Button
-                    variant="contained"
-                    onClick={() => setModalOpen(true)}
-                    sx={{
-                      marginTop: 1,
-                    }}
-                    fullWidth
-                  >
-                    Пригласить
-                  </Button>
+                  {authStore.userType !== RegisterTypes.INTERN && (
+                    <Button
+                      variant="contained"
+                      onClick={() => setModalOpen(true)}
+                      sx={{
+                        marginTop: 1,
+                      }}
+                      fullWidth
+                    >
+                      Пригласить
+                    </Button>
+                  )}
                 </Paper>
                 <Paper
                   elevation={3}
@@ -196,7 +250,7 @@ const StudentProfile: FC = () => {
                         Boolean(profile?.abilities?.length)
                           ? profile?.abilities
                               ?.map((item) => item.title)
-                              .join("*")
+                              .join("•")
                           : "не указаны"
                       }`}</ListItemText>
                     </ListItem>
@@ -206,39 +260,68 @@ const StudentProfile: FC = () => {
             </Container>
           </Grid>
           <Grid item xs={7}>
-            <Stack direction="column" spacing={2}>
-              <Paper elevation={3}>
-                <Card sx={{ position: "relative" }}>
-                  <CardHeader title="Обо мне" />
-                  <CardContent>
-                    {profile?.description ? (
-                      <div
-                        dangerouslySetInnerHTML={{
-                          __html: profile?.description,
-                        }}
-                      />
-                    ) : (
-                      "Нет информации"
-                    )}
-                  </CardContent>
-                </Card>
-              </Paper>
-              {!isEmpty(reactions) && (
-                <Paper
-                  elevation={3}
-                  sx={{
-                    padding: "10px",
-                  }}
-                >
-                  <Stack spacing={2}>
-                    <Typography variant="h5">Мои отклики</Typography>
-                    {reactions.map((reaction: any) => (
-                      <VacancyCard item={reaction.vacancy} key={reaction.id} />
-                    ))}
-                  </Stack>
-                </Paper>
-              )}
-            </Stack>
+            <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+              <Tabs
+                value={value}
+                onChange={handleChange}
+                aria-label="basic tabs example"
+              >
+                <Tab label="Информация" />
+                <Tab label="Приглашения" />
+              </Tabs>
+              <TabPanel value={value} index={0}>
+                <Stack direction="column" spacing={2}>
+                  <Paper elevation={3}>
+                    <Card sx={{ position: "relative" }}>
+                      <CardHeader title="Обо мне" />
+                      <CardContent>
+                        {profile?.description ? (
+                          <div
+                            dangerouslySetInnerHTML={{
+                              __html: profile?.description,
+                            }}
+                          />
+                        ) : (
+                          "Нет информации"
+                        )}
+                      </CardContent>
+                    </Card>
+                  </Paper>
+                  {!isEmpty(reactions) && (
+                    <Paper
+                      elevation={3}
+                      sx={{
+                        padding: "10px",
+                      }}
+                    >
+                      <Stack spacing={2}>
+                        <Typography variant="h5">Мои отклики</Typography>
+                        {reactions?.map((reaction: any) => (
+                          <ReactionCard item={reaction} key={reaction.id} />
+                        ))}
+                      </Stack>
+                    </Paper>
+                  )}
+                </Stack>
+              </TabPanel>
+              <TabPanel value={value} index={1}>
+                {!isEmpty(invitations) && (
+                  <Paper
+                    elevation={3}
+                    sx={{
+                      padding: "10px",
+                    }}
+                  >
+                    <Stack spacing={2}>
+                      <Typography variant="h5">Мои отклики</Typography>
+                      {invitations?.map((reaction: any) => (
+                        <InvitationCard item={reaction} key={reaction.id} />
+                      ))}
+                    </Stack>
+                  </Paper>
+                )}
+              </TabPanel>
+            </Box>
           </Grid>
         </Grid>
       </Box>

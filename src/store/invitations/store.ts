@@ -1,10 +1,12 @@
 import {
+  acceptVacancyInvitationRequest,
   createVacancyInvitationRequest,
   rejectVacancyInvitationRequest,
   revokeVacancyInvitationRequest,
 } from "api/invitations";
 import { VacancyInvitation } from "api/types";
 import { makeAutoObservable } from "mobx";
+import InternsStore from "../interns/store";
 
 class InvitationsStore {
   public loading: boolean = false;
@@ -32,6 +34,27 @@ class InvitationsStore {
     this.loading = true;
     return rejectVacancyInvitationRequest(id).then(() => {
       this.loading = false;
+      const invitations = InternsStore.getInvitations;
+      InternsStore.invitations = invitations.map((invitation) => {
+        if (invitation.id === id) {
+          return { ...invitation, rejected: true };
+        }
+        return invitation;
+      });
+    });
+  };
+
+  public acceptVacancyInvitation = (id: number) => {
+    this.loading = true;
+    return acceptVacancyInvitationRequest(id).then(() => {
+      this.loading = false;
+      const invitations = InternsStore.getInvitations;
+      InternsStore.invitations = invitations.map((invitation) => {
+        if (invitation.id === id) {
+          return { ...invitation, accepted: true };
+        }
+        return invitation;
+      });
     });
   };
 }

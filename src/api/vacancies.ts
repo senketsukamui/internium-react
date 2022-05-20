@@ -7,6 +7,9 @@ export const getVacancyRequest = (id: number) =>
 export const getVacanciesRequest = (params: string) =>
   basicAxios.get(`/vacancies/?${params}`);
 
+export const getVacancyInvitationsRequest = (id: number) =>
+  basicAxios.get(`/vacancies/${id}/invitations`);
+
 export const createVacancyRequest = (data: Vacancy) =>
   basicAxios.post("/vacancies", data);
 

@@ -1,5 +1,6 @@
 import { getCompanyUserProfileRequest } from "api/company-users";
 import {
+  getCurrentInternInvitationsRequest,
   getCurrentInternReactionsRequest,
   getInternProfileRequest,
   getInternsListRequest,
@@ -13,10 +14,15 @@ class InternsStore {
   public loading: boolean = false;
   public profile = null;
   public reactions = null;
+  public invitations = null;
   public interns: Intern[] | null = null;
 
   constructor() {
     makeAutoObservable(this);
+  }
+
+  get getInvitations() {
+    return toJS(this.invitations);
   }
 
   get getInterns() {
@@ -61,6 +67,14 @@ class InternsStore {
     this.loading = true;
     return getCurrentInternReactionsRequest().then(({ data }) => {
       this.reactions = data.reactions;
+      this.loading = false;
+    });
+  };
+
+  public getCurrentInternInvitations = () => {
+    this.loading = true;
+    return getCurrentInternInvitationsRequest().then(({ data }) => {
+      this.invitations = data.invitations;
       this.loading = false;
     });
   };

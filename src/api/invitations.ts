@@ -9,3 +9,6 @@ export const revokeVacancyInvitationRequest = (id: number) =>
 
 export const rejectVacancyInvitationRequest = (id: number) =>
   basicAxios.post(`/vacancy-invitations/${id}/reject`);
+
+export const acceptVacancyInvitationRequest = (id: number) =>
+  basicAxios.post(`/vacancy-invitations/${id}/accept`);

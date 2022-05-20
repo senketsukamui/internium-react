@@ -23,6 +23,7 @@ import SpecializationSelect from "components/SpecializationSelect";
 import { useNavigate, useParams } from "react-router-dom";
 import { useStores } from "hooks/useStores";
 import { observer } from "mobx-react";
+import SvgStudent from "components/Icons/StudentIcon";
 
 interface InternProps {
   user?: any;
@@ -31,14 +32,16 @@ interface InternProps {
 const InternProfileEdit: React.FC<InternProps> = ({ user }) => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [avatar, setAvatar] = useState<string | File>(user?.avatar);
+  const [avatar, setAvatar] = useState<string | File | null>(user?.avatar);
   const handleAvatarSelect = (e) => {
     setAvatar(e.target.files[0]);
   };
   const { internsStore, authStore } = useStores();
 
   const handleAvatarDelete = () => {
-    authStore.removeCurrentUserAvatar().then(() => setAvatar(null));
+    authStore.removeCurrentUserAvatar().then(() => {
+      setAvatar(null);
+    });
   };
 
   const handleAvatarUpload = () => {
@@ -118,15 +121,19 @@ const InternProfileEdit: React.FC<InternProps> = ({ user }) => {
           spacing={1}
         >
           <Grid item>
-            <Box
-              component="img"
-              sx={{ width: 150, height: 150 }}
-              src={
-                typeof avatar === "string"
-                  ? `https://internium.monkeyhackers.org/${avatar}`
-                  : URL.createObjectURL(avatar as Blob)
-              }
-            />
+            {avatar ? (
+              <Box
+                component="img"
+                sx={{ width: 150, height: 150, borderRadius: "50%" }}
+                src={
+                  typeof avatar === "string"
+                    ? `https://internium.monkeyhackers.org/${avatar}`
+                    : URL.createObjectURL(avatar as Blob)
+                }
+              />
+            ) : (
+              <SvgStudent width={150} height={150} />
+            )}
           </Grid>
           <Grid item>
             <input type="file" onChange={handleAvatarSelect} />

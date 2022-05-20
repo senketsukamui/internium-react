@@ -1,6 +1,8 @@
 import {
+  deleteCompanyLogoRequest,
   getCompanyProfile,
   getCompanyVacanciesRequest,
+  updateCompanyLogoRequest,
   updateCompanyProfileRequest,
 } from "api/companies";
 import { CompanyUpdateInterface } from "api/types";
@@ -51,6 +53,22 @@ class CompaniesStore {
         this.profile = data;
       }
     );
+  }
+
+  public deleteCompanyLogo(id: number) {
+    this.loading = true;
+    return deleteCompanyLogoRequest(id).then(() => {
+      this.loading = false;
+    });
+  }
+
+  public updateCompanyLogo(id: number, file: File) {
+    this.loading = true;
+    const formData = new FormData();
+    formData.append("file", file);
+    return updateCompanyLogoRequest(formData, id).then(() => {
+      this.loading = false;
+    });
   }
 }
 

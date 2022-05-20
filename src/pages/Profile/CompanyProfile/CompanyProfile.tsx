@@ -3,15 +3,11 @@ import {
   Box,
   Button,
   Card,
-  CardActions,
   CardContent,
   CardHeader,
-  Chip,
   Container,
   Grid,
   Link,
-  List,
-  ListItem,
   Paper,
   Stack,
   TextField,
@@ -81,7 +77,19 @@ const CompanyProfile = () => {
                   }}
                 >
                   <Box sx={{ display: "flex", justifyContent: "center" }}>
-                    <SvgCompany width={150} height={150} />
+                    {profile?.logo ? (
+                      <Box
+                        component="img"
+                        sx={{ width: 150, height: 150, borderRadius: "50%" }}
+                        src={
+                          typeof profile?.logo?.filepath === "string"
+                            ? `https://internium.monkeyhackers.org/${profile.logo.filepath}`
+                            : URL.createObjectURL(profile.avatar as Blob)
+                        }
+                      />
+                    ) : (
+                      <SvgCompany width={150} height={150} />
+                    )}
                   </Box>
                   <Typography
                     variant="h5"

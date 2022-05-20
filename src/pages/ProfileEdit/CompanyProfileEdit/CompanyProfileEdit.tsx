@@ -9,6 +9,7 @@ import { companyUpdateSchema } from "./constants";
 import ReactQuill from "react-quill";
 import { useNavigate, useParams } from "react-router-dom";
 import { CompanyModel } from "store/companies/types";
+import SvgStudent from "components/Icons/StudentIcon";
 
 interface CompanyProps {
   user?: any;
@@ -20,7 +21,12 @@ const CompanyProfileEdit: React.FC<CompanyProps> = ({ user }) => {
   const navigate = useNavigate();
   const profile = user || companiesStore.companyProfile;
 
-  console.log(user, profile);
+  const [avatar, setAvatar] = React.useState<string | File | null>(
+    user?.avatar
+  );
+  const handleAvatarSelect = (e) => {
+    setAvatar(e.target.files[0]);
+  };
 
   const { control, handleSubmit, reset, watch, formState } =
     useForm<CompanyUpdateInterface>({
@@ -53,6 +59,18 @@ const CompanyProfileEdit: React.FC<CompanyProps> = ({ user }) => {
     }
   }, []);
 
+  const handleAvatarDelete = () => {
+    companiesStore.deleteCompanyLogo(id).then(() => {
+      setAvatar(null);
+    });
+  };
+
+  const handleAvatarUpload = () => {
+    if (avatar) {
+      companiesStore.updateCompanyLogo(id, avatar);
+    }
+  };
+
   React.useEffect(() => {
     if (profile) {
       reset({
@@ -80,6 +98,44 @@ const CompanyProfileEdit: React.FC<CompanyProps> = ({ user }) => {
           padding: "20px",
         }}
       >
+        <Grid
+          container
+          direction="column"
+          sx={{ alignItems: "center" }}
+          spacing={1}
+        >
+          <Grid item>
+            {avatar ? (
+              <Box
+                component="img"
+                sx={{ width: 150, height: 150, borderRadius: "50%" }}
+                src={
+                  typeof avatar === "string"
+                    ? `https://internium.monkeyhackers.org/${avatar}`
+                    : URL.createObjectURL(avatar as Blob)
+                }
+              />
+            ) : (
+              <SvgStudent width={150} height={150} />
+            )}
+          </Grid>
+          <Grid item>
+            <input type="file" onChange={handleAvatarSelect} />
+          </Grid>
+          <Grid item>
+            <Button
+              color="error"
+              variant="outlined"
+              onClick={handleAvatarDelete}
+              sx={{ marginRight: 1 }}
+            >
+              Удалить
+            </Button>
+            <Button variant="outlined" onClick={handleAvatarUpload}>
+              Сохранить
+            </Button>
+          </Grid>
+        </Grid>
         <Box component="form" onSubmit={handleSubmit(onSubmit)}>
           <Typography gutterBottom sx={{ fontSize: "1.2rem" }}>
             Описание

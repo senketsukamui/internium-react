@@ -12,5 +12,8 @@ export const updateInternProfileRequest = (
 export const getCurrentInternReactionsRequest = () =>
   basicAxios.get("/interns/current/reactions");
 
+export const getCurrentInternInvitationsRequest = () =>
+  basicAxios.get("/interns/current/invitations");
+
 export const getInternsListRequest = (params: string) =>
   basicAxios.get(`/interns/?${params}`);

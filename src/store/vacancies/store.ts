@@ -1,6 +1,7 @@
 import {
   createVacancyRequest,
   getVacanciesRequest,
+  getVacancyInvitationsRequest,
   getVacancyRequest,
   updateVacancyRequest,
 } from "api/vacancies";
@@ -11,9 +12,14 @@ class VacanciesStore {
   public loading: boolean = false;
   public vacancies: VacancyModel[] = [];
   public vacancy: VacancyModel | null = null;
+  public invitations = null;
 
   constructor() {
     makeAutoObservable(this);
+  }
+
+  get getInvitations() {
+    return toJS(this.invitations);
   }
 
   get getVacancyValue() {
@@ -60,6 +66,14 @@ class VacanciesStore {
         this.vacancy = data;
       }
     );
+  }
+
+  public getVacancyInvitations(id: number) {
+    this.loading = true;
+    return getVacancyInvitationsRequest(id).then(({ data }: { data: any }) => {
+      this.loading = false;
+      this.invitations = data.invitations;
+    });
   }
 }
 

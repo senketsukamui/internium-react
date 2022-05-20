@@ -9,6 +9,7 @@ import {
   Grid,
   Link,
   List,
+  ListItem,
   ListItemButton,
   Paper,
   Typography,
@@ -17,17 +18,25 @@ import SvgCompany from "components/Icons/CompanyIcon";
 import useNotification from "hooks/useNotification";
 import { useStores } from "hooks/useStores";
 import { observer } from "mobx-react";
+import { RegisterTypes } from "pages/Auth/constants";
 import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 const Vacancy = () => {
   const { id } = useParams();
-  const { vacanciesStore, companiesStore, reactionsStore } = useStores();
+  const {
+    vacanciesStore,
+    companiesStore,
+    reactionsStore,
+    authStore,
+    invitationsStore,
+  } = useStores();
   const [message, sendMessage] = useNotification();
   const navigate = useNavigate();
 
   const vacancy = vacanciesStore.getVacancyValue;
   const companyVacancies = companiesStore.companyVacancies;
+  const invitations = vacanciesStore.getInvitations;
 
   const handleReact = () => {
     reactionsStore.createReaction(Number(id)).then(() =>
@@ -56,6 +65,16 @@ const Vacancy = () => {
       companiesStore.getCompanyVacancies(vacancy.company.id);
     }
   }, [vacancy]);
+
+  React.useEffect(() => {
+    if (authStore.userType !== RegisterTypes.INTERN) {
+      vacanciesStore.getVacancyInvitations(id);
+    }
+  }, []);
+
+  const handleRevokeInvitation = (invitationId: number) => {
+    invitationsStore.revokeVacancyInvitation(invitationId);
+  };
 
   return (
     <Grid
@@ -209,6 +228,42 @@ const Vacancy = () => {
                             {vacancy.title}
                           </ListItemButton>
                         ))}
+                    </List>
+                  </AccordionDetails>
+                </Accordion>
+              </Paper>
+            )}
+            {invitations && (
+              <Paper>
+                <Accordion>
+                  <AccordionSummary>{`Все приглашения (${invitations.length})`}</AccordionSummary>
+                  <AccordionDetails>
+                    <List>
+                      {invitations?.map((invitation) => (
+                        <ListItem
+                          sx={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                          }}
+                          divider
+                        >
+                          <Typography
+                            onClick={() =>
+                              navigate(
+                                `/intern/profile/${invitation.intern.id}`
+                              )
+                            }
+                          >{`${invitation.intern.firstName} ${invitation.intern.lastName}`}</Typography>
+                          <Button
+                            onClick={() =>
+                              handleRevokeInvitation(invitation.id)
+                            }
+                            color="error"
+                          >
+                            Отозвать
+                          </Button>
+                        </ListItem>
+                      ))}
                     </List>
                   </AccordionDetails>
                 </Accordion>
