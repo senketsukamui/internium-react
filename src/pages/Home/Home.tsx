@@ -1,10 +1,8 @@
 import React from "react";
 import Header from "components/Header";
 import Main from "./Main";
-import { Box } from "@mui/material";
 import { Route, Routes } from "react-router-dom";
 import Search from "./Search";
-import Profile from "pages/Profile";
 import Vacancy from "pages/Vacancy";
 import VacancyEdit from "pages/VacancyEdit";
 import StudentProfile from "pages/Profile/StudentProfile";
