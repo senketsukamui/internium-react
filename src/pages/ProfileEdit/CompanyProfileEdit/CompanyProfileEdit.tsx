@@ -21,9 +21,7 @@ const CompanyProfileEdit: React.FC<CompanyProps> = ({ user }) => {
   const navigate = useNavigate();
   const profile = user || companiesStore.companyProfile;
 
-  const [avatar, setAvatar] = React.useState<string | File | null>(
-    user?.avatar
-  );
+  const [avatar, setAvatar] = React.useState<string | File | null>(user?.logo);
   const handleAvatarSelect = (e) => {
     setAvatar(e.target.files[0]);
   };

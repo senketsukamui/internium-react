@@ -21,21 +21,25 @@ class ReactionStore {
   public createReaction(vacancyId: number) {
     this.loading = true;
     return createReactionRequest({ vacancyId }).then(({ data }) => {
-      console.log(data);
       this.loading = false;
     });
   }
 
-  public deleteReaction(vacancyId: number) {
+  public deleteReaction(reactionId: number) {
     this.loading = true;
-    return deleteReactionRequest({ vacancyId }).then(({ data }) => {
+    return deleteReactionRequest({ reactionId }).then(() => {
       this.loading = false;
+      this.reactions = this.reactions!.map((reaction) => {
+        if (reaction.id === reactionId) {
+          return { ...reaction, archived: true };
+        }
+      });
     });
   }
 
-  public getReactions(vacancyId: string) {
+  public getReactions(reactionId: string) {
     this.loading = true;
-    return getReactionsRequest({ vacancyId }).then(({ data }) => {
+    return getReactionsRequest({ reactionId }).then(({ data }) => {
       this.loading = false;
     });
   }

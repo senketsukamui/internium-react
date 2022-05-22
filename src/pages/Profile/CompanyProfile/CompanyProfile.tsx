@@ -13,6 +13,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import { baseURL } from "api/utils";
 import SvgCompany from "components/Icons/CompanyIcon";
 import VacancyCard from "components/VacancyCard";
 import VacancyModal from "components/VacancyModal";
@@ -82,9 +83,9 @@ const CompanyProfile = () => {
                         component="img"
                         sx={{ width: 150, height: 150, borderRadius: "50%" }}
                         src={
-                          typeof profile?.logo?.filepath === "string"
-                            ? `https://internium.monkeyhackers.org/${profile.logo.filepath}`
-                            : URL.createObjectURL(profile.avatar as Blob)
+                          typeof profile?.logo === "string"
+                            ? `${baseURL}/${profile.logo}`
+                            : URL.createObjectURL(profile.logo as Blob)
                         }
                       />
                     ) : (

@@ -16,15 +16,12 @@ import {
   Tabs,
   Typography,
 } from "@mui/material";
+import { baseURL } from "api/utils";
 import SvgStudent from "components/Icons/StudentIcon";
-import InvitationCard from "components/InvitationCard";
-import ReactionCard from "components/ReactionCard";
 import TabPanel from "components/TabPanel";
-import VacancyCard from "components/VacancyCard";
 import VacancyInvitationModal from "components/VacancyInvitationModal";
 import { format } from "date-fns";
 import { useStores } from "hooks/useStores";
-import { isEmpty } from "lodash";
 import { observer } from "mobx-react";
 import { RegisterTypes } from "pages/Auth/constants";
 import React, { FC } from "react";
@@ -129,7 +126,7 @@ const StudentProfile: FC = () => {
                         sx={{ width: 150, height: 150, borderRadius: "50%" }}
                         src={
                           typeof profile.avatar === "string"
-                            ? `https://internium.monkeyhackers.org/${profile.avatar}`
+                            ? `${baseURL}/${profile.avatar}`
                             : URL.createObjectURL(profile.avatar as Blob)
                         }
                       />

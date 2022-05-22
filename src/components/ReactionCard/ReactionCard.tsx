@@ -1,10 +1,12 @@
-import { Card, Typography, Chip, Link, Grid } from "@mui/material";
+import { Card, Typography, Chip, Link, Grid, Button } from "@mui/material";
 import {
   LocationStatusesTranslations,
   PaidStatusesTranslations,
 } from "components/VacancyModal/constants";
+import { useStores } from "hooks/useStores";
 import { observer } from "mobx-react";
 import React from "react";
+import useNotification from "hooks/useNotification";
 import { Reaction } from "store/reactions/types";
 import { getNumberWithSeparator } from "utils/numberWithCommas";
 
@@ -13,6 +15,18 @@ interface ReactionCardProps {
 }
 
 const ReactionCard: React.FC<ReactionCardProps> = ({ item }) => {
+  const { reactionsStore } = useStores();
+  const [message, sendMessage] = useNotification();
+
+  const handleDeleteReaction = () => {
+    reactionsStore.deleteReaction(item?.id).then(() =>
+      sendMessage({
+        msg: "Вы успешно удалили отклик на вакансию!",
+        variant: "danger",
+      })
+    );
+  };
+
   return (
     <Card
       key={item.id}
@@ -63,6 +77,17 @@ const ReactionCard: React.FC<ReactionCardProps> = ({ item }) => {
               )} ₽`}</Typography>
             )}
           </Grid>
+          {!item.archived && !item.accepted && !item.rejected && (
+            <Grid item>
+              <Button
+                variant="contained"
+                color="error"
+                onClick={handleDeleteReaction}
+              >
+                Удалить отклик
+              </Button>
+            </Grid>
+          )}
         </Grid>
       </Grid>
     </Card>

@@ -66,7 +66,10 @@ export const VacancyDetailsCard: React.FC<VacancyCardProps> = ({ item }) => {
           </Grid>
 
           <Grid item>
-            <Link href={`/company/${item?.company.id}`} underline="hover">
+            <Link
+              href={`/company/profile/${item?.company.id}`}
+              underline="hover"
+            >
               {item?.company?.name}
             </Link>
           </Grid>

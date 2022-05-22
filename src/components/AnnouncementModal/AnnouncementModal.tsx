@@ -47,7 +47,9 @@ const AnnouncementModal: FC<AnnouncementModalProps> = ({
   const [message, setMessage] = React.useState<string>("");
 
   const onSend = () => {
-    vacanciesStore.makeVacancyAnnouncement({ message, vacancyId });
+    vacanciesStore
+      .makeVacancyAnnouncement({ message, vacancyId })
+      .then(() => handleModalClose());
   };
 
   return (

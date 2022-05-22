@@ -15,7 +15,7 @@ import {
 } from "@mui/material";
 import SvgCompany from "components/Icons/CompanyIcon";
 import VacancyModal from "components/VacancyModal";
-import useNotification from "hooks/useNotification";
+import { baseURL } from "api/utils";
 import { useStores } from "hooks/useStores";
 import { observer } from "mobx-react";
 import React from "react";
@@ -54,8 +54,27 @@ const CompanyUserProfile = () => {
                     padding: "15px",
                   }}
                 >
-                  <Box sx={{ display: "flex", justifyContent: "center" }}>
-                    <SvgCompany width={150} height={150} />
+                  <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "center",
+                    }}
+                  >
+                    {profile?.userInfo?.avatar ? (
+                      <Box
+                        component="img"
+                        sx={{ width: 150, height: 150, borderRadius: "50%" }}
+                        src={
+                          typeof profile?.userInfo?.avatar === "string"
+                            ? `${baseURL}/${profile?.userInfo?.avatar}`
+                            : URL.createObjectURL(
+                                profile?.userInfo?.avatar as Blob
+                              )
+                        }
+                      />
+                    ) : (
+                      <SvgCompany width={150} height={150} />
+                    )}
                   </Box>
                   <Typography
                     variant="h5"
@@ -88,8 +107,27 @@ const CompanyUserProfile = () => {
                     padding: "15px",
                   }}
                 >
-                  <Box sx={{ display: "flex", justifyContent: "center" }}>
-                    <SvgCompany width={150} height={150} />
+                  <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "center",
+                    }}
+                  >
+                    {profile?.company?.logo ? (
+                      <Box
+                        component="img"
+                        sx={{ width: 150, height: 150, borderRadius: "50%" }}
+                        src={
+                          typeof profile?.company?.logo === "string"
+                            ? `${baseURL}/${profile?.company?.logo}`
+                            : URL.createObjectURL(
+                                profile?.company?.logo as Blob
+                              )
+                        }
+                      />
+                    ) : (
+                      <SvgCompany width={150} height={150} />
+                    )}
                   </Box>
                   <Link
                     variant="h5"

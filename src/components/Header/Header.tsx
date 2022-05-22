@@ -58,9 +58,11 @@ const Header = () => {
               <Grid item>
                 <HeaderLink href="/search">Стажировки</HeaderLink>
               </Grid>
-              <Grid item>
-                <HeaderLink href="/interns">Соискатели</HeaderLink>
-              </Grid>
+              {authStore.userType !== RegisterTypes.INTERN && (
+                <Grid item>
+                  <HeaderLink href="/interns">Соискатели</HeaderLink>
+                </Grid>
+              )}
             </Grid>
           </Grid>
           <Grid

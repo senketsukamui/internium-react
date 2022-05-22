@@ -5,7 +5,9 @@ const defaultHeaders = {
   "Access-Control-Allow-Origin": "*",
 };
 
-const baseURL = "https://internium.monkeyhackers.org/api";
+export const baseURL = "https://internium.monkeyhackers.org";
+
+export const apiURL = `${baseURL}/api`;
 
 const defaultBodyHeaders = {
   ...defaultHeaders,
@@ -15,12 +17,12 @@ const defaultBodyHeaders = {
 const okOnly = (status: number) => status === 200;
 
 export const basicAxios = axios.create({
-  baseURL,
+  baseURL: apiURL,
   headers: defaultBodyHeaders,
 });
 
 export const mainAxios = axios.create({
-  baseURL,
+  baseURL: apiURL,
   headers: defaultBodyHeaders,
   validateStatus: okOnly,
   paramsSerializer: (params: Record<string, string>) =>

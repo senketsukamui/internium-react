@@ -1,4 +1,4 @@
-import { Card, Typography, Chip, Link, Grid } from "@mui/material";
+import { Card, Typography, Chip, Link, Grid, Box } from "@mui/material";
 import {
   LocationStatuses,
   LocationStatusesTranslations,
@@ -6,8 +6,7 @@ import {
 import React from "react";
 import { Intern } from "store/interns/types";
 import { Ability } from "store/specializations/types";
-import { VacancyModel } from "store/vacancies/types";
-import { getNumberWithSeparator } from "utils/numberWithCommas";
+import SvgStudent from "components/Icons/StudentIcon";
 
 interface CardProps {
   item: Intern;
@@ -24,8 +23,24 @@ const InternCard: React.FC<CardProps> = ({ onClick, item }) => {
         border: "thin solid #ccc",
         borderRadius: "8px",
         cursor: "pointer",
+        display: "flex",
       }}
     >
+      <Box sx={{ padding: "1rem", paddingRight: 0 }}>
+        {item?.logo ? (
+          <Box
+            component="img"
+            sx={{ width: 50, height: 50, borderRadius: "50%" }}
+            src={
+              typeof item.avatar === "string"
+                ? `https://internium.monkeyhackers.org/${item.avatar}`
+                : URL.createObjectURL(item.avatar as Blob)
+            }
+          />
+        ) : (
+          <SvgStudent width={50} height={50} />
+        )}
+      </Box>
       <Grid container direction="column" sx={{ padding: "1rem" }}>
         <Grid item container direction="column">
           <Grid item>

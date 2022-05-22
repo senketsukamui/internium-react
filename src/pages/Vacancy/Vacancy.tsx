@@ -14,10 +14,12 @@ import {
   Paper,
   Typography,
 } from "@mui/material";
+import { baseURL } from "api/utils";
 import AnnouncementModal from "components/AnnouncementModal";
 import SvgCompany from "components/Icons/CompanyIcon";
 import useNotification from "hooks/useNotification";
 import { useStores } from "hooks/useStores";
+import { isEmpty } from "lodash";
 import { observer } from "mobx-react";
 import { RegisterTypes } from "pages/Auth/constants";
 import React from "react";
@@ -32,6 +34,7 @@ const Vacancy = () => {
     authStore,
     invitationsStore,
   } = useStores();
+
   const [message, sendMessage] = useNotification();
   const [modalOpen, setModalOpen] = React.useState<boolean>(false);
   const navigate = useNavigate();
@@ -45,15 +48,6 @@ const Vacancy = () => {
       sendMessage({
         msg: "Вы успешно откликнулись на вакансию!",
         variant: "success",
-      })
-    );
-  };
-
-  const handleDeleteReaction = () => {
-    reactionsStore.deleteReaction(Number(id)).then(() =>
-      sendMessage({
-        msg: "Вы успешно удалили отклик на вакансию!",
-        variant: "danger",
       })
     );
   };
@@ -172,13 +166,20 @@ const Vacancy = () => {
               }}
               elevation={2}
             >
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "center",
-                }}
-              >
-                <SvgCompany width={160} height={160} />
+              <Box sx={{ display: "flex", justifyContent: "center" }}>
+                {vacancy?.company?.logo ? (
+                  <Box
+                    component="img"
+                    sx={{ width: 160, height: 160, borderRadius: "50%" }}
+                    src={
+                      typeof vacancy?.company?.logo === "string"
+                        ? `${baseURL}/${vacancy?.company.logo}`
+                        : URL.createObjectURL(vacancy?.company.logo as Blob)
+                    }
+                  />
+                ) : (
+                  <SvgCompany width={160} height={160} />
+                )}
               </Box>
               <Link
                 href={`/company/profile/${vacancy.company.id}`}
@@ -210,15 +211,9 @@ const Vacancy = () => {
                 </Button>
               )}
               {vacancy.reacted ? (
-                <Button
-                  variant="contained"
-                  onClick={handleDeleteReaction}
-                  color="error"
-                  fullWidth
-                  sx={{ marginTop: 1 }}
-                >
-                  Убрать отклик
-                </Button>
+                <Typography sx={{ marginTop: 1, color: "#68c07b" }}>
+                  Вы уже откликнулись на эту вакансию
+                </Typography>
               ) : (
                 <Button
                   variant="contained"
@@ -230,7 +225,7 @@ const Vacancy = () => {
                 </Button>
               )}
             </Paper>
-            {companyVacancies?.length - 1 && (
+            {!isEmpty(companyVacancies) && (
               <Paper>
                 <Accordion>
                   <AccordionSummary>{`Все вакансии компании (${
