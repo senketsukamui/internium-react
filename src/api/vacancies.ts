@@ -1,4 +1,4 @@
-import { Vacancy } from "store/vacancies/types";
+import { Vacancy, VacancyAnnouncement } from "store/vacancies/types";
 import { basicAxios, mainAxios } from "./utils";
 
 export const getVacancyRequest = (id: number) =>
@@ -15,3 +15,6 @@ export const createVacancyRequest = (data: Vacancy) =>
 
 export const updateVacancyRequest = (data: Vacancy, id: number) =>
   basicAxios.put(`/vacancies/${id}`, data);
+
+export const makeVacancyAnnouncementRequest = (data: VacancyAnnouncement) =>
+  basicAxios.post("/vacancy-announcements", data);

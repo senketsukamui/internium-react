@@ -19,6 +19,7 @@ import {
 import SvgStudent from "components/Icons/StudentIcon";
 import InvitationCard from "components/InvitationCard";
 import ReactionCard from "components/ReactionCard";
+import TabPanel from "components/TabPanel";
 import VacancyCard from "components/VacancyCard";
 import VacancyInvitationModal from "components/VacancyInvitationModal";
 import { format } from "date-fns";
@@ -30,32 +31,7 @@ import React, { FC } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { InternStatuses } from "store/auth/types";
 import { calculateAge } from "utils";
-
-interface TabPanelProps {
-  children?: React.ReactNode;
-  index: number;
-  value: number;
-}
-
-function TabPanel(props: TabPanelProps) {
-  const { children, value, index, ...other } = props;
-
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`simple-tabpanel-${index}`}
-      aria-labelledby={`simple-tab-${index}`}
-      {...other}
-    >
-      {value === index && (
-        <Box sx={{ p: 3 }}>
-          <Typography>{children}</Typography>
-        </Box>
-      )}
-    </div>
-  );
-}
+import Reactions from "./Reactions";
 
 const StudentProfile: FC = () => {
   const { id } = useParams();
@@ -261,13 +237,9 @@ const StudentProfile: FC = () => {
           </Grid>
           <Grid item xs={7}>
             <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-              <Tabs
-                value={value}
-                onChange={handleChange}
-                aria-label="basic tabs example"
-              >
+              <Tabs value={value} onChange={handleChange}>
                 <Tab label="Информация" />
-                <Tab label="Приглашения" />
+                {isCurrentUser && <Tab label="Отклики" />}
               </Tabs>
               <TabPanel value={value} index={0}>
                 <Stack direction="column" spacing={2}>
@@ -287,39 +259,10 @@ const StudentProfile: FC = () => {
                       </CardContent>
                     </Card>
                   </Paper>
-                  {!isEmpty(reactions) && (
-                    <Paper
-                      elevation={3}
-                      sx={{
-                        padding: "10px",
-                      }}
-                    >
-                      <Stack spacing={2}>
-                        <Typography variant="h5">Мои отклики</Typography>
-                        {reactions?.map((reaction: any) => (
-                          <ReactionCard item={reaction} key={reaction.id} />
-                        ))}
-                      </Stack>
-                    </Paper>
-                  )}
                 </Stack>
               </TabPanel>
               <TabPanel value={value} index={1}>
-                {!isEmpty(invitations) && (
-                  <Paper
-                    elevation={3}
-                    sx={{
-                      padding: "10px",
-                    }}
-                  >
-                    <Stack spacing={2}>
-                      <Typography variant="h5">Мои отклики</Typography>
-                      {invitations?.map((reaction: any) => (
-                        <InvitationCard item={reaction} key={reaction.id} />
-                      ))}
-                    </Stack>
-                  </Paper>
-                )}
+                <Reactions reactions={reactions} invitations={invitations} />
               </TabPanel>
             </Box>
           </Grid>

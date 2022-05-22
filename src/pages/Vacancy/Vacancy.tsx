@@ -14,6 +14,7 @@ import {
   Paper,
   Typography,
 } from "@mui/material";
+import AnnouncementModal from "components/AnnouncementModal";
 import SvgCompany from "components/Icons/CompanyIcon";
 import useNotification from "hooks/useNotification";
 import { useStores } from "hooks/useStores";
@@ -32,6 +33,7 @@ const Vacancy = () => {
     invitationsStore,
   } = useStores();
   const [message, sendMessage] = useNotification();
+  const [modalOpen, setModalOpen] = React.useState<boolean>(false);
   const navigate = useNavigate();
 
   const vacancy = vacanciesStore.getVacancyValue;
@@ -74,6 +76,10 @@ const Vacancy = () => {
 
   const handleRevokeInvitation = (invitationId: number) => {
     invitationsStore.revokeVacancyInvitation(invitationId);
+  };
+
+  const handleOpenAnnouncementModal = () => {
+    setModalOpen(true);
   };
 
   return (
@@ -131,7 +137,11 @@ const Vacancy = () => {
               <Box>
                 {Boolean(vacancy?.abilities.length) ? (
                   vacancy?.abilities.map((item) => (
-                    <Chip sx={{ marginRight: 1 }} label={item.title} />
+                    <Chip
+                      key={item.id}
+                      sx={{ marginRight: 1 }}
+                      label={item.title}
+                    />
                   ))
                 ) : (
                   <Typography paragraph>Не указаны</Typography>
@@ -189,6 +199,16 @@ const Vacancy = () => {
               >
                 Редактировать
               </Button>
+              {authStore.userType !== RegisterTypes.INTERN && (
+                <Button
+                  variant="contained"
+                  sx={{ marginTop: 1 }}
+                  onClick={handleOpenAnnouncementModal}
+                  fullWidth
+                >
+                  Отправить всем
+                </Button>
+              )}
               {vacancy.reacted ? (
                 <Button
                   variant="contained"
@@ -241,6 +261,7 @@ const Vacancy = () => {
                     <List>
                       {invitations?.map((invitation) => (
                         <ListItem
+                          key={invitation.id}
                           sx={{
                             display: "flex",
                             justifyContent: "space-between",
@@ -271,6 +292,13 @@ const Vacancy = () => {
             )}
           </Grid>
         </>
+      )}
+      {modalOpen && (
+        <AnnouncementModal
+          open={modalOpen}
+          setOpen={setModalOpen}
+          vacancyId={Number(id)}
+        />
       )}
     </Grid>
   );

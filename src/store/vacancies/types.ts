@@ -17,3 +17,8 @@ export interface VacancyModel {
   title: string;
   description: string;
 }
+
+export interface VacancyAnnouncement {
+  vacancyId: number;
+  message: string;
+}

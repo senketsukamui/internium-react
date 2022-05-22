@@ -59,9 +59,6 @@ const Header = () => {
                 <HeaderLink href="/search">Стажировки</HeaderLink>
               </Grid>
               <Grid item>
-                <HeaderLink href="">Компании</HeaderLink>
-              </Grid>
-              <Grid item>
                 <HeaderLink href="/interns">Соискатели</HeaderLink>
               </Grid>
             </Grid>

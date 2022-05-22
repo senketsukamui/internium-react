@@ -3,10 +3,12 @@ import {
   getVacanciesRequest,
   getVacancyInvitationsRequest,
   getVacancyRequest,
+  makeVacancyAnnouncementRequest,
   updateVacancyRequest,
 } from "api/vacancies";
+import { thru } from "lodash";
 import { makeAutoObservable, toJS } from "mobx";
-import { Vacancy, VacancyModel } from "./types";
+import { Vacancy, VacancyAnnouncement, VacancyModel } from "./types";
 
 class VacanciesStore {
   public loading: boolean = false;
@@ -73,6 +75,13 @@ class VacanciesStore {
     return getVacancyInvitationsRequest(id).then(({ data }: { data: any }) => {
       this.loading = false;
       this.invitations = data.invitations;
+    });
+  }
+
+  public makeVacancyAnnouncement(data: VacancyAnnouncement) {
+    this.loading = true;
+    return makeVacancyAnnouncementRequest(data).then(() => {
+      this.loading = false;
     });
   }
 }
