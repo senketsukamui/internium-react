@@ -29,17 +29,13 @@ import { observer } from "mobx-react";
 import { RegisterTypes } from "pages/Auth/constants";
 import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import Invitations from "./Invitations";
 import Reactions from "./Reactions";
 
 const Vacancy = () => {
   const { id } = useParams();
-  const {
-    vacanciesStore,
-    companiesStore,
-    reactionsStore,
-    authStore,
-    invitationsStore,
-  } = useStores();
+  const { vacanciesStore, companiesStore, reactionsStore, authStore } =
+    useStores();
 
   const [message, sendMessage] = useNotification();
   const [modalOpen, setModalOpen] = React.useState<boolean>(false);
@@ -50,6 +46,12 @@ const Vacancy = () => {
   const companyVacancies = companiesStore.companyVacancies;
   const invitations = vacanciesStore.getInvitations;
   const reactions = vacanciesStore.getReactions;
+  const isIntern = authStore.isIntern;
+  const isBelongToCurrentCompany = vacanciesStore.isBelongToCurrentCompany(
+    vacancy?.companyId
+  );
+
+  console.log(authStore.getUserObject);
 
   const handleReact = () => {
     reactionsStore.createReaction(Number(id)).then(() =>
@@ -71,15 +73,18 @@ const Vacancy = () => {
   }, [vacancy]);
 
   React.useEffect(() => {
-    if (authStore.userType !== RegisterTypes.INTERN) {
+    if (
+      authStore.userType !== RegisterTypes.INTERN &&
+      isBelongToCurrentCompany
+    ) {
       vacanciesStore.getVacancyInvitations(id);
       vacanciesStore.getVacancyReactions(id);
     }
   }, []);
 
-  const handleRevokeInvitation = (invitationId: number) => {
-    invitationsStore.revokeVacancyInvitation(invitationId);
-  };
+  // const handleRevokeInvitation = (invitationId: number) => {
+  //   invitationsStore.revokeVacancyInvitation(invitationId);
+  // };
 
   const handleOpenAnnouncementModal = () => {
     setModalOpen(true);
@@ -158,8 +163,8 @@ const Vacancy = () => {
             <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
               <Tabs value={tab} onChange={handleChange}>
                 <Tab label="Информация" />
-                <Tab label="Реакции" />
-                <Tab label="Приглашения" />
+                {isBelongToCurrentCompany && <Tab label="Реакции" />}
+                {isBelongToCurrentCompany && <Tab label="Приглашения" />}
               </Tabs>
             </Box>
             <TabPanel value={tab} index={0}>
@@ -178,6 +183,9 @@ const Vacancy = () => {
             </TabPanel>
             <TabPanel value={tab} index={1}>
               {reactions && <Reactions reactions={reactions} />}
+            </TabPanel>
+            <TabPanel value={tab} index={2}>
+              {invitations && <Invitations invitations={invitations} />}
             </TabPanel>
           </Grid>
           <Grid item xs={4}>
@@ -215,37 +223,41 @@ const Vacancy = () => {
               >
                 {vacancy.company.name}
               </Link>
-              <Button
-                variant="contained"
-                onClick={() => navigate(`/vacancy/${id}/edit`)}
-                fullWidth
-              >
-                Редактировать
-              </Button>
-              {authStore.userType !== RegisterTypes.INTERN && (
-                <Button
-                  variant="contained"
-                  sx={{ marginTop: 1 }}
-                  onClick={handleOpenAnnouncementModal}
-                  fullWidth
-                >
-                  Отправить всем
-                </Button>
+              {!isIntern && isBelongToCurrentCompany && (
+                <>
+                  <Button
+                    variant="contained"
+                    onClick={() => navigate(`/vacancy/${id}/edit`)}
+                    fullWidth
+                  >
+                    Редактировать
+                  </Button>
+
+                  <Button
+                    variant="contained"
+                    sx={{ marginTop: 1 }}
+                    onClick={handleOpenAnnouncementModal}
+                    fullWidth
+                  >
+                    Отправить всем
+                  </Button>
+                </>
               )}
-              {vacancy.reacted ? (
-                <Typography sx={{ marginTop: 1, color: "#68c07b" }}>
-                  Вы уже откликнулись на эту вакансию
-                </Typography>
-              ) : (
-                <Button
-                  variant="contained"
-                  onClick={handleReact}
-                  fullWidth
-                  sx={{ marginTop: 1 }}
-                >
-                  Откликнуться
-                </Button>
-              )}
+              {isIntern &&
+                (vacancy.reacted ? (
+                  <Typography sx={{ marginTop: 1, color: "#68c07b" }}>
+                    Вы уже откликнулись на эту вакансию
+                  </Typography>
+                ) : (
+                  <Button
+                    variant="contained"
+                    onClick={handleReact}
+                    fullWidth
+                    sx={{ marginTop: 1 }}
+                  >
+                    Откликнуться
+                  </Button>
+                ))}
             </Paper>
             {!isEmpty(companyVacancies) && (
               <Paper>
@@ -265,43 +277,6 @@ const Vacancy = () => {
                             {vacancy.title}
                           </ListItemButton>
                         ))}
-                    </List>
-                  </AccordionDetails>
-                </Accordion>
-              </Paper>
-            )}
-            {invitations && (
-              <Paper>
-                <Accordion>
-                  <AccordionSummary>{`Все приглашения (${invitations.length})`}</AccordionSummary>
-                  <AccordionDetails>
-                    <List>
-                      {invitations?.map((invitation) => (
-                        <ListItem
-                          key={invitation.id}
-                          sx={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                          }}
-                          divider
-                        >
-                          <Typography
-                            onClick={() =>
-                              navigate(
-                                `/intern/profile/${invitation.intern.id}`
-                              )
-                            }
-                          >{`${invitation.intern.firstName} ${invitation.intern.lastName}`}</Typography>
-                          <Button
-                            onClick={() =>
-                              handleRevokeInvitation(invitation.id)
-                            }
-                            color="error"
-                          >
-                            Отозвать
-                          </Button>
-                        </ListItem>
-                      ))}
                     </List>
                   </AccordionDetails>
                 </Accordion>

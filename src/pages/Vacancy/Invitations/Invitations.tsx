@@ -4,41 +4,42 @@ import UserReactionCard from "components/UserReactionCard";
 import { observer } from "mobx-react";
 import React from "react";
 
-interface ReactionsProps {
-  reactions: any;
+interface InvitationsProps {
+  invitations: any;
 }
 
-const Reactions: React.FC<ReactionsProps> = ({ reactions }) => {
+const Invitations: React.FC<InvitationsProps> = ({ invitations }) => {
+  console.log(invitations);
   const [tab, setTab] = React.useState<number>(0);
   const handleChangeTab = (event: React.SyntheticEvent, newValue: number) => {
     setTab(newValue);
   };
 
-  const activeReactions = React.useMemo(
-    () => reactions.filter((item) => !item.rejected && !item.archived),
-    []
+  const activeInvitations = React.useMemo(
+    () => invitations?.filter((item) => !item.rejected && !item.archived),
+    [invitations]
   );
 
-  const archivedReactions = React.useMemo(
-    () => reactions.filter((item) => item.rejected || item.archived),
-    []
+  const archivedInvitations = React?.useMemo(
+    () => invitations.filter((item) => item.rejected || item.archived),
+    [invitations]
   );
   return (
     <Box>
       <Tabs value={tab} onChange={handleChangeTab}>
-        <Tab label={`Активные (${activeReactions?.length})`} />
-        <Tab label={`Архивированные (${archivedReactions.length})`} />
+        <Tab label={`Активные (${activeInvitations?.length})`} />
+        <Tab label={`Архивированные (${archivedInvitations.length})`} />
       </Tabs>
       <TabPanel value={tab} index={0}>
         <Stack spacing={2}>
-          {activeReactions?.map((reaction: any) => (
+          {activeInvitations?.map((reaction: any) => (
             <UserReactionCard item={reaction} key={reaction.id} />
           ))}
         </Stack>
       </TabPanel>
       <TabPanel value={tab} index={1}>
         <Stack spacing={2}>
-          {archivedReactions?.map((reaction: any) => (
+          {archivedInvitations?.map((reaction: any) => (
             <UserReactionCard item={reaction} key={reaction.id} />
           ))}
         </Stack>
@@ -47,4 +48,4 @@ const Reactions: React.FC<ReactionsProps> = ({ reactions }) => {
   );
 };
 
-export default observer(Reactions);
+export default observer(Invitations);

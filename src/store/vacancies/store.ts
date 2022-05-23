@@ -8,6 +8,7 @@ import {
   updateVacancyRequest,
 } from "api/vacancies";
 import { makeAutoObservable, toJS } from "mobx";
+import AuthStore from "../auth";
 import { Vacancy, VacancyAnnouncement, VacancyModel } from "./types";
 
 class VacanciesStore {
@@ -19,6 +20,13 @@ class VacanciesStore {
 
   constructor() {
     makeAutoObservable(this);
+  }
+
+  public isBelongToCurrentCompany(id: number) {
+    return (
+      AuthStore.getUserObject?.companyId === id ||
+      AuthStore.getUserObject?.id === id
+    );
   }
 
   get getInvitations() {

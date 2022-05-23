@@ -53,6 +53,10 @@ class AuthStore {
     return this.user?.id === Number(id) || this.user?.companyId === Number(id);
   }
 
+  get isIntern() {
+    return this.userType === RegisterTypes.INTERN;
+  }
+
   public loginIntern(phone: string) {
     this.loading = true;
     this.codeSent = false;
@@ -130,6 +134,7 @@ class AuthStore {
         console.log(data);
         this.user = data;
         this.loading = false;
+        this.userType = RegisterTypes.COMPANY;
       }
     );
   }
@@ -147,7 +152,6 @@ class AuthStore {
     // TODO: Deal with action and types
     return createCompanyUserRequest(data, token).then(
       ({ data }: { data: JWTTokenResponse }) => {
-        console.log(data);
         save("accessToken", data.accessToken);
         save("refreshToken", data.refreshToken);
         this.accessToken = data.accessToken;

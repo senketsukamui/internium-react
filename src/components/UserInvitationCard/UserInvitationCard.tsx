@@ -11,19 +11,18 @@ import { ru } from "date-fns/locale";
 import useNotification from "hooks/useNotification";
 import { useStores } from "hooks/useStores";
 import React from "react";
-import { getNumberWithSeparator } from "utils/numberWithCommas";
 
-interface UserReactionCardProps {
+interface UserInvitationCardProps {
   item: any;
 }
 
-const UserReactionCard: React.FC<UserReactionCardProps> = ({ item }) => {
-  const { reactionsStore } = useStores();
+const UserInvitationCard: React.FC<UserInvitationCardProps> = ({ item }) => {
+  const { invitationsStore } = useStores();
   const [message, sendMessage] = useNotification();
-  const isActiveReaction = !item.accepted && !item.archived && !item.rejected;
+  const isActiveInvitation = !item.accepted && !item.archived && !item.rejected;
 
-  const handleDeleteReaction = () => {
-    reactionsStore.deleteReaction(item?.id).then(() =>
+  const handleDeleteInvitation = () => {
+    invitationsStore.deleteReaction(item?.id).then(() =>
       sendMessage({
         msg: "Вы успешно удалили отклик на вакансию!",
         variant: "danger",
@@ -32,7 +31,7 @@ const UserReactionCard: React.FC<UserReactionCardProps> = ({ item }) => {
   };
 
   const handleAcceptReaction = () => {
-    reactionsStore.acceptReaction(item?.id).then(() =>
+    invitationsStore.acceptReaction(item?.id).then(() =>
       sendMessage({
         msg: "Вы успешно приняли отклик на вакансию!",
         variant: "success",
@@ -97,7 +96,7 @@ const UserReactionCard: React.FC<UserReactionCardProps> = ({ item }) => {
             </Typography>
           </Grid>
 
-          {isActiveReaction && (
+          {isActiveInvitation && (
             <Grid item>
               <Button
                 sx={{ marginRight: 1 }}
@@ -109,7 +108,7 @@ const UserReactionCard: React.FC<UserReactionCardProps> = ({ item }) => {
               <Button
                 variant="contained"
                 color="error"
-                onClick={handleDeleteReaction}
+                onClick={handleDeleteInvitation}
               >
                 Удалить отклик
               </Button>
@@ -121,4 +120,4 @@ const UserReactionCard: React.FC<UserReactionCardProps> = ({ item }) => {
   );
 };
 
-export default UserReactionCard;
+export default UserInvitationCard;

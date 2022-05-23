@@ -43,6 +43,11 @@ class ReactionStore {
     this.loading = true;
     return acceptReactionRequest(id).then(() => {
       this.loading = false;
+      this.reactions = this.reactions!.map((reaction) => {
+        if (reaction.id === reactionId) {
+          return { ...reaction, accepted: true };
+        }
+      });
     });
   }
 
@@ -50,13 +55,11 @@ class ReactionStore {
     this.loading = true;
     return rejectReactionRequest(id).then(() => {
       this.loading = false;
-    });
-  }
-
-  public getReactions(reactionId: string) {
-    this.loading = true;
-    return getReactionsRequest({ reactionId }).then(({ data }) => {
-      this.loading = false;
+      this.reactions = this.reactions!.map((reaction) => {
+        if (reaction.id === reactionId) {
+          return { ...reaction, rejected: true };
+        }
+      });
     });
   }
 }
