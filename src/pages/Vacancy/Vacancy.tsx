@@ -12,11 +12,16 @@ import {
   ListItem,
   ListItemButton,
   Paper,
+  Tab,
+  Tabs,
   Typography,
 } from "@mui/material";
 import { baseURL } from "api/utils";
 import AnnouncementModal from "components/AnnouncementModal";
 import SvgCompany from "components/Icons/CompanyIcon";
+import ReactionCard from "components/ReactionCard";
+import TabPanel from "components/TabPanel";
+import UserReactionCard from "components/UserReactionCard";
 import useNotification from "hooks/useNotification";
 import { useStores } from "hooks/useStores";
 import { isEmpty } from "lodash";
@@ -24,6 +29,7 @@ import { observer } from "mobx-react";
 import { RegisterTypes } from "pages/Auth/constants";
 import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import Reactions from "./Reactions";
 
 const Vacancy = () => {
   const { id } = useParams();
@@ -37,11 +43,13 @@ const Vacancy = () => {
 
   const [message, sendMessage] = useNotification();
   const [modalOpen, setModalOpen] = React.useState<boolean>(false);
+  const [tab, setTab] = React.useState<number>(0);
   const navigate = useNavigate();
 
   const vacancy = vacanciesStore.getVacancyValue;
   const companyVacancies = companiesStore.companyVacancies;
   const invitations = vacanciesStore.getInvitations;
+  const reactions = vacanciesStore.getReactions;
 
   const handleReact = () => {
     reactionsStore.createReaction(Number(id)).then(() =>
@@ -65,6 +73,7 @@ const Vacancy = () => {
   React.useEffect(() => {
     if (authStore.userType !== RegisterTypes.INTERN) {
       vacanciesStore.getVacancyInvitations(id);
+      vacanciesStore.getVacancyReactions(id);
     }
   }, []);
 
@@ -74,6 +83,10 @@ const Vacancy = () => {
 
   const handleOpenAnnouncementModal = () => {
     setModalOpen(true);
+  };
+
+  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+    setTab(newValue);
   };
 
   return (
@@ -142,21 +155,30 @@ const Vacancy = () => {
                 )}
               </Box>
             </Paper>
-            <Paper
-              sx={{
-                padding: "30px",
-              }}
-              elevation={2}
-            >
-              <Typography variant="h5">Описание</Typography>
-              <Divider
-                sx={{
-                  margin: "8px 0",
-                }}
-                variant="fullWidth"
-              />
-              <div dangerouslySetInnerHTML={{ __html: vacancy.description }} />
-            </Paper>
+            <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+              <Tabs value={tab} onChange={handleChange}>
+                <Tab label="Информация" />
+                <Tab label="Реакции" />
+                <Tab label="Приглашения" />
+              </Tabs>
+            </Box>
+            <TabPanel value={tab} index={0}>
+              <Paper elevation={2}>
+                <Typography variant="h5">Описание</Typography>
+                <Divider
+                  sx={{
+                    margin: "8px 0",
+                  }}
+                  variant="fullWidth"
+                />
+                <div
+                  dangerouslySetInnerHTML={{ __html: vacancy.description }}
+                />
+              </Paper>
+            </TabPanel>
+            <TabPanel value={tab} index={1}>
+              {reactions && <Reactions reactions={reactions} />}
+            </TabPanel>
           </Grid>
           <Grid item xs={4}>
             <Paper
@@ -228,7 +250,7 @@ const Vacancy = () => {
             {!isEmpty(companyVacancies) && (
               <Paper>
                 <Accordion>
-                  <AccordionSummary>{`Все вакансии компании (${
+                  <AccordionSummary>{`Другие вакансии компании (${
                     companyVacancies?.length - 1
                   })`}</AccordionSummary>
                   <AccordionDetails>

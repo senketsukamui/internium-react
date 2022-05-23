@@ -1,7 +1,9 @@
 import {
+  acceptReactionRequest,
   createReactionRequest,
   deleteReactionRequest,
   getReactionsRequest,
+  rejectReactionRequest,
 } from "api/reactions";
 import { makeAutoObservable, toJS } from "mobx";
 import { Reaction } from "./types";
@@ -34,6 +36,20 @@ class ReactionStore {
           return { ...reaction, archived: true };
         }
       });
+    });
+  }
+
+  public acceptReaction(id: number) {
+    this.loading = true;
+    return acceptReactionRequest(id).then(() => {
+      this.loading = false;
+    });
+  }
+
+  public rejectReaction(id: number) {
+    this.loading = true;
+    return rejectReactionRequest(id).then(() => {
+      this.loading = false;
     });
   }
 

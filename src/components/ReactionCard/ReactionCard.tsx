@@ -1,4 +1,4 @@
-import { Card, Typography, Chip, Link, Grid, Button } from "@mui/material";
+import { Card, Typography, Link, Grid, Button } from "@mui/material";
 import {
   LocationStatusesTranslations,
   PaidStatusesTranslations,

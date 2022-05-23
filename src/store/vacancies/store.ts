@@ -2,11 +2,11 @@ import {
   createVacancyRequest,
   getVacanciesRequest,
   getVacancyInvitationsRequest,
+  getVacancyReactionsRequest,
   getVacancyRequest,
   makeVacancyAnnouncementRequest,
   updateVacancyRequest,
 } from "api/vacancies";
-import { thru } from "lodash";
 import { makeAutoObservable, toJS } from "mobx";
 import { Vacancy, VacancyAnnouncement, VacancyModel } from "./types";
 
@@ -14,6 +14,7 @@ class VacanciesStore {
   public loading: boolean = false;
   public vacancies: VacancyModel[] = [];
   public vacancy: VacancyModel | null = null;
+  public reactions = null;
   public invitations = null;
 
   constructor() {
@@ -22,6 +23,10 @@ class VacanciesStore {
 
   get getInvitations() {
     return toJS(this.invitations);
+  }
+
+  get getReactions() {
+    return toJS(this.reactions);
   }
 
   get getVacancyValue() {
@@ -75,6 +80,14 @@ class VacanciesStore {
     return getVacancyInvitationsRequest(id).then(({ data }: { data: any }) => {
       this.loading = false;
       this.invitations = data.invitations;
+    });
+  }
+
+  public getVacancyReactions(id: number) {
+    this.loading = true;
+    return getVacancyReactionsRequest(id).then(({ data }: { data: any }) => {
+      this.loading = false;
+      this.reactions = data.reactions;
     });
   }
 
